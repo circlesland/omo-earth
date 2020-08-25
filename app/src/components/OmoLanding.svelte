@@ -1,16 +1,24 @@
 <script lang="ts">
+  import { Navigate } from "svelte-router-spa";
+  import OmoInput from "./OmoInput.svelte";
 
+  const links = [
+    {
+      title: "Blog",
+      link: "blog",
+    },
+  ];
 </script>
 
-<!-- This is an example component -->
 <div>
-  <div class="bg-dark px-4 py-4">
+  <div class="bg-primary px-4 py-4">
     <div
       class="md:max-w-6xl md:mx-auto md:flex md:items-center md:justify-between">
       <div class="flex justify-between items-center">
+        <img src="/images/logo.svg" class="h-10 w-10 pb-1" alt="logo" />
         <a
           href="/"
-          class="font-title inline-block py-2 text-white text-2xl uppercase
+          class="font-title inline-block p-2 text-white text-2xl uppercase
           font-bold">
           Omo Earth
         </a>
@@ -23,37 +31,15 @@
 
       <div>
         <div class="hidden md:block uppercase">
-          <a
-            href="/"
-            class="inline-block py-1 md:py-4 text-gray-100 mr-6 font-bold">
-            How it Works
-          </a>
-          <a
-            href="/"
-            class="inline-block py-1 md:py-4 text-gray-500 hover:text-gray-100
-            mr-6">
-            Services
-          </a>
-          <a
-            href="/"
-            class="inline-block py-1 md:py-4 text-gray-500 hover:text-gray-100">
-            Blog
-          </a>
+          {#each links as l}
+            <Navigate to={l.link}>
+              <span
+                class="inline-block py-1 md:py-4 text-gray-100 mr-6 font-bold">
+                {l.title}
+              </span>
+            </Navigate>
+          {/each}
         </div>
-      </div>
-      <div class="hidden md:block">
-        <a
-          href="/"
-          class="inline-block py-1 md:py-4 text-gray-500 hover:text-gray-100
-          mr-6">
-          Login
-        </a>
-        <a
-          href="/"
-          class="inline-block py-2 px-4 text-gray-700 bg-white hover:bg-gray-100
-          rounded-lg">
-          Sign Up
-        </a>
       </div>
     </div>
   </div>
@@ -63,24 +49,23 @@
       <div class="md:max-w-6xl md:mx-auto">
         <div class="md:flex md:flex-wrap">
           <div class="md:w-1/2 text-center md:text-left md:pt-16">
-            <h1
-              class="font-title uppercase text-white text-2xl md:text-5xl
+            <div
+              class="font-title uppercase text-blue-100 text-white text-3xl
               leading-tight mb-4">
-              FOLLOW YOUR DREAMS
-            </h1>
-
-            <p class="font-subtitle text-indigo-200 md:text-2xl md:pr-48">
-              and kickstart with us the universal basic income economy of
+              time to reset the economy
+            </div>
+            <span
+              class="font-title uppercase text-white text-6xl leading-tight">
+              21.03.2021
+            </span>
+            <p class="font-subtitle text-blue-200 text-2xl md:pr-48">
+              kickstart soon your own economy of dreams and passions and harvest
+              every hour your personal universal basic income currency of
               tomorrow
             </p>
-
-            <a
-              href="/"
-              class="mt-6 mb-12 md:mb-0 md:mt-10 inline-block py-3 px-8
-              font-title text-xl uppercase text-white hover:bg-secondary
-              bg-tertiary rounded-lg shadow">
-              Get Started
-            </a>
+            <div class="mt-4">
+              <OmoInput />
+            </div>
           </div>
           <div class="md:w-1/2 relative">
             <div class="hidden md:block">
@@ -483,5 +468,4 @@
       <path fill-opacity="1" d="M0,224L1440,32L1440,320L0,320Z" />
     </svg>
   </div>
-
 </div>

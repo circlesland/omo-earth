@@ -11,20 +11,14 @@ module.exports = {
     fontFamily: {
       'title': ['"Josefin Sans"', 'sans-serif'],
       'subtitle': ['Exo 2', 'sans-serif'],
-      sans: ['"Nunito Sans"', 'sans-serif']
+      'sans': ['"Nunito Sans"', 'sans-serif']
     },
     extend: {
       colors: {
-        primary: '#233D81',
-        secondary: '#1C8FC0',
-        tertiary: '#2AD78B',
-        dark: '#03174B',
-        leap1: '#233d81',
-        leap2: '#0F81C0',
-        leap3: '#42AFED',
-        leap4: '#3BD2DC',
-        leap5: '#3BDCA2',
-        leap6: '#3BDC7B',
+        primary: '#03174B',
+        secondary: '#233D81',
+        tertiary: '#3182CE',
+        action: '#2AD78B',
         'smoke-darkest': 'rgba(0, 0, 0, 0.9)',
         'smoke-darker': 'rgba(0, 0, 0, 0.75)',
         'smoke-dark': 'rgba(0, 0, 0, 0.6)',
