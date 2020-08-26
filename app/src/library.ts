@@ -7,6 +7,7 @@ import OmoTransactions from "./components/OmoTransactions.svelte";
 import OmoSapiens from "./components/OmoSapiens.svelte";
 import OmoLanding from "./components/OmoLanding.svelte";
 import OmoNavTop from "./components/OmoNavTop.svelte";
+import OmoNavDapp from "./components/OmoNavDapp.svelte";
 
 export const library = {
   getComponentByName: (name) => {
@@ -29,6 +30,8 @@ export const library = {
         return OmoNavTop;
       case "OmoSapiens":
         return OmoSapiens;
+      case "OmoNavDapp":
+        return OmoNavDapp;
     }
   },
 };
