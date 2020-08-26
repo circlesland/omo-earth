@@ -1,8 +1,17 @@
 import { LayoutAsideMainFooter } from "../layouts/LayoutAsideMainFooter";
 import { LayoutMainAside } from "../layouts/LayoutMainAside";
+import {LayoutHeaderMain} from "../layouts/LayoutHeaderMain";
+
+
+export const MetaLayout = (() => {
+  if (window.innerWidth > 800)
+    return LayoutAsideMainFooter
+  else
+    return LayoutHeaderMain
+})()
 
 export const Safe = {
-  layout: LayoutAsideMainFooter,
+  layout: MetaLayout,
   children: [
     {
       area: "aside",
