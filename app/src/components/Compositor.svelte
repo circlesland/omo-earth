@@ -1,7 +1,26 @@
 <script lang="ts">
-  /*import { Component } from "../interfaces/component";
-  import { Library } from "../interfaces/library";
-*/
+
+  function getAreasFromString(areas) {
+    const withoutQuotes = areas.split("'").join(" ");
+    const strippedWhitespace = withoutQuotes.split("  ").join(" ");
+    const items = {};
+    strippedWhitespace.split(" ").forEach(o => {
+      if (o.trim() === "")
+        return;
+      items[o] = true;
+    });
+    const distinctAreas = Object.keys(items);
+    console.log("getAreasFromString(areas: " + areas + ") : " + JSON.stringify(distinctAreas))
+    return distinctAreas;
+  }
+
+  function isAreaAvailable(parentLayout, childArea)
+  {
+    const availableAreas = getAreasFromString(parentLayout.areas);
+    const found = availableAreas.find(o => o === childArea);
+    return !!found;
+  }
+
   export let composition;
   export let library;
 </script>
@@ -32,7 +51,13 @@
     style="grid-area: {composition.area}; --areas: {composition.layout.areas};
     --columns: {composition.layout.columns}; --rows: {composition.layout.rows}; ">
     {#each composition.children as child}
-      <svelte:self {library} composition={child} />
+      {#if isAreaAvailable(composition.layout, child.area)}
+        <svelte:self {library} composition={child} />
+      {:else}
+        <div style="position:absolute; left:-2000em; top:-2000em; visibility: hidden">
+          <svelte:self {library} composition={child} />
+        </div>
+      {/if}
     {/each}
   </section>
 {/if}

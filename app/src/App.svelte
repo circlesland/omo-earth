@@ -23,6 +23,7 @@
   page("/market", () => (current = Market));
   // activate router
   page.start();
+
 </script>
 
 <style>
