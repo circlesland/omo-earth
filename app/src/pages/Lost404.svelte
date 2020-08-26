@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Navigate } from "svelte-router-spa";
+
 </script>
 
 <style>
@@ -21,9 +21,7 @@
       <div class="text-lg mb-8">
         You may have mistyped the address or the page may have moved.
       </div>
-      <Navigate to="/">
-        <a href="/" class="border border-white rounded p-4">Go Home</a>
-      </Navigate>
+      <a href="/" class="border border-white rounded p-4">Go Home</a>
     </div>
   </div>
 </div>

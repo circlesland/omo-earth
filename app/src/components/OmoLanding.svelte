@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Navigate } from "svelte-router-spa";
   import OmoInput from "./OmoInput.svelte";
 
   const links = [
