@@ -1,5 +1,4 @@
 export const Market = {
-  area: "main",
   layout: {
     areas: "'header' 'main' 'footer'",
     columns: "1fr",

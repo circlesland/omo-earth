@@ -2,7 +2,6 @@ import { LayoutAsideMainFooter } from "../layouts/LayoutAsideMainFooter";
 import { LayoutMainAside } from "../layouts/LayoutMainAside";
 
 export const Safe = {
-  area: "main",
   layout: LayoutAsideMainFooter,
   children: [
     {

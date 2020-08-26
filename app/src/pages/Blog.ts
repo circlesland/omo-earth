@@ -1,7 +1,6 @@
 import { LayoutHeaderMain } from "../layouts/LayoutHeaderMain";
 
 export const Blog = {
-  area: "main",
   layout: LayoutHeaderMain,
   children: [
     {
