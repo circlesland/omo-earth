@@ -10,8 +10,6 @@
   import { Market } from "./pages/Market";
   import { Safe } from "./pages/Safe";
 
-  //import {Library} from "interfaces/library"
-
   // set default component
   let current = Home;
 

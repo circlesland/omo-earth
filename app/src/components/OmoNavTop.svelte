@@ -5,8 +5,10 @@
 <IconsFontAwesome />
 
 <header>
-  <nav class="flex justify-between w-full bg-primary text-white">
-    <i class="fas fa-arrow-left p-2 hover:bg-secondary" />
+  <nav class="flex justify-between w-full bg-gray-200 text-primary">
+    <i
+      class="fas fa-arrow-left p-2 hover:bg-secondary"
+      on:click={() => window.shellEvents.publish('left')} />
     <div class="py-2 uppercase text-xs font-bold justify-center">
       context title
       <!-- <a href="/">
@@ -17,6 +19,8 @@
       <a href="/safe">safe</a>
       <a href="/market">market</a>
     </div>
-    <i class="fas fa-arrow-right p-2 hover:bg-secondary" />
+    <i
+      class="fas fa-arrow-right p-2 hover:bg-secondary"
+      on:click={() => window.shellEvents.publish('right')} />
   </nav>
 </header>
