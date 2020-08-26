@@ -1,17 +1,21 @@
 <script lang="ts">
 
   function getAreasFromString(areas) {
-    const withoutQuotes = areas.split("'").join(" ");
-    const strippedWhitespace = withoutQuotes.split("  ").join(" ");
+    const strippedWhitespace =
+            // Replace all single quotes with whitespaces ..
+            areas.split("'").join(" ")
+                    // .. then replaces all double whitespaces with single whitespaces
+                    .split("  ").join(" ");
+
     const items = {};
-    strippedWhitespace.split(" ").forEach(o => {
-      if (o.trim() === "")
-        return;
-      items[o] = true;
-    });
-    const distinctAreas = Object.keys(items);
-    console.log("getAreasFromString(areas: " + areas + ") : " + JSON.stringify(distinctAreas))
-    return distinctAreas;
+
+    // De-duplicate all area names
+    strippedWhitespace.split(" ")
+            .filter(o => o.trim() !== "")
+            .forEach(o => items[o] = true);
+
+    // Return them as array
+    return Object.keys(items);
   }
 
   function isAreaAvailable(parentLayout, childArea)
