@@ -38,8 +38,8 @@ export const Safe = {
       ],
     },
     {
-      area: "start",
-      component: "OmoNavBottom",
+      area: "dapp",
+      component: "OmoNavDapp",
     },
     {
       area: "footer",

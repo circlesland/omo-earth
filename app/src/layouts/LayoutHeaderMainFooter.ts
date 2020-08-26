@@ -1,5 +1,5 @@
 export const LayoutHeaderMainFooter = {
-  areas: "'header' 'main' 'footer'",
-  columns: "1fr",
+  areas: "'header header' 'main main' 'dapp footer'",
+  columns: "16rem 1fr",
   rows: "2rem 1fr 4rem",
 };
