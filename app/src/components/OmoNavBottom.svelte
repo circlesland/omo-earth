@@ -22,8 +22,9 @@
 
 <IconsFontAwesome />
 
-<ul class="flex justify-end bg-white text-gray-700 shadow h-full w-full">
-
+<ul
+  class="border-t border-gray-300 flex justify-end bg-white text-gray-700 shadow
+  h-full w-full">
   {#each navitems as item}
     <li class="hover:bg-gray-100 w-16 text-gray-600">
       <div class="h-16 w-16 px-6 flex justify-center items-center">
@@ -41,5 +42,4 @@
       <i class="text-lg fas fa-plus" />
     </button>
   </li>
-
 </ul>

@@ -1,11 +1,10 @@
-import Compositor from "./components/Compositor.svelte";
-
 import OmoBlog from "./components/OmoBlog.svelte";
 import OmoShopProducts from "./components/OmoShopProducts.svelte";
 import OmoShopHeader from "./components/OmoShopHeader.svelte";
 import OmoNavAside from "./components/OmoNavAside.svelte";
 import OmoNavBottom from "./components/OmoNavBottom.svelte";
 import OmoTransactions from "./components/OmoTransactions.svelte";
+import OmoSapiens from "./components/OmoSapiens.svelte";
 import OmoLanding from "./components/OmoLanding.svelte";
 import OmoNavTop from "./components/OmoNavTop.svelte";
 
@@ -28,6 +27,8 @@ export const library = {
         return OmoBlog;
       case "OmoNavTop":
         return OmoNavTop;
+      case "OmoSapiens":
+        return OmoSapiens;
     }
   },
 };

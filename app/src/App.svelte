@@ -5,10 +5,10 @@
   import { library } from "./library";
 
   // Import Page Compositions
-  import { Home } from "./components/pages/Home";
-  import { Blog } from "./components/pages/Blog";
-  import { Market } from "./components/pages/Market";
-  import { Safe } from "./components/pages/Safe";
+  import { Home } from "./pages/Home";
+  import { Blog } from "./pages/Blog";
+  import { Market } from "./pages/Market";
+  import { Safe } from "./pages/Safe";
 
   //import {Library} from "interfaces/library"
 

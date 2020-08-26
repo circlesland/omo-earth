@@ -1,13 +1,11 @@
+import { LayoutHeaderMain } from "../layouts/LayoutHeaderMain";
+
 export const Home = {
   area: "main",
-  layout: {
-    areas: "'top' 'main'",
-    columns: "1fr",
-    rows: "2rem 1fr",
-  },
+  layout: LayoutHeaderMain,
   children: [
     {
-      area: "top",
+      area: "header",
       component: "OmoNavTop",
     },
     {
