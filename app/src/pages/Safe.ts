@@ -1,27 +1,27 @@
-import { LayoutHeaderAsideMainFooter } from "../layouts/LayoutHeaderAsideMainFooter";
-import { LayoutMainAside } from "../layouts/LayoutMainAside";
+import { LayoutMain } from "../layouts/LayoutMain";
+import { LayoutNavMainAside } from "../layouts/LayoutNavMainAside";
 import { LayoutHeaderMainFooter } from "../layouts/LayoutHeaderMainFooter";
 
-export const MetaLayout = (() => {
-  if (window.innerWidth > 800) return LayoutHeaderAsideMainFooter;
-  else return LayoutHeaderMainFooter;
+export const ResponsiveLayout = (() => {
+  if (window.innerWidth > 800) return LayoutNavMainAside;
+  else return LayoutMain;
 })();
 
 export const Safe = {
-  layout: MetaLayout,
+  layout: LayoutHeaderMainFooter,
   children: [
     {
       area: "header",
       component: "OmoNavTop",
     },
     {
-      area: "aside",
-      component: "OmoNavAside",
-    },
-    {
       area: "main",
-      layout: LayoutMainAside,
+      layout: ResponsiveLayout,
       children: [
+        {
+          area: "nav",
+          component: "OmoNavAside",
+        },
         {
           area: "main",
           component: "OmoTransactions",
@@ -31,6 +31,10 @@ export const Safe = {
           component: "OmoSapiens",
         },
       ],
+    },
+    {
+      area: "start",
+      component: "OmoNavBottom",
     },
     {
       area: "footer",
