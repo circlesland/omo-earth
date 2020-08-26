@@ -1,9 +1,10 @@
 import { LayoutMain } from "../layouts/LayoutMain";
-import { LayoutNavMainAside } from "../layouts/LayoutNavMainAside";
+import { LayoutNavMain } from "../layouts/LayoutNavMain";
+import { LayoutMainAside } from "../layouts/LayoutMainAside";
 import { LayoutHeaderMainFooter } from "../layouts/LayoutHeaderMainFooter";
 
 export const ResponsiveLayout = (() => {
-  if (window.innerWidth > 800) return LayoutNavMainAside;
+  if (window.innerWidth > 800) return LayoutNavMain;
   else return LayoutMain;
 })();
 
@@ -24,11 +25,14 @@ export const Safe = {
         },
         {
           area: "main",
-          component: "OmoTransactions",
-        },
-        {
-          area: "aside",
-          component: "OmoSapiens",
+          layout: LayoutMainAside,
+          children: [
+            { area: "main", component: "OmoTransactions" },
+            {
+              area: "aside",
+              component: "OmoSapiens",
+            },
+          ],
         },
       ],
     },

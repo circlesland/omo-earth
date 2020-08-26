@@ -1,8 +1,7 @@
 import { Observable, Subject } from "rxjs";
 
 export class EventBroker {
-  public constructor() {
-  }
+  public constructor() {}
 
   private _topics: { [namespace: string]: { [name: string]: Topic<any> } } = {};
 
@@ -13,7 +12,7 @@ export class EventBroker {
    */
   public createTopic<T>(namespace: string, name: string): Topic<T> {
     if (this._topics[name]) {
-      throw new Error(`A topic with the name ${name} already exists.`)
+      throw new Error(`A topic with the name ${name} already exists.`);
     }
 
     const topic = new Topic<T>(namespace, name);
@@ -34,12 +33,14 @@ export class EventBroker {
   public getTopic<T>(namespace: string, name: string): Topic<T> {
     const ns = this._topics[namespace];
     if (!ns) {
-      throw new Error(`There is no namespace with the name '${namespace}'.`)
+      throw new Error(`There is no namespace with the name '${namespace}'.`);
     }
 
     const topic = ns[name];
     if (!topic) {
-      throw new Error(`There is no topic with the name '${name}' in the namespace '${namespace}'.`)
+      throw new Error(
+        `There is no topic with the name '${name}' in the namespace '${namespace}'.`
+      );
     }
 
     return topic;
@@ -64,8 +65,7 @@ export class EventBroker {
   }
 }
 
-export class Topic<T>
-{
+export class Topic<T> {
   /**
    * The name of the topic (must be unique within the namespace)
    */

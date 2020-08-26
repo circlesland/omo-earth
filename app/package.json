@@ -28,6 +28,7 @@
   "dependencies": {
     "leaflet-geosearch": "^3.0.6",
     "page": "^1.11.6",
+    "rxjs": "^6.6.2",
     "sirv-cli": "^1.0.0"
   }
 }
