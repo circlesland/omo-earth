@@ -1,18 +1,19 @@
-import { LayoutAsideMainFooter } from "../layouts/LayoutAsideMainFooter";
+import { LayoutHeaderAsideMainFooter } from "../layouts/LayoutHeaderAsideMainFooter";
 import { LayoutMainAside } from "../layouts/LayoutMainAside";
-import {LayoutHeaderMain} from "../layouts/LayoutHeaderMain";
-
+import { LayoutHeaderMainFooter } from "../layouts/LayoutHeaderMainFooter";
 
 export const MetaLayout = (() => {
-  if (window.innerWidth > 800)
-    return LayoutAsideMainFooter
-  else
-    return LayoutHeaderMain
-})()
+  if (window.innerWidth > 800) return LayoutHeaderAsideMainFooter;
+  else return LayoutHeaderMainFooter;
+})();
 
 export const Safe = {
   layout: MetaLayout,
   children: [
+    {
+      area: "header",
+      component: "OmoNavTop",
+    },
     {
       area: "aside",
       component: "OmoNavAside",
@@ -20,7 +21,6 @@ export const Safe = {
     {
       area: "main",
       layout: LayoutMainAside,
-
       children: [
         {
           area: "main",
