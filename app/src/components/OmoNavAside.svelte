@@ -1,6 +1,5 @@
 <script>
   import IconsFontAwesome from "./IconsFontAwesome.svelte";
-  import { Navigate } from "svelte-router-spa";
 
   const navitems = [
     {
@@ -32,7 +31,7 @@
     </li>
     <li class="my-px">
       <span class="flex font-medium text-sm text-gray-400 px-4 my-4 uppercase">
-        Projects
+        Account
       </span>
     </li>
     <li class="my-px">
@@ -54,7 +53,7 @@
               2 0 002-2V8m-9 4h4" />
           </svg>
         </span>
-        <span class="ml-3">Manager</span>
+        <span class="ml-3">Transactions</span>
       </a>
     </li>
     <li class="my-px">
@@ -77,7 +76,7 @@
               012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
           </svg>
         </span>
-        <span class="ml-3">Tasks</span>
+        <span class="ml-3">Token</span>
       </a>
     </li>
     <li class="my-px">
@@ -102,7 +101,7 @@
               0 11-4 0 2 2 0 014 0z" />
           </svg>
         </span>
-        <span class="ml-3">Clients</span>
+        <span class="ml-3">Receiving Trust</span>
         <span
           class="flex items-center justify-center text-sm text-gray-500
           font-semibold bg-gray-300 h-6 px-2 rounded-full ml-auto">
@@ -128,12 +127,14 @@
               d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </span>
-        <span class="ml-3">Add new</span>
+        <span class="ml-3">Giving Trust</span>
       </a>
     </li>
     <li class="my-px">
-      <span class="flex font-medium text-sm text-gray-400 px-4 my-4 uppercase">
-        Account
+      <span
+        class="font-title flex font-medium text-sm text-blue-700 px-4 my-4
+        uppercase">
+        Profile
       </span>
     </li>
     <li class="my-px">
@@ -155,15 +156,15 @@
               00-7-7z" />
           </svg>
         </span>
-        <span class="ml-3">Profile</span>
+        <span class="ml-3">Devices</span>
       </a>
     </li>
     <li class="my-px">
       <a
         href="/"
-        class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500
-        hover:bg-gray-700">
-        <span class="flex items-center justify-center text-lg text-gray-500">
+        class="flex flex-row items-center h-12 px-4 text-tertiary
+        hover:bg-secondary">
+        <span class="flex items-center justify-center text-lg text-tertiary">
           <svg
             fill="none"
             stroke-linecap="round"
@@ -180,8 +181,8 @@
         </span>
         <span class="ml-3">Notifications</span>
         <span
-          class="flex items-center justify-center text-sm text-red-500
-          font-semibold bg-red-300 h-6 px-2 rounded-full ml-auto">
+          class="flex items-center justify-center text-sm text-blue-200
+          font-semibold bg-blue-500 h-6 px-2 rounded-full ml-auto">
           10
         </span>
       </a>

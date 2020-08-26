@@ -4,7 +4,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public -s",
+    "start": "sirv public",
     "validate": "svelte-check"
   },
   "devDependencies": {
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "leaflet-geosearch": "^3.0.6",
-    "sirv-cli": "^1.0.0",
-    "svelte-router-spa": "^5.7.3"
+    "page": "^1.11.6",
+    "sirv-cli": "^1.0.0"
   }
 }

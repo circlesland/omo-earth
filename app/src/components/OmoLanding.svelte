@@ -32,12 +32,10 @@
       <div>
         <div class="hidden md:block uppercase">
           {#each links as l}
-            <Navigate to={l.link}>
-              <span
-                class="inline-block py-1 md:py-4 text-gray-100 mr-6 font-bold">
-                {l.title}
-              </span>
-            </Navigate>
+            <span
+              class="inline-block py-1 md:py-4 text-gray-100 mr-6 font-bold">
+              {l.title}
+            </span>
           {/each}
         </div>
       </div>
