@@ -2,29 +2,21 @@ import type { Menu } from "../components/OmoNavAside/OmoNavAsideInterfaces";
 import { NavigateTo } from "../trigger/navigateTo";
 import type {Component} from "../interfaces/component";
 
-export const menu : Component = {
+export const marketMenu : Component = {
   area: "nav",
   component: "OmoNavAside",
   data: {
     menu: <Menu>{
       categories: [
         {
-          title: "Account",
+          title: "Filter by",
           trigger: [
             new NavigateTo("Transactions", "/safe/transactions"),
             new NavigateTo("Token", "/safe/token"),
             new NavigateTo("Received trust", "/safe/trust/received"),
             new NavigateTo("Expressed trust", "/safe/trust/expressed"),
           ],
-        },
-        {
-          title: "Profile",
-          trigger: [
-            new NavigateTo("Me", "/safe/profile/1"),
-            new NavigateTo("Notifications", "/profile/notifications"),
-            new NavigateTo("Settings", "/profile/settings"),
-          ],
-        },
+        }
       ],
     },
   },

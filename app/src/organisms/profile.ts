@@ -1,8 +1,9 @@
 import { LayoutMain } from "../layouts/LayoutMain";
+import type {Component} from "../interfaces/component";
 
 export const profile = (id:string) =>
 {
-  return {
+  return <Component>{
     area: "main",
     layout: "LayoutMain",children: [
       {

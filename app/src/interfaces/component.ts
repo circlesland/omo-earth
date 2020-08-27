@@ -2,8 +2,12 @@ import type { Layout } from "./layout";
 
 export interface Component {
   data?: any;
-  component: string;
+  component?: string;
   children?: Component[];
   area: string;
-  layout?: Layout
+  /**
+   * When set wraps a "<div>" element around the child component(s) and applies the cssClasses on it.
+   */
+  cssClasses?: string;
+  layout?: string
 }
