@@ -1,8 +1,6 @@
-import { LayoutMain } from "../layouts/LayoutMain";
-
 export const products = {
   area: "main",
-  layout: LayoutMain,
+  layout: "LayoutMain",
   children: [
     {
       area: "main",
