@@ -1,6 +1,9 @@
 <script lang="ts">
 
+  import {RuntimeInstances} from "../runtimeInstances";
+  import type {RuntimeInstanceReference} from "../runtimeInstances";
   import {onMount} from "svelte";
+  import type {Component} from "../interfaces/component";
 
   function getAreasFromString(areas) {
     const strippedWhitespace =
@@ -43,8 +46,32 @@
   let cssClass = null;
 
   let layoutName = "";
+  let runtimeInstanceReference: RuntimeInstanceReference;
+
+  function addRuntimeInstanceIfApplicable(composition:Component, runtimeInstanceReference: RuntimeInstanceReference)
+  {
+    if (!composition)
+      return;
+    if (!composition.id)
+      return;
+    if (composition.children || composition.children.length > 0)
+      return;
+    if (!runtimeInstanceReference)
+      return;
+
+    console.log("addRuntimeInstanceIfApplicable(composition:" + JSON.stringify(composition) + ")");
+    if (!runtimeInstanceReference && composition && composition.id && (!composition.children || composition.children.length == 0)) {
+      // Register this as an addressable component
+      runtimeInstanceReference = {
+        definition: composition,
+        viewInstance: undefined
+      };
+      RuntimeInstances.instance().add(composition, runtimeInstanceReference)
+    }
+  }
 
   $:{
+    addRuntimeInstanceIfApplicable(composition, runtimeInstanceReference);
     if (composition.layout) {
       if (typeof composition.layout === "string") {
         console.log(composition);
@@ -57,6 +84,10 @@
       if (layout && layout.class) {
         cssClass = layout.class;
       }
+    }
+
+    if (runtimeInstanceReference) {
+      console.log("runtimeInstanceReference changed to:", runtimeInstanceReference);
     }
   }
 </script>
@@ -80,10 +111,12 @@
       <div class="{composition.cssClasses}">
         {#if typeof composition.component === "string"}
           <svelte:component
+                  bind:this={runtimeInstanceReference}
                   this={library.getComponentByName(composition.component)}
                   data={composition.data}/>
         {:else}
           <svelte:component
+                  bind:this={runtimeInstanceReference}
                   this={library.getComponentByName(composition.component[deviceClass])}
                   data={composition.data}/>
         {/if}

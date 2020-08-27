@@ -1,24 +1,23 @@
 import {Actions} from "../actions/actions";
 import type {Request} from "./request";
-import type {ResponseReceiver} from "../interfaces/responseReceiver";
+import type {AddressableComponent} from "../interfaces/component";
 
 export class FilterBy implements Request
 {
-  id:string;
-  sender:ResponseReceiver;
-  title: string;
+  requestId:string;
+  sender:AddressableComponent;
+  title: string = "<<no title>>";
   storeName:string;
   icon:string = "fa-filter";
-  tags:{type:string, id:string}[];
+  jsonPathFilter:string;
 
   readonly triggers: Actions = Actions.filterBy;
 
-  constructor(id: string, sender:ResponseReceiver, storeName:string, title:string, tags:{type:string, id:string}[])
+  constructor(requestId: string, sender:AddressableComponent, storeName:string, jsonPathFilter:string)
   {
-    this.id = id;
-    this.title = title;
+    this.requestId = requestId;
     this.storeName = storeName;
-    this.tags = tags;
+    this.jsonPathFilter = jsonPathFilter;
     this.sender = sender;
   }
 }

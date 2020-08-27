@@ -1,6 +1,5 @@
-import type { Layout } from "./layout";
-
-export interface Component {
+export interface Component
+{
   data?: any;
   component?: string;
   children?: Component[];
@@ -10,4 +9,13 @@ export interface Component {
    */
   cssClasses?: string;
   layout?: string
+}
+
+export interface AddressableComponent extends Component
+{
+  /**
+   * If the view-component in this "Component" wants to be notified about events and repsponsen,
+   * it must provide a unique ID.
+   */
+  id?:string
 }

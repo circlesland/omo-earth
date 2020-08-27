@@ -44,7 +44,7 @@
     viewDocument = Blog;
   });
   page("/market", () => {
-    viewDocument = Market(products);
+    viewDocument = Market(products());
   });
   page("*", () => {
     viewDocument = Lost404;

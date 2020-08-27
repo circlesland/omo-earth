@@ -1,8 +1,8 @@
-import type {ResponseReceiver} from "../interfaces/responseReceiver";
 import type {Trigger} from "./trigger";
+import type {AddressableComponent} from "../interfaces/component";
 
 export interface Request extends Trigger
 {
-  id:string;
-  sender:ResponseReceiver;
+  requestId:string;
+  sender:AddressableComponent;
 }
