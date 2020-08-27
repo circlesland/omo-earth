@@ -1,4 +1,5 @@
 import { LayoutMainAside } from "../layouts/LayoutMainAside";
+import { LayoutBlock } from "../layouts/LayoutBlock";
 
 export const transactions = {
   area: "main",
@@ -6,13 +7,19 @@ export const transactions = {
   children: [
     {
       area: "main",
-      component: "OmoPlaceholder",
-      data: "I am the transactions detail",
-    },
-    {
-      area: "aside",
-      component: "OmoPlaceholder",
-      data: "I am the omo firends detail",
+      layout: LayoutBlock,
+      children: [
+        {
+          area: "block",
+          component: "OmoTransactions",
+          data: "I am the omo firends detail",
+        },
+        {
+          area: "block",
+          component: "OmoBalance",
+          data: "I am the omo firends detail",
+        },
+      ],
     },
   ],
 };

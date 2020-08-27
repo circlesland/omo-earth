@@ -10,6 +10,7 @@ import OmoNavTop from "./components/OmoNavTop.svelte";
 import OmoNavDapp from "./components/OmoNavDapp.svelte";
 import OmoPlaceholder from "./components/OmoPlaceholder.svelte";
 import OmoProductDetail from "./components/OmoProductDetail.svelte";
+import OmoBalance from "./components/OmoBalance.svelte";
 
 export const library = {
   getComponentByName: (name) => {
@@ -38,6 +39,8 @@ export const library = {
         return OmoPlaceholder;
       case "OmoProductDetail":
         return OmoProductDetail;
+      case "OmoBalance":
+        return OmoBalance;
     }
   },
 };
