@@ -1,10 +1,9 @@
-import {LayoutMain} from "../layouts/LayoutMain";
-import {LayoutNavMain} from "../layouts/LayoutNavMain";
-import {LayoutMainAside} from "../layouts/LayoutMainAside";
-import {LayoutHeaderMainFooter} from "../layouts/LayoutHeaderMainFooter";
+import { LayoutMain } from "../layouts/LayoutMain";
+import { LayoutNavMain } from "../layouts/LayoutNavMain";
+import { LayoutMainAside } from "../layouts/LayoutMainAside";
+import { LayoutHeaderMainFooter } from "../layouts/LayoutHeaderMainFooter";
 
-export const ResponsiveLayout = (() =>
-{
+export const ResponsiveLayout = (() => {
   if (window.innerWidth > 800) return LayoutNavMain;
   else return LayoutMain;
 })();
@@ -22,13 +21,17 @@ export const Safe = {
       children: [
         {
           area: "nav",
+          device: "mobile",
           component: "OmoNavAside",
         },
         {
           area: "main",
           layout: LayoutMainAside,
           children: [
-            {area: "main", component: "OmoTransactions"},
+            {
+              area: "main",
+              component: "OmoTransactions",
+            },
             {
               area: "aside",
               component: "OmoSapiens",
