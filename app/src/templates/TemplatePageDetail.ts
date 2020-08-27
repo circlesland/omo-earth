@@ -15,7 +15,7 @@ export function generatePageSingle(
         component: {
           mobile: "OmoNavTopMobile",
           tablet: "OmoNavTopTablet",
-          desktop: "OmoNavTopDesktop"
+          desktop: "OmoNavTopDesktop",
         },
         data: {
           title,
@@ -24,9 +24,9 @@ export function generatePageSingle(
       {
         area: "main",
         layout: {
-          mobile: "LayoutHeaderMainFooter",
-          tablet: "LayoutHeaderMain",
-          desktop: "LayoutHeaderMainFooter"
+          mobile: "LayoutMain",
+          tablet: "LayoutMain",
+          desktop: "LayoutNavMain",
         },
         children: [menu, content],
       },
