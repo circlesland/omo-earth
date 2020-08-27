@@ -1,5 +1,5 @@
 import OmoBlog from "./components/OmoBlog.svelte";
-import OmoShopProducts from "./components/OmoShopProducts.svelte";
+import OmoMarketProducts from "./components/OmoMarketProducts.svelte";
 import OmoShopHeader from "./components/OmoShopHeader.svelte";
 import OmoNavAside from "./components/OmoNavAside.svelte";
 import OmoNavBottom from "./components/OmoNavBottom.svelte";
@@ -20,8 +20,8 @@ export const library = {
         return OmoNavAside;
       case "OmoShopHeader":
         return OmoShopHeader;
-      case "OmoShopProducts":
-        return OmoShopProducts;
+      case "OmoMarketProducts":
+        return OmoMarketProducts;
       case "OmoLanding":
         return OmoLanding;
       case "OmoBlog":

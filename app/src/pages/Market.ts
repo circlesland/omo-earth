@@ -2,7 +2,7 @@ export const Market = {
   layout: {
     areas: "'header' 'main' 'footer'",
     columns: "1fr",
-    rows: "1fr 4rem",
+    rows: "4rem 1fr 4rem",
   },
   children: [
     {
@@ -11,7 +11,7 @@ export const Market = {
     },
     {
       area: "main",
-      component: "OmoShopProducts",
+      component: "OmoMarketProducts",
     },
     {
       area: "footer",
