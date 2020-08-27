@@ -9,8 +9,9 @@
   import { Blog } from "./pages/Blog";
   import { Market } from "./pages/Market";
   import { Safe } from "./pages/Safe";
-  import {Actions} from "./trigger/trigger";
+  import {Actions, NavigateTo} from "./trigger/trigger";
   import {SafeTransactions} from "./pages/SafeTransactions";
+  import {actionRepository} from "./actions/actionRepository";
 
   // set default component
   let viewDocument = Home;
@@ -34,10 +35,13 @@
     viewDocument = Market
   });
 
-
   window.shellEvents.observable.subscribe(event => {
-    if (event.triggers && event.triggers === Actions.navigate) {
-      page(event.to);
+    if (event.triggers) {
+      // This event should trigger some action. Find it in the action repo and execute it.
+      const foundAction = actionRepository[event.triggers];
+      if (foundAction) {
+        foundAction(event);
+      }
     }
   })
 
