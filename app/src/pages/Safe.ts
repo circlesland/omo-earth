@@ -3,7 +3,7 @@ import {LayoutNavMain} from "../layouts/LayoutNavMain";
 import {LayoutMainAside} from "../layouts/LayoutMainAside";
 import {LayoutHeaderMainFooter} from "../layouts/LayoutHeaderMainFooter";
 import type {Menu} from "../components/OmoNavAside/OmoNavAsideInterfaces";
-import {Actions, NavigateTo} from "../trigger/trigger";
+import {NavigateTo} from "../trigger/navigateTo";
 
 export const ResponsiveLayout = (() =>
 {

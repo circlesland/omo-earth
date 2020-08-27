@@ -9,7 +9,6 @@
   import { Blog } from "./pages/Blog";
   import { Market } from "./pages/Market";
   import { Safe } from "./pages/Safe";
-  import {Actions, NavigateTo} from "./trigger/trigger";
   import {SafeTransactions} from "./pages/SafeTransactions";
   import {actionRepository} from "./actions/actionRepository";
 
