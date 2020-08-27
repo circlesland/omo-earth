@@ -9,8 +9,12 @@
   import { Blog } from "./pages/Blog";
   import { Market } from "./pages/Market";
   import { Safe } from "./pages/Safe";
-  import {Actions} from "./trigger/trigger";
-  import {SafeTransactions} from "./pages/SafeTransactions";
+  import { Product } from "./pages/Product";
+  import { Actions } from "./trigger/trigger";
+  import { transactions } from "./organisms/transactions";
+  import { token } from "./organisms/token";
+  import { productDetail } from "./organisms/productDetail";
+  import Lost404 from "./pages/Lost404.svelte";
 
   // set default component
   let viewDocument = Home;
@@ -18,32 +22,38 @@
   // Map routes to page. If a route is hit the current
   // reference is set to the route's component
   page("/", () => {
-    viewDocument = Home
+    viewDocument = Home;
   });
   page("/safe", () => {
-    viewDocument = Safe
+    viewDocument = Safe(transactions);
   });
   page("/safe/transactions", () => {
-    viewDocument = SafeTransactions
+    viewDocument = Safe(transactions);
   });
-
+  page("/safe/token", () => {
+    viewDocument = Safe(token);
+  });
+  page("/product/:id", (ctx) => {
+    viewDocument = Product(productDetail(ctx.params.id));
+  });
   page("/blog", () => {
-    viewDocument = Blog
+    viewDocument = Blog;
   });
   page("/market", () => {
-    viewDocument = Market
+    viewDocument = Market;
+  });
+  page("*", () => {
+    viewDocument = Lost404;
   });
 
-
-  window.shellEvents.observable.subscribe(event => {
+  window.shellEvents.observable.subscribe((event) => {
     if (event.triggers && event.triggers === Actions.navigate) {
       page(event.to);
     }
-  })
+  });
 
   // activate router
   page.start();
-
 </script>
 
 <style>

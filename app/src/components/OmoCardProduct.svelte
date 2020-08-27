@@ -1,4 +1,6 @@
 <script>
+  import { NavigateTo } from "../trigger/trigger";
+
   export let data = {};
 </script>
 
@@ -48,7 +50,8 @@
   </div>
   <div class="font-title flex justify-between w-full">
     <a
-      href="javascript:navigate('omodream', '{data._id}')"
+      on:click={() => window.shellEvents.publish(new NavigateTo('title', 'product/' + data.id))}
+      href="#"
       class="w-full text-center text-white bg-secondary font-bold text-lg px-4
       py-2 uppercase hover:bg-tertiary">
       pre-order now

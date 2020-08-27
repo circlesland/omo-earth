@@ -3,7 +3,7 @@
 
   const products = [
     {
-      id: "product1234",
+      id: "1234",
       name: "product title",
       price: "50 ø",
       description: "product description",
