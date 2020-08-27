@@ -9,7 +9,7 @@
   <nav class="flex justify-between w-full bg-primary text-white">
     <i
       class="fas fa-arrow-left p-2 hover:bg-secondary"
-      on:click={() => window.shellEvents.publish('left')} />
+      on:click={() => window.trigger('left')} />
     <div class="py-2 uppercase text-xs font-bold justify-center">
       {#if data.title}{data.title}{:else}Omo Earth{/if} (Mobile)
       <!-- <a href="/">
@@ -22,6 +22,6 @@
     </div>
     <i
       class="fas fa-arrow-right p-2 hover:bg-secondary"
-      on:click={() => window.shellEvents.publish('right')} />
+      on:click={() => window.trigger('right')} />
   </nav>
 </header>

@@ -53,7 +53,7 @@
       {:else if item._type === 'item'}
         <li class="my-px">
           <a
-            on:click={() => window.shellEvents.publish(item._trigger)}
+            on:click={() => window.trigger(item._trigger)}
             class="flex flex-row items-center h-12 px-4 rounded-lg text-gray-500
             hover:bg-gray-700">
             <span

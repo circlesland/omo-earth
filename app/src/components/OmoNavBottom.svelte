@@ -17,7 +17,7 @@
   h-full w-full">
   {#each data.triggers as trigger}
     <li
-      on:click={() => window.shellEvents.publish(trigger)}
+      on:click={() => window.trigger(trigger)}
       class="hover:bg-gray-100 w-16 text-gray-600">
       <div class="h-16 w-16 px-6 flex justify-center items-center">
         <span class="pt-1 text-center items-center">
