@@ -11,7 +11,7 @@ export const ResponsiveLayout = (() =>
   else return LayoutMain;
 })();
 
-export const Safe = {
+export const SafeTransactions = {
   layout: LayoutHeaderMainFooter,
   children: [{
       area: "header",
@@ -47,9 +47,6 @@ export const Safe = {
           children: [{
               area: "main",
               component: "OmoTransactions"
-            }, {
-              area: "aside",
-              component: "OmoSapiens",
             },
           ],
         },

@@ -9,16 +9,38 @@
   import { Blog } from "./pages/Blog";
   import { Market } from "./pages/Market";
   import { Safe } from "./pages/Safe";
+  import {Actions} from "./trigger/trigger";
+  import {SafeTransactions} from "./pages/SafeTransactions";
 
   // set default component
-  let current = Home;
+  let viewDocument = Home;
 
   // Map routes to page. If a route is hit the current
   // reference is set to the route's component
-  page("/", () => (current = Home));
-  page("/safe", () => (current = Safe));
-  page("/blog", () => (current = Blog));
-  page("/market", () => (current = Market));
+  page("/", () => {
+    viewDocument = Home
+  });
+  page("/safe", () => {
+    viewDocument = Safe
+  });
+  page("/safe/transactions", () => {
+    viewDocument = SafeTransactions
+  });
+
+  page("/blog", () => {
+    viewDocument = Blog
+  });
+  page("/market", () => {
+    viewDocument = Market
+  });
+
+
+  window.shellEvents.observable.subscribe(event => {
+    if (event.triggers && event.triggers === Actions.navigate) {
+      page(event.to);
+    }
+  })
+
   // activate router
   page.start();
 
@@ -36,5 +58,5 @@
 
 <Tailwind />
 <div class="app">
-  <Compositor {library} composition={current} />
+  <Compositor {library} composition={viewDocument} />
 </div>
