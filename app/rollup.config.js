@@ -64,9 +64,7 @@ export default {
       browser: true,
       dedupe: ["svelte"],
     }),
-    commonjs({
-      include: "node_modules/**",
-    }),
+    commonjs(),
     typescript({
       sourceMap: !production,
     }),

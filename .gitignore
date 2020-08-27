@@ -106,6 +106,9 @@ dist
 
 src/**/*.js.map 
 
+app/src/**/*.js.map 
+app/src/**/*.js 
+
 bundle.js
 bundle.js.map 
 bundle.css.map
