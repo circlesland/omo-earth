@@ -8,18 +8,24 @@ function createStore() {
     email: "max@die-mustermanns.de",
     picture: "https://source.unsplash.com/random",
     trustedPersons: [{
-      id: 2
+      type: "users",
+      id: "2"
     },{
-      id: 3
+      type: "users",
+      id: "3"
     },{
-      id: 4
+      type: "users",
+      id: "4"
     }],
     trustingPersons: [{
-      id: 2
+      type: "users",
+      id: "2"
     },{
-      id: 3
+      type: "users",
+      id: "3"
     },{
-      id: 4
+      type: "users",
+      id: "4"
     }]
   });
 

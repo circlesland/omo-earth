@@ -3,8 +3,6 @@
   import Tailwind from "./Tailwind.svelte";
   import page from "page";
   import { library } from "./library";
-
-  // Import Page Compositions
   import { Home } from "./pages/Home";
   import { Blog } from "./pages/Blog";
   import { Market } from "./pages/Market";
@@ -15,8 +13,8 @@
   import { token } from "./organisms/token";
   import { productDetail } from "./organisms/productDetail";
   import Lost404 from "./pages/Lost404.svelte";
-
   import { actionRepository } from "./actions/actionRepository";
+  import {profile} from "./organisms/profile";
 
   // set default component
   let viewDocument = Home;
@@ -34,6 +32,9 @@
   });
   page("/safe/token", () => {
     viewDocument = Safe(token);
+  });
+  page("/safe/profile/:id", (ctx) => {
+    viewDocument = Safe(profile(ctx.params.id));
   });
   page("/product/:id", (ctx) => {
     viewDocument = Product(productDetail(ctx.params.id));

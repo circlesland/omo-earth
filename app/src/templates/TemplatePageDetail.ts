@@ -1,12 +1,5 @@
-import { LayoutMain } from "../layouts/LayoutMain";
-import { LayoutNavMain } from "../layouts/LayoutNavMain";
 import { LayoutHeaderMainFooter } from "../layouts/LayoutHeaderMainFooter";
 import type { Trigger } from "../trigger/trigger";
-
-export const ResponsiveLayout = (() => {
-  if (window.innerWidth > 800) return LayoutNavMain;
-  else return LayoutMain;
-})();
 
 export function generatePageSingle(
   title: string,
@@ -15,18 +8,26 @@ export function generatePageSingle(
   quickActions: Trigger[]
 ) {
   return {
-    layout: LayoutHeaderMainFooter,
+    layout: "LayoutHeaderMainFooter",
     children: [
       {
         area: "header",
-        component: "OmoNavTop",
+        component: {
+          mobile: "OmoNavTopMobile",
+          tablet: "OmoNavTopTablet",
+          desktop: "OmoNavTopDesktop"
+        },
         data: {
           title,
         },
       },
       {
         area: "main",
-        layout: ResponsiveLayout,
+        layout: {
+          mobile: "LayoutHeaderMainFooter",
+          tablet: "LayoutHeaderMain",
+          desktop: "LayoutHeaderMainFooter"
+        },
         children: [menu, content],
       },
       {

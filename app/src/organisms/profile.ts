@@ -1,14 +1,17 @@
 import { LayoutMain } from "../layouts/LayoutMain";
 
-export const productDetail = (id) => {
+export const profile = (id:string) =>
+{
   return {
     area: "main",
     layout: "LayoutMain",children: [
       {
         area: "main",
-        component: "OmoProductDetail",
-        data: { title: "title", id },
+        component: "OmoProfile",
+        data: {
+          id
+        },
       },
     ],
-  };
+  }
 };

@@ -2,8 +2,7 @@ import { LayoutMainAside } from "../layouts/LayoutMainAside";
 
 export const transactions = {
   area: "main",
-  layout: LayoutMainAside,
-  children: [
+  layout: "LayoutMainAside",children: [
     {
       area: "top",
       component: "OmoBalance",
