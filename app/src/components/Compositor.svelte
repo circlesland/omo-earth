@@ -1,5 +1,7 @@
 <script lang="ts">
 
+  import {onMount} from "svelte";
+
   function getAreasFromString(areas) {
     const strippedWhitespace =
             // Replace all single quotes with whitespaces ..
@@ -18,6 +20,17 @@
     return Object.keys(items);
   }
 
+  let deviceClass = "mobile";
+
+  onMount(() => {
+    if (window.innerWidth <= 600)
+      deviceClass = "mobile";
+    else if (window.innerWidth <= 1024)
+      deviceClass = "tablet";
+    else
+      deviceClass = "desktop";
+  });
+
   function isAreaAvailable(parentLayout, childArea) {
     const availableAreas = getAreasFromString(parentLayout.areas);
     const found = availableAreas.find(o => o === childArea);
@@ -29,9 +42,21 @@
 
   let cssClass = "compositor";
 
+  let layoutName = "";
+
   $:{
-    if (composition.layout && composition.layout.class) {
-      cssClass = "compositor " + composition.layout.class;
+    if (composition.layout) {
+      if (typeof composition.layout === "string") {
+        console.log(composition);
+        layoutName = composition.layout;
+      } else {
+        console.log("composition.layout[deviceClass]", composition, deviceClass, composition.layout[deviceClass])
+        layoutName = composition.layout[deviceClass];
+      }
+      const layout = library.getLayoutByName(layoutName);
+      if (layout && layout.class) {
+        cssClass = "compositor " + layout.class;
+      }
     }
   }
 </script>
@@ -51,18 +76,24 @@
   <!-- This branch handles leaf-components -->
   <section style="grid-area: {composition.area}; display: grid; grid-template-columns:
     'minmax(1fr)'; grid-template-rows: 'minmax(1fr)'; overflow: hidden;">
-    <svelte:component
-            this={library.getComponentByName(composition.component)}
-            data={composition.data}/>
+    {#if typeof composition.component === "string"}
+      <svelte:component
+              this={library.getComponentByName(composition.component)}
+              data={composition.data}/>
+    {:else}
+      <svelte:component
+              this={library.getComponentByName(composition.component[deviceClass])}
+              data={composition.data}/>
+    {/if}
   </section>
 {:else if composition}
   <!-- This branch handles container-components -->
   <section
           class={cssClass}
-          style="grid-area: {composition.area}; --areas: {composition.layout.areas};
-    --columns: {composition.layout.columns}; --rows: {composition.layout.rows}; ">
+          style="grid-area: {composition.area}; --areas: {library.getLayoutByName(layoutName).areas};
+    --columns: {library.getLayoutByName(layoutName).columns}; --rows: {library.getLayoutByName(layoutName).rows}; ">
     {#each composition.children as child}
-      {#if isAreaAvailable(composition.layout, child.area)}
+      {#if isAreaAvailable(library.getLayoutByName(layoutName), child.area)}
         <svelte:self {library} composition={child}/>
       {:else}
         <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),

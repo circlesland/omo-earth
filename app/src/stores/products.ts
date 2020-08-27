@@ -8,9 +8,15 @@ function createStore() {
       category: "food",
       price: "20 ø",
       description: "product description",
-      city: "Munich",
       group: "OrgaName",
       image: "https://source.unsplash.com/featured/?banana",
+      tags:[{
+        type: "cities",
+        id: "1"
+      },{
+        type: "users",
+        id: "2"
+      }]
     },
     {
       id: "12345",
@@ -18,9 +24,12 @@ function createStore() {
       category: "clothing",
       price: "50 ø",
       description: "product description",
-      city: "Berlin",
       group: "OrgaName",
       image: "https://source.unsplash.com/featured/?shoe",
+      tags:[{
+        type: "cities",
+        id: "2"
+      }]
     },
     {
       id: "123456",
@@ -28,9 +37,15 @@ function createStore() {
       category: "living",
       price: "100.000 ø",
       description: "product description",
-      city: "Baku",
       group: "OrgaName",
       image: "https://source.unsplash.com/featured/?appartment",
+      tags:[{
+        type: "cities",
+        id: "3"
+      },{
+        type: "cities",
+        id: "2"
+      }]
     },
   ];
   const { subscribe, set, update } = writable(data);

@@ -19,7 +19,7 @@ export const menu = {
         {
           title: "Profile",
           trigger: [
-            new NavigateTo("My Devices", "/profile/devices"),
+            new NavigateTo("Me", "/safe/profile/1"),
             new NavigateTo("Notifications", "/profile/notifications"),
             new NavigateTo("Settings", "/profile/settings"),
           ],

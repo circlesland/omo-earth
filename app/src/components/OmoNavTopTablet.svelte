@@ -11,7 +11,7 @@
       class="fas fa-arrow-left p-2 hover:bg-secondary"
       on:click={() => window.shellEvents.publish('left')} />
     <div class="py-2 uppercase text-xs font-bold justify-center">
-      {#if data.title}{data.title}{:else}Omo Earth{/if}
+      {#if data.title}{data.title}{:else}Omo Earth{/if} (Tablet)
       <!-- <a href="/">
         <img alt="" class="h-6" src="/logos/omo.svg" alt="logo" />
       </a> 

@@ -1,7 +1,5 @@
-import { LayoutHeaderMain } from "../layouts/LayoutHeaderMain";
-
 export const Home = {
-  layout: LayoutHeaderMain,
+  layout: "LayoutHeaderMain",
   children: [
     {
       area: "header",

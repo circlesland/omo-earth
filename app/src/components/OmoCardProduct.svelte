@@ -1,5 +1,6 @@
 <script>
   import { NavigateTo } from "../trigger/navigateTo";
+  import {allStores} from "../stores/allStores";
 
   export let data = {};
 
@@ -46,7 +47,9 @@
           212.801c-31.996 0-57.144-24.645-57.144-56 0-31.357 25.147-56
           57.144-56s57.144 24.643 57.144 56c0 31.355-25.148 56-57.144 56z" />
       </svg>
-      <p class="px-2 text-sm">{data.city}</p>
+      {#each data.tags as tag}
+        <p class="px-2 text-sm">{(allStores[tag.type].byId(tag.id)).name}</p>
+      {/each}
     </div>
   </div>
   <div class="font-title flex justify-between w-full">

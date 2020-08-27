@@ -5,25 +5,27 @@ function createStore() {
     {
       id: "1",
       createdAt: "2020-01-01T23:23:23",
+      subject: "Miete",
       from: {
-        type: "user",
+        type: "users",
         id: "1"
       },
       to: {
-        type: "user",
+        type: "users",
         id: "2"
       },
-      amount: 16.5
+      amount: 600.5
     },
     {
       id: "2",
       createdAt: "2020-01-01T23:50:01",
+      subject: "Zu viel bezahlt",
       from: {
-        type: "user",
+        type: "users",
         id: "2"
       },
       to: {
-        type: "user",
+        type: "users",
         id: "1"
       },
       amount: 0.5
