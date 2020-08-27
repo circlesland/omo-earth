@@ -36,6 +36,7 @@
   });
   page("/product/:id", (ctx) => {
     viewDocument = Product(productDetail(ctx.params.id));
+    console.log(viewDocument);
   });
   page("/blog", () => {
     viewDocument = Blog;

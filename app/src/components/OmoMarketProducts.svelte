@@ -4,12 +4,33 @@
   const products = [
     {
       id: "1234",
-      name: "product title",
-      price: "50 ø",
+      name: "Banana",
+      category: "food",
+      price: "20 ø",
       description: "product description",
       city: "Munich",
       group: "OrgaName",
-      image: "https://source.unsplash.com/featured/?product",
+      image: "https://source.unsplash.com/featured/?banana",
+    },
+    {
+      id: "12345",
+      name: "Shoe",
+      category: "clothing",
+      price: "50 ø",
+      description: "product description",
+      city: "Berlin",
+      group: "OrgaName",
+      image: "https://source.unsplash.com/featured/?shoe",
+    },
+    {
+      id: "123456",
+      name: "Appartment",
+      category: "living",
+      price: "100.000 ø",
+      description: "product description",
+      city: "Baku",
+      group: "OrgaName",
+      image: "https://source.unsplash.com/featured/?appartment",
     },
   ];
 </script>

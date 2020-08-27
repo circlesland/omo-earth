@@ -8,7 +8,7 @@
   <span
     class="font-title w-full text-center text-sm font-bold inline-block p-2
     uppercase text-white bg-secondary">
-    500 / 1596
+    {data.category}
   </span>
   <div class="relative">
     <div class="overflow-hidden h-3 text-xs flex bg-primary">
@@ -54,7 +54,7 @@
       href="#"
       class="w-full text-center text-white bg-secondary font-bold text-lg px-4
       py-2 uppercase hover:bg-tertiary">
-      pre-order now
+      Buy Now
     </a>
   </div>
 </div>
