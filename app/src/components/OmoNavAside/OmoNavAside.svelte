@@ -1,5 +1,6 @@
 <script>
   import IconsFontAwesome from "../IconsFontAwesome.svelte";
+  import {DummyTrigger} from "../../trigger/dummyTrigger";
 
   export let data;
 
@@ -37,6 +38,8 @@
 
 <IconsFontAwesome/>
 <div class="flex h-full w-full max-w-xs p-4 bg-primary">
+
+  <a href="#" on:click={() => window.shellEvents.publish(new DummyTrigger("Dummy", "Dummy in OmoNavAside"))}>Dummy action</a>
 
   <ul class="flex flex-col w-full">
     {#each items as item}

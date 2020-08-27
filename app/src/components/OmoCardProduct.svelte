@@ -1,5 +1,5 @@
 <script>
-  import { NavigateTo } from "../trigger/trigger";
+  import { NavigateTo } from "../trigger/navigateTo";
 
   export let data = {};
 </script>

@@ -10,11 +10,12 @@
   import { Market } from "./pages/Market";
   import { Safe } from "./pages/Safe";
   import { Product } from "./pages/Product";
-  import { Actions } from "./trigger/trigger";
   import { transactions } from "./organisms/transactions";
   import { token } from "./organisms/token";
   import { productDetail } from "./organisms/productDetail";
   import Lost404 from "./pages/Lost404.svelte";
+
+  import { actionRepository } from "./actions/actionRepository";
 
   // set default component
   let viewDocument = Home;
@@ -47,8 +48,12 @@
   });
 
   window.shellEvents.observable.subscribe((event) => {
-    if (event.triggers && event.triggers === Actions.navigate) {
-      page(event.to);
+    if (event.triggers) {
+      // This event should trigger some action. Find it in the action repo and execute it.
+      const foundAction = actionRepository[event.triggers];
+      if (foundAction) {
+        foundAction(event);
+      }
     }
   });
 

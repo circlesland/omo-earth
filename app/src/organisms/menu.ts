@@ -1,5 +1,5 @@
 import type { Menu } from "../components/OmoNavAside/OmoNavAsideInterfaces";
-import { Actions, NavigateTo } from "../trigger/trigger";
+import { NavigateTo } from "../trigger/navigateTo";
 
 export const menu = {
   area: "nav",
