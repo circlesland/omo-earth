@@ -2,6 +2,7 @@
   import { NavigateTo } from "../trigger/navigateTo";
 
   export let data = {};
+
 </script>
 
 <div class="max-w-sm bg-white shadow-lg rounded-lg overflow-hidden my-4">
