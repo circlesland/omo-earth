@@ -11,6 +11,7 @@
   import { Safe } from "./pages/Safe";
   import { Product } from "./pages/Product";
   import { transactions } from "./organisms/transactions";
+  import { products } from "./organisms/products";
   import { token } from "./organisms/token";
   import { productDetail } from "./organisms/productDetail";
   import Lost404 from "./pages/Lost404.svelte";
@@ -42,7 +43,7 @@
     viewDocument = Blog;
   });
   page("/market", () => {
-    viewDocument = Market;
+    viewDocument = Market(products);
   });
   page("*", () => {
     viewDocument = Lost404;

@@ -1,21 +1,6 @@
-export const Market = {
-  layout: {
-    areas: "'header' 'main' 'footer'",
-    columns: "1fr",
-    rows: "4rem 1fr 4rem",
-  },
-  children: [
-    {
-      area: "header",
-      component: "OmoShopHeader",
-    },
-    {
-      area: "main",
-      component: "OmoMarketProducts",
-    },
-    {
-      area: "footer",
-      component: "OmoNavBottom",
-    },
-  ],
-};
+import { generatePageSingle } from "../templates/TemplatePageDetail";
+import { menu } from "../organisms/menu";
+import { quickActionsSafe } from "../organisms/quickActionsSafe";
+
+export const Market = (content: any) =>
+  generatePageSingle("Omo Market", menu, content, quickActionsSafe);
