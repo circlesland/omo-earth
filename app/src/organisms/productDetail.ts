@@ -7,7 +7,7 @@ export const productDetail = (id) => {
     children: [
       {
         area: "main",
-        component: "OmoPlaceholder",
+        component: "OmoProductDetail",
         data: { title: "title", id },
       },
     ],
