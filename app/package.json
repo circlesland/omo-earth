@@ -1,11 +1,12 @@
 {
-  "name": "svelte-ts-tailwind-app",
-  "version": "1.0.0",
+  "name": "omo-earth",
+  "version": "0.8.0",
   "scripts": {
     "build": "rollup -c",
-    "dev": "npx tsc && rollup -c -w",
+    "dev": "rollup -c -w & npm run tsc",
     "start": "sirv public --single",
-    "validate": "svelte-check"
+    "validate": "svelte-check",
+    "tsc": "npx tsc -w"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^15.0.0",
@@ -20,7 +21,7 @@
     "rollup-plugin-terser": "^7.0.1",
     "svelte": "^3.24.1",
     "svelte-check": "^1.0.32",
-    "svelte-preprocess": "^4.2.0",
+    "svelte-preprocess": "^4.2.1",
     "tailwindcss": "1.6.0",
     "tslib": "^2.0.0",
     "typescript": "^3.9.3"
