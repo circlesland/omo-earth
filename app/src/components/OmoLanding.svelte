@@ -16,7 +16,7 @@
       <div class="flex justify-between items-center">
         <img src="/images/logo.svg" class="h-10 w-10 pb-1" alt="logo" />
         <a
-          href="/"
+          href="/safe"
           class="font-title inline-block p-2 text-white text-2xl uppercase
           font-bold">
           Omo Earth

@@ -32,33 +32,28 @@
   });
 
   function isAreaAvailable(parentLayout, childArea) {
+    console.log("isAreaAvailable(parentLayout, childArea)", parentLayout, childArea);
     const availableAreas = getAreasFromString(parentLayout.areas);
     const found = availableAreas.find((o) => o === childArea);
     return !!found;
   }
 
-  export let composition;
+  export let composition:Component;
+  let componentDefintion:ComponentDefinition;
+
+
   export let library;
 
   let cssClass = null;
 
-  let layoutName = "";
-
   $: {
-    if (composition.layout) {
-      if (typeof composition.layout === "string") {
-        console.log(composition);
-        layoutName = composition.layout;
-      } else {
-        console.log(
-          "composition.layout[deviceClass]",
-          composition,
-          deviceClass,
-          composition.layout[deviceClass]
-        );
-        layoutName = composition.layout[deviceClass];
-      }
-      const layout = library.getLayoutByName(layoutName);
+    componentDefintion = composition[deviceClass];
+    if (!componentDefintion) {
+      componentDefintion = composition["mobile"];
+    }
+
+    if (componentDefintion.layout) {
+      const layout = library.getLayoutByName(componentDefintion.layout);
       if (layout && layout.class) {
         cssClass = layout.class;
       }
@@ -77,51 +72,54 @@
   }
 </style>
 
-{#if composition && (!composition.children || composition.children.length === 0)}
+{#if componentDefintion && (!componentDefintion.children || componentDefintion.children.length === 0)}
   <!-- This branch handles leaf-components -->
   <section
-    style="grid-area: {composition.area}; display: grid; grid-template-columns:
+    style="grid-area: {componentDefintion.area}; display: grid; grid-template-columns:
     'minmax(1fr)'; grid-template-rows: 'minmax(1fr)'; overflow: hidden;">
-    {#if composition.cssClasses}
-      <div class={composition.cssClasses}>
-        {#if typeof composition.component === 'string'}
-          <svelte:component
-            this={library.getComponentByName(composition.component)}
-            data={composition.data} />
-        {:else}
-          <svelte:component
-            this={library.getComponentByName(composition.component[deviceClass])}
-            data={composition.data} />
-        {/if}
+    {#if componentDefintion.cssClasses}
+      <div class={componentDefintion.cssClasses}>
+        <svelte:component
+          this={library.getComponentByName(componentDefintion.component)}
+          data={componentDefintion.data} />
       </div>
-    {:else if typeof composition.component === 'string'}
-      <svelte:component
-        this={library.getComponentByName(composition.component)}
-        data={composition.data} />
     {:else}
       <svelte:component
-        this={library.getComponentByName(composition.component[deviceClass])}
-        data={composition.data} />
+              this={library.getComponentByName(componentDefintion.component)}
+              data={componentDefintion.data} />
     {/if}
   </section>
-{:else if composition}
+{:else if componentDefintion}
   <!-- This branch handles container-components -->
   <section
     class="compositor"
-    style="grid-area: {composition.area}; --areas: {library.getLayoutByName(layoutName).areas};
-    --columns: {library.getLayoutByName(layoutName).columns}; --rows: {library.getLayoutByName(layoutName).rows};
+    style="grid-area: {componentDefintion.area}; --areas: {library.getLayoutByName(componentDefintion.layout).areas};
+    --columns: {library.getLayoutByName(componentDefintion.layout).columns}; --rows: {library.getLayoutByName(componentDefintion.layout).rows};
     ">
-    {#each composition.children as child}
-      {#if isAreaAvailable(library.getLayoutByName(layoutName), child.area)}
-        <svelte:self {library} composition={child} />
-      {:else}
-        <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
-        we simply shoot it to the moon.. -->
-        <div
-          style="position:absolute; left:-2000em; top:-2000em; visibility:
-          hidden">
+    {#each componentDefintion.children as child}
+      {#if !child[deviceClass]}
+        <!-- WHEN THE DEVICE CLASS DOESN'T EXIST ON THE CHILD, CHOOSE "mobile" -->
+        {#if isAreaAvailable(library.getLayoutByName(componentDefintion.layout), child["mobile"].area)}
           <svelte:self {library} composition={child} />
-        </div>
+        {:else}
+        <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
+          we simply shoot it to the moon.. -->
+          <div style="position:absolute; left:-2000em; top:-2000em; visibility: hidden">
+            <svelte:self {library} composition={child} />
+          </div>
+        {/if}
+      {:else}
+        {#if isAreaAvailable(library.getLayoutByName(componentDefintion.layout), child[deviceClass].area)}
+          <svelte:self {library} composition={child} />
+        {:else}
+          <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
+          we simply shoot it to the moon.. -->
+          <div
+            style="position:absolute; left:-2000em; top:-2000em; visibility:
+            hidden">
+            <svelte:self {library} composition={child} />
+          </div>
+        {/if}
       {/if}
     {/each}
   </section>

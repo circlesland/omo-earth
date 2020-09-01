@@ -1,5 +1,6 @@
 import { LayoutHeaderMainFooter } from "../layouts/LayoutHeaderMainFooter";
 import type { Trigger } from "../trigger/trigger";
+import type { Component } from "../interfaces/component";
 
 export function generatePageSingle(
   title: string,
@@ -7,36 +8,54 @@ export function generatePageSingle(
   content: any,
   quickActions: Trigger[]
 ) {
-  return {
-    layout: "LayoutHeaderMainFooter",
-    children: [
-      {
-        area: "header",
-        component: {
-          mobile: "OmoNavTopMobile",
-          tablet: "OmoNavTopTablet",
-          desktop: "OmoNavTopDesktop",
+  let component: Component = {
+    mobile: {
+      area: "main",
+      layout: "LayoutHeaderMainFooter",
+      children: [
+        {
+          mobile: {
+            area: "header",
+            component:
+              "OmoNavTopMobile" /* {
+            mobile: "OmoNavTopMobile",
+            tablet: "OmoNavTopTablet",
+            desktop: "OmoNavTopDesktop",
+          },*/,
+            data: {
+              title,
+            },
+          },
         },
-        data: {
-          title,
+        {
+          mobile: {
+            area: "main",
+            layout:
+              "LayoutMain" /*{
+            mobile: "LayoutMain",
+            tablet: "LayoutMain",
+            desktop: "LayoutNavMain",
+          },*/,
+            children: [menu, content],
+          },
         },
-      },
-      {
-        area: "main",
-        layout: {
-          mobile: "LayoutMain",
-          tablet: "LayoutMain",
-          desktop: "LayoutNavMain",
+        {
+          mobile: {
+            area: "dapp",
+            component: "OmoNavDapp",
+          },
         },
-        children: [menu, content],
-      },
-      {
-        area: "footer",
-        component: "OmoNavBottom",
-        data: {
-          triggers: quickActions,
+        {
+          mobile: {
+            area: "footer",
+            component: "OmoNavBottom",
+            data: {
+              triggers: quickActions,
+            },
+          },
         },
-      },
-    ],
+      ],
+    },
   };
+  return component;
 }

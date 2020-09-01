@@ -3,16 +3,19 @@ import type {Component} from "../interfaces/component";
 
 export const profile = (id:string) =>
 {
-  return <Component>{
-    area: "main",
-    layout: "LayoutMain",children: [
-      {
-        area: "main",
-        component: "OmoProfile",
-        data: {
-          id
-        },
-      },
-    ],
+  const component : Component = {
+    mobile: {
+      area: "main",
+      layout: "LayoutMain",
+      children: [{
+        mobile: {
+          area: "main",
+          component: "OmoProfile",
+          data: {
+            id
+          },
+        }
+      }],
+    }
   }
 };
