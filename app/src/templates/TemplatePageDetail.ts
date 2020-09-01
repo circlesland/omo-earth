@@ -16,12 +16,7 @@ export function generatePageSingle(
         {
           mobile: {
             area: "header",
-            component:
-              "OmoNavTopMobile" /* {
-            mobile: "OmoNavTopMobile",
-            tablet: "OmoNavTopTablet",
-            desktop: "OmoNavTopDesktop",
-          },*/,
+            component: "OmoNavTop",
             data: {
               title,
             },
@@ -30,19 +25,18 @@ export function generatePageSingle(
         {
           mobile: {
             area: "main",
-            layout:
-              "LayoutMain" /*{
-            mobile: "LayoutMain",
-            tablet: "LayoutMain",
-            desktop: "LayoutNavMain",
-          },*/,
+            layout: "LayoutMain",
             children: [menu, content],
           },
-        },
-        {
-          mobile: {
-            area: "dapp",
-            component: "OmoNavDapp",
+          tablet: {
+            area: "main",
+            layout: "LayoutNavMain",
+            children: [menu, content],
+          },
+          desktop: {
+            area: "main",
+            layout: "LayoutNavMain",
+            children: [menu, content],
           },
         },
         {

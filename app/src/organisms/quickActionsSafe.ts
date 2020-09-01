@@ -1,7 +1,7 @@
-import { DummyTrigger } from "../trigger/dummyTrigger";
+import { NavigateTo } from "../trigger/navigateTo";
 
 export const quickActionsSafe = [
-  new DummyTrigger("Safe", "", "fa-user-shield"),
-  new DummyTrigger("Market", "", "fa-store"),
-  new DummyTrigger("People", "", "fa-users"),
+  new NavigateTo("Safe", "/safe", "fa-user-shield"),
+  new NavigateTo("Market", "/market", "fa-store"),
+  new NavigateTo("People", "/", "fa-users"),
 ];

@@ -6,9 +6,7 @@ import OmoNavBottom from "./components/OmoNavBottom.svelte";
 import OmoTransactions from "./components/OmoTransactions.svelte";
 import OmoSapiens from "./components/OmoSapiens.svelte";
 import OmoLanding from "./components/OmoLanding.svelte";
-import OmoNavTopMobile from "./components/OmoNavTopMobile.svelte";
-import OmoNavTopTablet from "./components/OmoNavTopTablet.svelte";
-import OmoNavTopDesktop from "./components/OmoNavTopDesktop.svelte";
+import OmoNavTop from "./components/OmoNavTop.svelte";
 import OmoNavDapp from "./components/OmoNavDapp.svelte";
 import OmoPlaceholder from "./components/OmoPlaceholder.svelte";
 import OmoProductDetail from "./components/OmoProductDetail.svelte";
@@ -55,12 +53,8 @@ export const library = {
         return OmoLanding;
       case "OmoBlog":
         return OmoBlog;
-      case "OmoNavTopMobile":
-        return OmoNavTopMobile;
-      case "OmoNavTopTablet":
-        return OmoNavTopTablet;
-      case "OmoNavTopDesktop":
-        return OmoNavTopDesktop;
+      case "OmoNavTop":
+        return OmoNavTop;
       case "OmoSapiens":
         return OmoSapiens;
       case "OmoNavDapp":
