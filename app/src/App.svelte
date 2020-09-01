@@ -12,7 +12,6 @@
   import { products } from "./organisms/products";
   import { safeToken } from "./organisms/safeToken";
   import { productDetail } from "./organisms/productDetail";
-  import Lost404 from "./pages/Lost404.svelte";
   import { actionRepository } from "./actions/actionRepository";
   import {profile} from "./organisms/profile";
 
@@ -44,9 +43,6 @@
   });
   page("/market", () => {
     viewDocument = Market(products);
-  });
-  page("*", () => {
-    viewDocument = Lost404;
   });
 
   window.shellEvents.observable.subscribe((event) => {

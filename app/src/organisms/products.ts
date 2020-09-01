@@ -9,7 +9,6 @@ export const products : Component = {
       area: "main",
       cssClasses: "",
       component: "OmoMarketProducts",
-      data: "I am the omo firends detail",
     }
   }]
   }

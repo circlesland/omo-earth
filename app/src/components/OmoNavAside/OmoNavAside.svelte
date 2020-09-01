@@ -1,6 +1,5 @@
 <script>
   import IconsFontAwesome from "../IconsFontAwesome.svelte";
-  import { DummyTrigger } from "../../trigger/dummyTrigger";
 
   export let data;
 
@@ -53,7 +52,8 @@
         </li>
       {:else if item._type === 'item'}
         <li class="my-px">
-          <a
+          <!-- svelte-ignore a11y-invalid-attribute -->
+          <a href="" 
             on:click={() => window.trigger(item._trigger)}
             class="flex flex-row font-title text-sm uppercase font-bold
             items-center h-10 px-4 text-gray-500 hover:bg-gray-200

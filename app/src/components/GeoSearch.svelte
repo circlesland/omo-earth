@@ -22,5 +22,5 @@
 <!-- This is an example component -->
 <div>
   <input type="text" bind:value={placeName} />
-  <button on:click={geoSearch(placeName)}>Search</button>
+  <button on:click={() => {geoSearch(placeName)}}>Search</button>
 </div>

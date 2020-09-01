@@ -4,7 +4,7 @@ function createStore() {
   const data = [
     {
       id: "1",
-      createdAt: "1598941028",
+      createdAt: 1598941028,
       subject: "Rent",
       from: {
         type: "users",
@@ -20,7 +20,7 @@ function createStore() {
     },
     {
       id: "2",
-      createdAt: "1598953028",
+      createdAt: 1598953028,
       subject: "Universal Basic Income",
       from: {
         type: "users",
@@ -36,7 +36,7 @@ function createStore() {
     },
     {
       id: "3",
-      createdAt: "1598933028",
+      createdAt: 1598933028,
       subject: "Coffee",
       from: {
         type: "users",
@@ -52,7 +52,7 @@ function createStore() {
     },
     {
       id: "4",
-      createdAt: "1598253028",
+      createdAt: 1598253028,
       subject: "Omo Scooter",
       from: {
         type: "users",
@@ -68,7 +68,7 @@ function createStore() {
     },
     {
       id: "2",
-      createdAt: "1598153028",
+      createdAt: 1598153028,
       subject: "Universal Basic Income",
       from: {
         type: "users",
@@ -84,7 +84,7 @@ function createStore() {
     },
     {
       id: "5",
-      createdAt: "1598253028",
+      createdAt: 1598253028,
       subject: "Thank you for the beer",
       from: {
         type: "users",
@@ -99,7 +99,7 @@ function createStore() {
     },
     {
       id: "6",
-      createdAt: "1592253028",
+      createdAt: 1592253028,
       subject: "Paycheck",
       from: {
         type: "users",
@@ -115,7 +115,7 @@ function createStore() {
     },
     {
       id: "6",
-      createdAt: "1592253028",
+      createdAt: 1592253028,
       subject: "Thank you for lending",
       from: {
         type: "users",

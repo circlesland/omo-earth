@@ -14,7 +14,8 @@
 
 <ul class="flex bg-primary text-white shadow h-full w-full">
   <li class="mt-auto h-full flex items-center w-16 border-r border-blue-900">
-    <img src="/images/logo.svg" class="p-3" />
+    <!-- svelte-ignore a11y-img-redundant-alt -->
+    <img src="/images/logo.svg" alt="image" class="p-3" />
   </li>
   <li class="flex flex-1 justify-center md:justify-start">
     {#each data.triggers as trigger}

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+import type { Component, ComponentDefinition } from "../interfaces/component";
 
   function getAreasFromString(areas) {
     const strippedWhitespace =
@@ -40,7 +41,6 @@
 
   export let composition:Component;
   let componentDefintion:ComponentDefinition;
-
 
   export let library;
 

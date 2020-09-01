@@ -13,7 +13,7 @@
 
   // functions
   const handleClose = () => (isOpen = false);
-  const handleEsc = (e) => e.key === "Escape" && handleClose();
+  const handleEsc = (esc) => esc.key === "Escape" && handleClose();
 
   // lifecycle
   afterUpdate(() => {
