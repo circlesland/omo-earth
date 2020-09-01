@@ -11,9 +11,9 @@ export const menu: Component = {
         {
           title: "Account",
           trigger: [
-            new NavigateTo("My Account", "/safe/transactions"),
+            new NavigateTo("My Account", "/safe/dashboard"),
             new NavigateTo("Token", "/safe/token"),
-            new NavigateTo("Friends", "/safe/trust/received"),
+            new NavigateTo("Friends", "/safe/contacts"),
           ],
         },
         {

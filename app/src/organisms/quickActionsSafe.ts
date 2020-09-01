@@ -1,6 +1,7 @@
 import { DummyTrigger } from "../trigger/dummyTrigger";
 
 export const quickActionsSafe = [
-  new DummyTrigger("Send", "", "fa-home"),
-  new DummyTrigger("Trust", "", "fa-home"),
+  new DummyTrigger("Safe", "", "fa-user-shield"),
+  new DummyTrigger("Market", "", "fa-store"),
+  new DummyTrigger("People", "", "fa-users"),
 ];

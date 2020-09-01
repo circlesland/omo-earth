@@ -7,7 +7,9 @@
 <section class="bg-white w-full p-8">
   <div class="font-title text-tertiary text-xl">Transaction History</div>
   {#each $transactions as t}
-    <div class="flex h-14 w-full text-secondary border-b border-gray-100">
+    <div
+      class="flex h-14 w-full text-secondary border-b border-gray-100
+      hover:bg-gray-100">
       <div
         class="w-12 h-12 pt-2 flex flex-col justify-center text-center"
         class:text-green-400={t.direction === 'in'}>
@@ -35,7 +37,7 @@
         </p>
       </div>
       <div
-        class="font-title h-12 py-2 px-3 text-2xl font-bold"
+        class="font-title h-12 py-2 px-3 text-3xl font-bold"
         class:text-green-400={t.direction === 'in'}
         class:text-secondary={t.direction === 'out'}>
         {#if t.direction === 'out'}-{t.amount}{:else}{t.amount}{/if}

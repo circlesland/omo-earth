@@ -31,10 +31,6 @@ export function generatePageSingle(
         children: [menu, content],
       },
       {
-        area: "dapp",
-        component: "OmoNavDapp",
-      },
-      {
         area: "footer",
         component: "OmoNavBottom",
         data: {
