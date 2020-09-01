@@ -14,34 +14,33 @@ import OmoPlaceholder from "./components/OmoPlaceholder.svelte";
 import OmoProductDetail from "./components/OmoProductDetail.svelte";
 import OmoBalance from "./components/OmoBalance.svelte";
 import OmoProfile from "./components/OmoProfile.svelte";
-import {LayoutHeaderMain} from "./layouts/LayoutHeaderMain";
-import {LayoutHeaderMainFooter} from "./layouts/LayoutHeaderMainFooter";
-import {LayoutMain} from "./layouts/LayoutMain";
-import {LayoutMainAside} from "./layouts/LayoutMainAside";
-import {LayoutNavMain} from "./layouts/LayoutNavMain";
+import SafeDashboard from "./components/SafeDashboard.svelte";
+import SafeToken from "./components/SafeToken.svelte";
+
+import { LayoutHeaderMain } from "./layouts/LayoutHeaderMain";
+import { LayoutHeaderMainFooter } from "./layouts/LayoutHeaderMainFooter";
+import { LayoutMain } from "./layouts/LayoutMain";
+import { LayoutTopMainAside } from "./layouts/LayoutTopMainAside";
+import { LayoutNavMain } from "./layouts/LayoutNavMain";
 
 export const library = {
-  getLayoutByName: (name) =>
-  {
-    switch (name)
-    {
+  getLayoutByName: (name) => {
+    switch (name) {
       case "LayoutHeaderMain":
         return LayoutHeaderMain;
       case "LayoutHeaderMainFooter":
         return LayoutHeaderMainFooter;
       case "LayoutMain":
         return LayoutMain;
-      case "LayoutMainAside":
-        return LayoutMainAside;
+      case "LayoutTopMainAside":
+        return LayoutTopMainAside;
       case "LayoutNavMain":
         return LayoutNavMain;
     }
     throw new Error("Couldn't find layout with the name " + name);
   },
-  getComponentByName: (name) =>
-  {
-    switch (name)
-    {
+  getComponentByName: (name) => {
+    switch (name) {
       case "OmoNavBottom":
         return OmoNavBottom;
       case "OmoTransactions":
@@ -74,6 +73,10 @@ export const library = {
         return OmoBalance;
       case "OmoProfile":
         return OmoProfile;
+      case "SafeDashboard":
+        return SafeDashboard;
+      case "SafeToken":
+        return SafeToken;
     }
   },
 };

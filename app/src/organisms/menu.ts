@@ -1,8 +1,8 @@
 import type { Menu } from "../components/OmoNavAside/OmoNavAsideInterfaces";
 import { NavigateTo } from "../trigger/navigateTo";
-import type {Component} from "../interfaces/component";
+import type { Component } from "../interfaces/component";
 
-export const menu : Component = {
+export const menu: Component = {
   area: "nav",
   component: "OmoNavAside",
   data: {
@@ -11,10 +11,9 @@ export const menu : Component = {
         {
           title: "Account",
           trigger: [
-            new NavigateTo("Transactions", "/safe/transactions"),
+            new NavigateTo("My Account", "/safe/transactions"),
             new NavigateTo("Token", "/safe/token"),
-            new NavigateTo("Received trust", "/safe/trust/received"),
-            new NavigateTo("Expressed trust", "/safe/trust/expressed"),
+            new NavigateTo("Friends", "/safe/trust/received"),
           ],
         },
         {

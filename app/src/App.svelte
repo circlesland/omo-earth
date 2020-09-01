@@ -8,9 +8,9 @@
   import { Market } from "./pages/Market";
   import { Safe } from "./pages/Safe";
   import { Product } from "./pages/Product";
-  import { transactions } from "./organisms/transactions";
+  import { safeDashboard } from "./organisms/safeDashboard";
   import { products } from "./organisms/products";
-  import { token } from "./organisms/token";
+  import { safeToken } from "./organisms/safeToken";
   import { productDetail } from "./organisms/productDetail";
   import Lost404 from "./pages/Lost404.svelte";
   import { actionRepository } from "./actions/actionRepository";
@@ -25,20 +25,19 @@
     viewDocument = Home;
   });
   page("/safe", () => {
-    viewDocument = Safe(transactions);
+    viewDocument = Safe(safeDashboard);
   });
-  page("/safe/transactions", () => {
-    viewDocument = Safe(transactions);
+  page("/safe/dashboard", () => {
+    viewDocument = Safe(safeDashboard);
   });
   page("/safe/token", () => {
-    viewDocument = Safe(token);
+    viewDocument = Safe(safeToken);
   });
   page("/safe/profile/:id", (ctx) => {
     viewDocument = Safe(profile(ctx.params.id));
   });
   page("/product/:id", (ctx) => {
     viewDocument = Product(productDetail(ctx.params.id));
-    console.log(viewDocument);
   });
   page("/blog", () => {
     viewDocument = Blog;
