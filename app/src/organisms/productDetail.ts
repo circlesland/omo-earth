@@ -1,14 +1,15 @@
 import {LayoutMain} from "../layouts/LayoutMain";
 import type {Component} from "../interfaces/component";
+import {DeviceClass} from "../interfaces/component";
 
 export const productDetail = (id) =>
 {
   const component: Component = {
-    mobile: {
+    [DeviceClass.mobile]: {
       area: "main",
       layout: "LayoutMain",
       children: [{
-        mobile: {
+        [DeviceClass.mobile]: {
           area: "main",
           component: "OmoProductDetail",
           data: {title: "title", id},

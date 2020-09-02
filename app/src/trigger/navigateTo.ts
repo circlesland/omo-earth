@@ -6,7 +6,7 @@ export class NavigateTo implements Trigger {
   to: string;
   icon?: string;
 
-  readonly triggers: Actions = Actions.navigate;
+  readonly triggers: Actions = Actions.navigateTo;
 
   constructor(title: string, to: string, icon?: string) {
     this.title = title;

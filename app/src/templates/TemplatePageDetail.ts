@@ -23,6 +23,7 @@ export function generatePageSingle(
           },
         },
         {
+          id: "content", /* WARNING: This will only work well when this page document is displayed as the only document (full-window) */
           mobile: {
             area: "main",
             layout: "LayoutMain",

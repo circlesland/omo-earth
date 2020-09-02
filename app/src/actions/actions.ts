@@ -1,6 +1,6 @@
 export enum Actions
 {
-  navigate = "navigate",
+  navigateTo = "navigateTo",
   dummyAction = "dummyAction",
   filterBy = "filterBy"
 }

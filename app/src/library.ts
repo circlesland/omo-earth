@@ -73,4 +73,20 @@ export const library = {
         return SafeToken;
     }
   },
+
+  runtime: {
+    _instances: {},
+    register(id:string, instance:any) {
+      this._instances[id] = instance;
+      console.log("registered new instance with id: " + id, instance);
+    },
+    find(id:string) : any {
+      return this._instances[id];
+    },
+    remove(id:string) {
+      const oldInstance = this._instances[id];
+      delete this._instances[id];
+      console.log("removed instance with id: " + id, oldInstance);
+    }
+  }
 };

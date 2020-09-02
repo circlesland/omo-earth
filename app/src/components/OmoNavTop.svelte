@@ -11,7 +11,7 @@
       class="fas fa-bars p-2 hover:bg-white hover:text-secondary"
       on:click={() => window.trigger('left')} /> -->
     <div class="py-2 uppercase text-xs font-bold justify-center">
-      {#if data.title}{data.title}{:else}Omo Earth{/if}
+      {#if data && data.title}{data.title}{:else}Omo Earth{/if}
 
       <!-- <a href="/">
         <img alt="" class="h-6" src="/logos/omo.svg" alt="logo" />

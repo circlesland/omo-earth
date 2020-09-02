@@ -1,21 +1,20 @@
 import type {Component} from "../interfaces/component";
+import {DeviceClass} from "../interfaces/component";
 
-export const Home : Component = {
-  mobile: {
+export const Home: Component = {
+  [DeviceClass.mobile]: {
     area: "main",
     layout: "LayoutHeaderMain",
     children: [{
-      mobile:
-        {
-          area: "header",
-          component: "OmoNavTop",
-        }
+      [DeviceClass.mobile]: {
+        area: "header",
+        component: "OmoNavTop",
+      }
     }, {
-      mobile:
-        {
-          area: "main",
-          component: "OmoLanding",
-        }
+      [DeviceClass.mobile]: {
+        area: "main",
+        component: "OmoLanding",
+      }
     }]
   }
 };

@@ -7,8 +7,8 @@ import {allStores} from "../stores/allStores";
 import { get } from 'svelte/store';
 
 export const actionRepository = {
-  [Actions.navigate]:(trigger:NavigateTo) => page(trigger.to),
-  [Actions.dummyAction]:(trigger:DummyTrigger) => alert("dummyAction(text:" + trigger.text + ") was triggered by DummyTrigger."),
+  [Actions.dummyAction]:(trigger:DummyTrigger) => console.warn("dummyAction(text:" + trigger.text + ") was triggered by DummyTrigger."),
+  [Actions.navigateTo]:(trigger:NavigateTo) => page(trigger.to),
   [Actions.filterBy]:(trigger:FilterBy) => {
     const store = allStores[trigger.storeName];
     if (!store)
