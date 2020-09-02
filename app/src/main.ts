@@ -21,7 +21,9 @@ window.trigger = (trigger:any) => {
       throw new Error("There is no topic for component id '" + trigger.id + "'. Request is:" + JSON.stringify(trigger));
     }
     topic.publish(trigger);
+    console.log("Publishing component event: ",trigger);
   } else {
+    console.log("Publishing shell event: ",trigger);
     window.shellEvents.publish(trigger);
   }
 }

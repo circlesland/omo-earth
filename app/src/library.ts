@@ -14,6 +14,8 @@ import OmoBalance from "./components/OmoBalance.svelte";
 import OmoProfile from "./components/OmoProfile.svelte";
 import SafeDashboard from "./components/SafeDashboard.svelte";
 import SafeToken from "./components/SafeToken.svelte";
+import Compositor from "./components/Compositor.svelte";
+import PageCompositor from "./components/PageCompositor.svelte";
 
 import { LayoutHeaderMain } from "./layouts/LayoutHeaderMain";
 import { LayoutHeaderMainFooter } from "./layouts/LayoutHeaderMainFooter";
@@ -77,6 +79,10 @@ export const library = {
         return SafeDashboard;
       case "SafeToken":
         return SafeToken;
+      case "Compositor":
+        return Compositor;
+      case "PageCompositor":
+        return PageCompositor;
     }
   },
 
@@ -87,7 +93,6 @@ export const library = {
       this._instances[id] = instance;
       this._topics[id] = window.eventBroker.createTopic("omo", id);
       console.log("registered new instance with id: " + id, instance);
-
       return this._topics[id].observable;
     },
     find(id:string) : any {
