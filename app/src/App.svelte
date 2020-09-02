@@ -63,7 +63,7 @@
   page.start();
 
   setInterval(() => {
-    window.trigger(new SetLayout("content", "LayoutHeaderMainFooter"));
+    window.trigger(new SetLayout("content", "LayoutMain"));
     setTimeout(() => window.trigger(new ResetLayout("content")), 1000);
   }, 5000);
 </script>
