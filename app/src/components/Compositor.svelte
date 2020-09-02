@@ -81,10 +81,14 @@
     }
 
     // Remove the instance if the underlying view document changes its id
-
     if (composition) {
       if (id && id !== composition.id)
         library.runtime.remove(id);
+
+      id = composition.id;
+      if (id && componentInstance && !library.runtime.find(id)) {
+        library.runtime.register(id, componentInstance);
+      }
     }
   }
 </script>
