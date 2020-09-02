@@ -41,7 +41,8 @@
 
     // Register all component runtime instances
     if (composition && composition.id) {
-      library.runtime.register(composition.id, componentInstance);
+      eventStream = library.runtime.register(composition.id, componentInstance);
+      id = composition.id;
     }
   });
 
@@ -49,6 +50,10 @@
     // Remove all component runtime instances
     if (composition && composition.id) {
       library.runtime.remove(composition.id);
+      eventStream = null;
+      if (eventSubscription) {
+        eventSubscription.unsubscribe();
+      }
     }
   });
 
@@ -67,6 +72,9 @@
 
   let cssClass = null;
 
+  let eventStream;
+  let eventSubscription;
+
   $: {
     componentDefinition = composition[deviceClass];
     if (!componentDefinition) {
@@ -82,13 +90,25 @@
 
     // Remove the instance if the underlying view document changes its id
     if (composition) {
-      if (id && id !== composition.id)
+      if (id && id !== composition.id) {
         library.runtime.remove(id);
+        eventStream = null;
+        if (eventSubscription) {
+          eventSubscription.unsubscribe();
+        }
+      }
 
       id = composition.id;
       if (id && componentInstance && !library.runtime.find(id)) {
-        library.runtime.register(id, componentInstance);
+        eventStream = library.runtime.register(id, componentInstance);
       }
+    }
+
+    if (!eventSubscription && eventStream) {
+      eventSubscription = eventStream.subscribe(trigger => {
+        console.log("Compositor (id: " + id + ") received:", trigger);
+      });
+      console.log("Subscribed to events for compositor '" + id + "':", eventSubscription);
     }
   }
 </script>

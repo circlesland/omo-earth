@@ -61,7 +61,23 @@ export class EventBroker {
   }
 
   removeTopic(namespace: string, name: string) {
-    throw new Error("Not implemented");
+    const ns = this._topics[namespace];
+    if (!ns) {
+      console.warn("EventBroker: The topic '" + name + "' in namespace '" + namespace +"' that should be removed doesn't exist (namespace doesn't exist).");
+      return;
+    }
+    const topic = ns[name];
+    if (!topic){
+      console.warn("EventBroker: The topic '" + name + "' in namespace '" + namespace +"' that should be removed doesn't exist (topic doesn't exist).");
+      return;
+    }
+
+    delete ns[name];
+
+    // When this was the last topic in a namespace, remove the namespace as well
+    if (Object.keys(ns).length == 0) {
+      delete  this._topics[namespace];
+    }
   }
 }
 

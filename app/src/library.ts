@@ -20,6 +20,8 @@ import { LayoutHeaderMainFooter } from "./layouts/LayoutHeaderMainFooter";
 import { LayoutMain } from "./layouts/LayoutMain";
 import { LayoutTopMainAside } from "./layouts/LayoutTopMainAside";
 import { LayoutNavMain } from "./layouts/LayoutNavMain";
+import type {Observable} from "rxjs";
+import type {Trigger} from "./trigger/trigger";
 
 export const library = {
   getLayoutByName: (name) => {
@@ -76,9 +78,13 @@ export const library = {
 
   runtime: {
     _instances: {},
-    register(id:string, instance:any) {
+    _topics:{},
+    register(id:string, instance:any) : Observable<Trigger> {
       this._instances[id] = instance;
+      this._topics[id] = window.eventBroker.createTopic("omo", id);
       console.log("registered new instance with id: " + id, instance);
+
+      return this._topics[id].observable;
     },
     find(id:string) : any {
       return this._instances[id];
@@ -86,6 +92,7 @@ export const library = {
     remove(id:string) {
       const oldInstance = this._instances[id];
       delete this._instances[id];
+      window.eventBroker.removeTopic("omo", id);
       console.log("removed instance with id: " + id, oldInstance);
     }
   }

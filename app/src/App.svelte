@@ -14,6 +14,7 @@
   import { productDetail } from "./organisms/productDetail";
   import { actionRepository } from "./actions/actionRepository";
   import {profile} from "./organisms/profile";
+  import {DummyRequest} from "./trigger/dummyRequest";
 
   // set default component
   let viewDocument = Home;
@@ -57,6 +58,10 @@
 
   // activate router
   page.start();
+
+  setInterval(() => {
+    window.trigger(new DummyRequest("content", null, "Test", "Test", ""));
+  }, 1000);
 </script>
 
 <style>
