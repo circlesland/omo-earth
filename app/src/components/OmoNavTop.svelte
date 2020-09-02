@@ -1,34 +1,14 @@
 <script>
   import IconsFontAwesome from "./IconsFontAwesome.svelte";
-  import {SetLayout} from "../trigger/compositor/setLayout";
-  import {ResetLayout} from "../trigger/compositor/resetLayout";
-  import {library} from "../library";
-  import {DeviceClass} from "../interfaces/component";
+  import {ToggleSideNav} from "../trigger/shell/toggleSideNav";
 
   export let data = {};
-
-  let navState = true;
-  function toggleNav() {
-    const deviceClass = library.runtime.getDeviceClass();
-    if (navState){
-      if (deviceClass === DeviceClass.mobile) {
-        window.trigger(new SetLayout("content", "LayoutNav"));
-      } else {
-        window.trigger(new SetLayout("content", "LayoutMain"));
-      }
-    } else {
-      window.trigger(new ResetLayout("content"));
-    }
-    navState = !navState;
-  }
 </script>
 
 <IconsFontAwesome/>
 
 <header>
   <nav class="flex justify-between w-full bg-primary text-white">
-    <i class="fas fa-arrow-left p-2 hover:bg-secondary"
-       on:click={() => toggleNav()}>&nbsp;</i>
     <nav class="flex justify-center w-full bg-white text-secondary">
       <!-- <i
         class="fas fa-bars p-2 hover:bg-white hover:text-secondary"

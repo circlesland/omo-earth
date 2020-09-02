@@ -4,5 +4,6 @@ export enum Actions
   dummyAction = "dummyAction",
   filterBy = "filterBy",
   setLayout = "setLayout",
-  resetLayout = "resetLayout"
+  resetLayout = "resetLayout",
+  toggleSideNav = "toggleSideNav"
 }
