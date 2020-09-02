@@ -2,13 +2,20 @@
   import IconsFontAwesome from "./IconsFontAwesome.svelte";
   import {SetLayout} from "../trigger/compositor/setLayout";
   import {ResetLayout} from "../trigger/compositor/resetLayout";
+  import {library} from "../library";
+  import {DeviceClass} from "../interfaces/component";
 
   export let data = {};
 
   let navState = true;
   function toggleNav() {
+    const deviceClass = library.runtime.getDeviceClass();
     if (navState){
-      window.trigger(new SetLayout("content", "LayoutMain"));
+      if (deviceClass === DeviceClass.mobile) {
+        window.trigger(new SetLayout("content", "LayoutNav"));
+      } else {
+        window.trigger(new SetLayout("content", "LayoutMain"));
+      }
     } else {
       window.trigger(new ResetLayout("content"));
     }

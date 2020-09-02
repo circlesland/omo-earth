@@ -37,9 +37,7 @@
 
   onMount(() => {
     // Determine the DeviceClass
-    if (window.innerWidth <= 600) deviceClass = DeviceClass.mobile;
-    else if (window.innerWidth <= 1024) deviceClass = DeviceClass.tablet;
-    else deviceClass = DeviceClass.desktop;
+    deviceClass = library.runtime.getDeviceClass();
 
     // Register all component runtime instances
     if (component && component.id) {
@@ -61,11 +59,9 @@
 
   let actions = {
     [Actions.resetLayout]: (trigger: ResetLayout) => {
-      console.log(trigger);
       overrideLayout = undefined;
     },
     [Actions.setLayout]: (trigger: SetLayout) => {
-      console.log(trigger);
       overrideLayout = trigger.layoutName;
     }
   };
@@ -81,7 +77,7 @@
   }
 
   /**
-   * Handles incoming events.
+   * Handles incoming events and calls the corresponding actions.
    */
   function eventHandler(trigger:Trigger|undefined) {
     // TODO: This is the same code as in App.svelte

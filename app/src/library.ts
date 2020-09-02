@@ -20,8 +20,10 @@ import { LayoutHeaderMainFooter } from "./layouts/LayoutHeaderMainFooter";
 import { LayoutMain } from "./layouts/LayoutMain";
 import { LayoutTopMainAside } from "./layouts/LayoutTopMainAside";
 import { LayoutNavMain } from "./layouts/LayoutNavMain";
+import {LayoutNav} from "./layouts/LayoutNav";
 import type {Observable} from "rxjs";
 import type {Trigger} from "./trigger/trigger";
+import {DeviceClass} from "./interfaces/component";
 
 export const library = {
   getLayoutByName: (name) => {
@@ -36,6 +38,8 @@ export const library = {
         return LayoutTopMainAside;
       case "LayoutNavMain":
         return LayoutNavMain;
+      case "LayoutNav":
+        return LayoutNav;
     }
     throw new Error("Couldn't find layout with the name " + name);
   },
@@ -94,6 +98,11 @@ export const library = {
       delete this._instances[id];
       window.eventBroker.removeTopic("omo", id);
       console.log("removed instance with id: " + id, oldInstance);
+    },
+    getDeviceClass() : DeviceClass {
+      if (window.innerWidth <= 600) return DeviceClass.mobile;
+      else if (window.innerWidth <= 1024) return DeviceClass.tablet;
+      else return DeviceClass.desktop;
     }
   }
 };
