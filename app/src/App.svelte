@@ -15,6 +15,8 @@
   import { actionRepository } from "./actions/actionRepository";
   import {profile} from "./organisms/profile";
   import {DummyRequest} from "./trigger/dummyRequest";
+  import {SetLayout} from "./trigger/compositor/setLayout";
+  import {ResetLayout} from "./trigger/compositor/resetLayout";
 
   // set default component
   let viewDocument = Home;
@@ -47,6 +49,7 @@
   });
 
   window.shellEvents.observable.subscribe((event) => {
+    // TODO: This is the same code as in Compositor.svelte
     if (event.triggers) {
       // This event should trigger some action. Find it in the action repo and execute it.
       const foundAction = actionRepository[event.triggers];
@@ -60,8 +63,9 @@
   page.start();
 
   setInterval(() => {
-    window.trigger(new DummyRequest("content", null, "Test", "Test", ""));
-  }, 1000);
+    window.trigger(new SetLayout("content", "LayoutHeaderMainFooter"));
+    setTimeout(() => window.trigger(new ResetLayout("content")), 1000);
+  }, 5000);
 </script>
 
 <style>
@@ -76,5 +80,5 @@
 
 <Tailwind />
 <div class="app">
-  <Compositor {library} composition={viewDocument} />
+  <Compositor {library} component={viewDocument} />
 </div>

@@ -1,7 +1,5 @@
 import App from "./App.svelte";
 import {EventBroker, Topic} from "./eventBroker";
-import type {Request} from "./trigger/request";
-import {DummyRequest} from "./trigger/dummyRequest";
 
 declare global
 {

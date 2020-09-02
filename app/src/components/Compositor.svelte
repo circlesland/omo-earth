@@ -1,37 +1,39 @@
+<svelte:options accessors />
 <script lang="ts">
   import type { ComponentDefinition } from "../interfaces/component";
   import type { Component } from "../interfaces/component";
+  import type {Trigger} from "../trigger/trigger";
   import {DeviceClass} from "../interfaces/component";
   import {onDestroy, onMount} from "svelte";
+  import {Actions} from "../actions/actions";
+  import {SetLayout} from "../trigger/compositor/setLayout";
+  import {ResetLayout} from "../trigger/compositor/resetLayout";
 
-  function getAreasFromString(areas) {
-    const strippedWhitespace =
-      // Replace all single quotes with whitespaces ..
-      areas
-        .split("'")
-        .join(" ")
-        // .. then replaces all double whitespaces with single whitespaces
-        .split("  ")
-        .join(" ");
+   // If the compositor or the contained display component (leaf) should be able to receive events,
+   // they need to have a id.
+   // The id is specified in the "Component" and must be unique.
+  let id;
 
-    const items = {};
+   // The library from which the Compositor looks up component classes by name
+   // and where it registers runtime instances of the created components.
+  export let library;
 
-    // De-duplicate all area names
-    strippedWhitespace
-      .split(" ")
-      .filter((o) => o.trim() !== "")
-      .forEach((o) => (items[o] = true));
+  // The "composition" contains the display document.
+  export let component:Component;
 
-    // Return them as array
-    return Object.keys(items);
-  }
+  // A Component (see "composition") can contain multiple display documents. One for each DeviceClass.
+  // This variable holds the current ComponentDefinition that was chosen by the Compositor.
+  let componentDefinition:ComponentDefinition|undefined;
+  let deviceClass: DeviceClass = DeviceClass.mobile;
 
-  /**
-   * Contains the svelte component instance.
-   */
+  // Contains the svelte component instance.
   let componentInstance;
 
-  let deviceClass: DeviceClass = DeviceClass.mobile;
+  // When the "Component" has a "id" assigned, this variable will contain the corresponding event stream.
+  let eventStream;
+  let eventSubscription;
+
+  let overrideLayout;
 
   onMount(() => {
     // Determine the DeviceClass
@@ -40,16 +42,16 @@
     else deviceClass = DeviceClass.desktop;
 
     // Register all component runtime instances
-    if (composition && composition.id) {
-      eventStream = library.runtime.register(composition.id, componentInstance);
-      id = composition.id;
+    if (component && component.id) {
+      eventStream = library.runtime.register(component.id, componentInstance);
+      id = component.id;
     }
   });
 
   onDestroy(() => {
     // Remove all component runtime instances
-    if (composition && composition.id) {
-      library.runtime.remove(composition.id);
+    if (component && component.id) {
+      library.runtime.remove(component.id);
       eventStream = null;
       if (eventSubscription) {
         eventSubscription.unsubscribe();
@@ -57,40 +59,62 @@
     }
   });
 
-  function isAreaAvailable(parentLayout, childArea) {
-    const availableAreas = getAreasFromString(parentLayout.areas);
-    const found = availableAreas.find((o) => o === childArea);
-    return !!found;
+  let actions = {
+    [Actions.resetLayout]: (trigger: ResetLayout) => {
+      console.log(trigger);
+      overrideLayout = undefined;
+    },
+    [Actions.setLayout]: (trigger: SetLayout) => {
+      console.log(trigger);
+      overrideLayout = trigger.layoutName;
+    }
+  };
+
+  function getAreas(componentDefinition) {
+    return library.getLayoutByName(componentDefinition.layout).areas;
+  }
+  function getRows(componentDefinition) {
+    return library.getLayoutByName(componentDefinition.layout).rows;
+  }
+  function getColumns(componentDefinition) {
+    return library.getLayoutByName(componentDefinition.layout).columns;
   }
 
-  let id;
-
-  export let composition:Component;
-  let componentDefinition:ComponentDefinition;
-
-  export let library;
-
-  let cssClass = null;
-
-  let eventStream;
-  let eventSubscription;
-
-  $: {
-    componentDefinition = composition[deviceClass];
-    if (!componentDefinition) {
-      componentDefinition = composition["mobile"];
-    }
-
-    if (componentDefinition.layout) {
-      const layout = library.getLayoutByName(componentDefinition.layout);
-      if (layout && layout.class) {
-        cssClass = layout.class;
+  /**
+   * Handles incoming events.
+   */
+  function eventHandler(trigger:Trigger|undefined) {
+    // TODO: This is the same code as in App.svelte
+    if (trigger.triggers) {
+      // This event should trigger some action. Find it in the action repo and execute it.
+      const foundAction = actions[trigger.triggers];
+      if (foundAction) {
+        foundAction(trigger);
       }
     }
+  }
 
-    // Remove the instance if the underlying view document changes its id
-    if (composition) {
-      if (id && id !== composition.id) {
+  function clone(obj) {
+    const json = JSON.stringify(obj);
+    const clone = JSON.parse(json);
+    return clone;
+  }
+
+  $: {
+    if (component) {
+        componentDefinition = component[deviceClass];
+      if (!componentDefinition) {
+        componentDefinition = component[DeviceClass.mobile];
+      }
+      if (componentDefinition) {
+        componentDefinition = clone(componentDefinition);
+      }
+      if (componentDefinition && overrideLayout) {
+        componentDefinition.layout = overrideLayout;
+      }
+
+      // Remove the instance if the underlying Component its id
+      if (id && id !== component.id) {
         library.runtime.remove(id);
         eventStream = null;
         if (eventSubscription) {
@@ -98,18 +122,42 @@
         }
       }
 
-      id = composition.id;
+      id = component.id;
       if (id && componentInstance && !library.runtime.find(id)) {
         eventStream = library.runtime.register(id, componentInstance);
       }
     }
 
     if (!eventSubscription && eventStream) {
-      eventSubscription = eventStream.subscribe(trigger => {
-        console.log("Compositor (id: " + id + ") received:", trigger);
-      });
-      console.log("Subscribed to events for compositor '" + id + "':", eventSubscription);
+      eventSubscription = eventStream.subscribe(eventHandler);
     }
+  }
+
+  function isAreaAvailable(parentLayout, childArea) {
+    const availableAreas = getAreasFromString(parentLayout.areas);
+    return availableAreas.find((o) => o === childArea);
+  }
+
+  function getAreasFromString(areas) {
+    const strippedWhitespace =
+            // Replace all single quotes with whitespaces ..
+            areas
+                    .split("'")
+                    .join(" ")
+                    // .. then replaces all double whitespaces with single whitespaces
+                    .split("  ")
+                    .join(" ");
+
+    const items = {};
+
+    // De-duplicate all area names
+    strippedWhitespace
+            .split(" ")
+            .filter((o) => o.trim() !== "")
+            .forEach((o) => (items[o] = true));
+
+    // Return them as array
+    return Object.keys(items);
   }
 </script>
 
@@ -147,8 +195,8 @@
   <!-- This branch handles container-components -->
   <section
     class="compositor"
-    style="grid-area: {componentDefinition.area}; --areas: {library.getLayoutByName(componentDefinition.layout).areas};
-    --columns: {library.getLayoutByName(componentDefinition.layout).columns}; --rows: {library.getLayoutByName(componentDefinition.layout).rows};
+    style="grid-area: {componentDefinition.area}; --areas: {getAreas(componentDefinition)};
+    --columns: {getColumns(componentDefinition)}; --rows: {getRows(componentDefinition)};
     ">
     {#each componentDefinition.children as child}
       {#if !child[deviceClass]}
@@ -157,7 +205,7 @@
           <svelte:self
                   bind:this={componentInstance}
                   {library}
-                  composition={child} />
+                  component={child} />
         {:else}
         <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
           we simply shoot it to the moon.. -->
@@ -165,7 +213,7 @@
             <svelte:self
                     bind:this={componentInstance}
                     {library}
-                    composition={child} />
+                    component={child} />
           </div>
         {/if}
       {:else}
@@ -173,7 +221,7 @@
           <svelte:self
                   bind:this={componentInstance}
                   {library}
-                  composition={child} />
+                  component={child} />
         {:else}
           <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
           we simply shoot it to the moon.. -->
@@ -183,7 +231,7 @@
             <svelte:self
                     bind:this={componentInstance}
                     {library}
-                    composition={child} />
+                    component={child} />
           </div>
         {/if}
       {/if}

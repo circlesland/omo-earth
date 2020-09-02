@@ -4,7 +4,6 @@ import type { Component } from "../interfaces/component";
 import {DeviceClass} from "../interfaces/component";
 
 export const menu: Component = {
-  id: "menu",
   [DeviceClass.mobile]: {
     area: "nav",
     component: "OmoNavAside",

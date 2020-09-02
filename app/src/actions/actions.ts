@@ -2,5 +2,7 @@ export enum Actions
 {
   navigateTo = "navigateTo",
   dummyAction = "dummyAction",
-  filterBy = "filterBy"
+  filterBy = "filterBy",
+  setLayout = "setLayout",
+  resetLayout = "resetLayout"
 }
