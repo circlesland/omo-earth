@@ -9,7 +9,7 @@ export const safeDashboard: Component = {
       {
         [DeviceClass.mobile]: {
           area: "main",
-          cssClasses: "overflow-y-scroll overflow-x-hidden",
+          cssClasses: "overflow-y-scroll p-2 bg-gray-200 overflow-x-hidden",
           component: "SafeDashboard",
         },
         [DeviceClass.tablet]: {
