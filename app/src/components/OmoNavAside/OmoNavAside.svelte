@@ -1,9 +1,10 @@
 <script>
   import IconsFontAwesome from "../IconsFontAwesome.svelte";
-  import {library} from "../../library";
   import {DeviceClass} from "../../interfaces/component";
   import {ToggleSideNav} from "../../trigger/shell/toggleSideNav";
 
+
+  export let library;
   export let data;
 
   let items = [];

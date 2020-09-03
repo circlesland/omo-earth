@@ -8,7 +8,6 @@
   import {Actions} from "../actions/actions";
   import {SetLayout} from "../trigger/compositor/setLayout";
   import {ResetLayout} from "../trigger/compositor/resetLayout";
-  import {library} from "../library";
 
   // If the compositor or the contained display component (leaf) should be able to receive events,
   // they need to have a id.
@@ -17,6 +16,8 @@
 
   // The "composition" contains the display document.
   export let component: Component;
+
+  export let library;
 
   // A Component (see "composition") can contain multiple display documents. One for each DeviceClass.
   // This variable holds the current ComponentDefinition that was chosen by the Compositor.
@@ -179,6 +180,7 @@
       <div class={componentDefinition.cssClasses}>
         <svelte:component
                 bind:this={componentInstance}
+                library={library}
                 component={component}
                 this={library.getComponentByName(componentDefinition.component)}
                 data={componentDefinition.data}/>
@@ -186,6 +188,7 @@
     {:else}
       <svelte:component
               component={component}
+              library={library}
               bind:this={componentInstance}
               this={library.getComponentByName(componentDefinition.component)}
               data={componentDefinition.data}/>
@@ -203,6 +206,7 @@
       <!-- WHEN THE DEVICE CLASS DOESN'T EXIST ON THE CHILD, CHOOSE "mobile" -->
         {#if isAreaAvailable(library.getLayoutByName(componentDefinition.layout), child["mobile"].area)}
           <svelte:self
+                  library={library}
                   bind:this={componentInstance}
                   component={child}/>
         {:else}
@@ -210,6 +214,7 @@
           we simply shoot it to the moon.. -->
           <div style="position:absolute; left:-2000em; top:-2000em; visibility: hidden">
             <svelte:self
+                    library={library}
                     bind:this={componentInstance}
                     component={child}/>
           </div>
@@ -217,6 +222,7 @@
       {:else}
         {#if isAreaAvailable(library.getLayoutByName(componentDefinition.layout), child[deviceClass].area)}
           <svelte:self
+                  library={library}
                   bind:this={componentInstance}
                   component={child}/>
         {:else}
@@ -226,6 +232,7 @@
                   style="position:absolute; left:-2000em; top:-2000em; visibility:
             hidden">
             <svelte:self
+                    library={library}
                     bind:this={componentInstance}
                     component={child}/>
           </div>

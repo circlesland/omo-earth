@@ -9,7 +9,6 @@
   import {DummyTrigger} from "../trigger/dummyTrigger";
   import {Swipe, SwipeItem} from "svelte-swipe";
   import GridCompositor from "./GridCompositor.svelte";
-  import {library} from "../library";
 
   const swipeConfig = {
     autoplay: true,
@@ -26,6 +25,8 @@
 
   // The "composition" contains the display document.
   export let component: Component;
+
+  export let library;
 
   // A Component (see "composition") can contain multiple display documents. One for each DeviceClass.
   // This variable holds the current ComponentDefinition that was chosen by the Compositor.
