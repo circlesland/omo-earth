@@ -1,6 +1,6 @@
 import { generatePageSingle } from "../templates/TemplatePageDetail";
-import { menu } from "../organisms/menu";
+import { safeMenu } from "../organisms/menus/safeMenu";
 import { quickActionsSafe } from "../organisms/quickActionsSafe";
 
 export const Safe = (content: any) =>
-  generatePageSingle("Welcome Samuel", menu, content, quickActionsSafe);
+  generatePageSingle("Welcome Samuel", safeMenu, content, quickActionsSafe);

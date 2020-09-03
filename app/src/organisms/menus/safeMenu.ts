@@ -1,9 +1,9 @@
-import type { Menu } from "../components/OmoNavAside/OmoNavAsideInterfaces";
-import { NavigateTo } from "../trigger/navigateTo";
-import type { Component } from "../interfaces/component";
-import {DeviceClass} from "../interfaces/component";
+import type { Menu } from "../../components/OmoNavAside/OmoNavAsideInterfaces";
+import { NavigateTo } from "../../trigger/navigateTo";
+import type { Component } from "../../interfaces/component";
+import {DeviceClass} from "../../interfaces/component";
 
-export const menu: Component = {
+export const safeMenu: Component = {
   [DeviceClass.mobile]: {
     area: "nav",
     component: "OmoNavAside",

@@ -1,7 +1,7 @@
-import type {Menu} from "../components/OmoNavAside/OmoNavAsideInterfaces";
-import {NavigateTo} from "../trigger/navigateTo";
-import type {Component} from "../interfaces/component";
-import {DeviceClass} from "../interfaces/component";
+import type {Menu} from "../../components/OmoNavAside/OmoNavAsideInterfaces";
+import {NavigateTo} from "../../trigger/navigateTo";
+import type {Component} from "../../interfaces/component";
+import {DeviceClass} from "../../interfaces/component";
 
 export const marketMenu: Component = {
   [DeviceClass.mobile]: {

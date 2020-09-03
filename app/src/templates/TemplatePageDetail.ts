@@ -1,13 +1,14 @@
-import { LayoutHeaderMainFooter } from "../layouts/LayoutHeaderMainFooter";
-import type { Trigger } from "../trigger/trigger";
-import type { Component } from "../interfaces/component";
+import {LayoutHeaderMainFooter} from "../layouts/LayoutHeaderMainFooter";
+import type {Trigger} from "../trigger/trigger";
+import type {Component} from "../interfaces/component";
 
 export function generatePageSingle(
   title: string,
   menu: any,
   content: any,
   quickActions: Trigger[]
-) {
+)
+{
   let component: Component = {
     mobile: {
       area: "main",
