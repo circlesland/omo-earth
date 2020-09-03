@@ -29,16 +29,18 @@ export function generatePageSingle(
             layout: "LayoutMain",
             children: [
               menu,
-              {
-              mobile:{
-                area: "main",
-                component: "PageCompositor",
-                children:[
-                  content,
-                  content,
-                ]
-              }
-            }],
+              content
+              // {
+              // mobile:{
+              //   area: "main",
+              //   component: "PageCompositor",
+              //   children:[
+              //     content,
+              //     content,
+              //   ]
+              // }
+              // }
+            ],
           },
           tablet: {
             area: "main",

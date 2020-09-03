@@ -4,7 +4,7 @@
   import moment from "moment";
 </script>
 
-<section class="bg-white w-full p-8">
+<section class="bg-white p-8">
   <div class="font-title text-tertiary text-xl">Transaction History</div>
   {#each $transactions as t}
     <div
