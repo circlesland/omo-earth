@@ -7,7 +7,6 @@
   import {onDestroy, onMount} from "svelte";
   import {Actions} from "../actions/actions";
   import {DummyTrigger} from "../trigger/dummyTrigger";
-  import {Swipe, SwipeItem} from "svelte-swipe";
   import GridCompositor from "./GridCompositor.svelte";
   import {library} from "../library";
 
@@ -146,26 +145,21 @@
   }
 </style>
 <!-- This branch handles leaf-components -->
-{#if componentDefinition}
-<section
-        style="grid-area: {componentDefinition.area}; display: grid; grid-template-columns:
+{#if componentDefinition && componentDefinition.children && componentDefinition.children.length > 0}
+  <section style="grid-area: {componentDefinition.area}; display: grid; grid-template-columns:
     'minmax(1fr)'; grid-template-rows: 'minmax(1fr)'; overflow: hidden;">
-<Swipe {...swipeConfig}>
-  {#if componentDefinition.cssClasses}
-    <div class={componentDefinition.cssClasses}>
+    {#if componentDefinition.cssClasses}
+      <section class={componentDefinition.cssClasses}>
         {#each componentDefinition.children as child}
-          <SwipeItem>
-            <GridCompositor component={child}></GridCompositor>
-          </SwipeItem>
-        {/each}
-    </div>
-  {:else}
-      {#each componentDefinition.children as child}
-        <SwipeItem>
           <GridCompositor component={child}></GridCompositor>
-        </SwipeItem>
-      {/each}
-  {/if}
-</Swipe>
-</section>
+        {/each}
+      </section>
+    {:else}
+      <section>
+        {#each componentDefinition.children as child}
+          <GridCompositor component={child}></GridCompositor>
+        {/each}
+      </section>
+    {/if}
+  </section>
 {/if}

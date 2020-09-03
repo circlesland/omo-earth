@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Compositor from "./components/Compositor.svelte";
+  import GridCompositor from "./components/GridCompositor.svelte";
   import Tailwind from "./Tailwind.svelte";
   import page from "page";
   import { library } from "./library";
@@ -49,7 +49,7 @@
   });
 
   window.shellEvents.observable.subscribe((event) => {
-    // TODO: This is the same code as in Compositor.svelte
+    // TODO: This is the same code as in GridCompositor.svelte
     if (event.triggers) {
       // This event should trigger some action. Find it in the action repo and execute it.
       const foundAction = actionRepository[event.triggers];
@@ -75,5 +75,5 @@
 
 <Tailwind />
 <div class="app">
-  <Compositor {library} component={viewDocument} />
+  <GridCompositor {library} component={viewDocument} />
 </div>

@@ -14,8 +14,9 @@ import OmoBalance from "./components/OmoBalance.svelte";
 import OmoProfile from "./components/OmoProfile.svelte";
 import SafeDashboard from "./components/SafeDashboard.svelte";
 import SafeToken from "./components/SafeToken.svelte";
-import Compositor from "./components/Compositor.svelte";
+import GridCompositor from "./components/GridCompositor.svelte";
 import PageCompositor from "./components/PageCompositor.svelte";
+import SlotCompositor from "./components/SlotCompositor.svelte";
 
 import { LayoutHeaderMain } from "./layouts/LayoutHeaderMain";
 import { LayoutHeaderMainFooter } from "./layouts/LayoutHeaderMainFooter";
@@ -79,10 +80,12 @@ export const library = {
         return SafeDashboard;
       case "SafeToken":
         return SafeToken;
-      case "Compositor":
-        return Compositor;
+      case "GridCompositor":
+        return GridCompositor;
       case "PageCompositor":
         return PageCompositor;
+      case "SlotCompositor":
+        return SlotCompositor;
     }
   },
 
