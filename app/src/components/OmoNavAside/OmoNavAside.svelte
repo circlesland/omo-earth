@@ -1,5 +1,8 @@
 <script>
   import IconsFontAwesome from "../IconsFontAwesome.svelte";
+  import {library} from "../../library";
+  import {DeviceClass} from "../../interfaces/component";
+  import {ToggleSideNav} from "../../trigger/shell/toggleSideNav";
 
   export let data;
 
@@ -35,6 +38,14 @@
       items = menuItems;
     }
   }
+
+  function onMenuItemClick(item) {
+    const deviceClass = library.runtime.getDeviceClass();
+    if (deviceClass === DeviceClass.mobile) {
+      window.trigger(new ToggleSideNav());
+    }
+    window.trigger(item._trigger);
+  }
 </script>
 
 <IconsFontAwesome />
@@ -54,7 +65,7 @@
         <li class="my-px">
           <!-- svelte-ignore a11y-invalid-attribute -->
           <a href="" 
-            on:click={() => window.trigger(item._trigger)}
+            on:click={() => onMenuItemClick(item)}
             class="flex flex-row font-title text-sm uppercase font-bold
             items-center h-10 px-4 text-gray-500 hover:bg-gray-200
             hover:text-secondary">
