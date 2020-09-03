@@ -1,5 +1,5 @@
 import type { Component } from "../interfaces/component";
-import {DeviceClass} from "../interfaces/component";
+import { DeviceClass } from "../interfaces/component";
 
 export const safeDashboard: Component = {
   [DeviceClass.mobile]: {

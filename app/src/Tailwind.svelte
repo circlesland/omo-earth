@@ -5,10 +5,15 @@
   @tailwind utilities;
   @tailwind components;
 
+  html,
   body {
-    margin: 0px;
-    padding: 0px;
-    height: 100vh;
-    width: 100vw;
+    height: 1000%;
+    overflow: hidden;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 </style>

@@ -1,13 +1,12 @@
-<svelte:options accessors/>
 <script lang="ts">
-  import type {ComponentDefinition} from "../interfaces/component";
-  import type {Component} from "../interfaces/component";
-  import type {Trigger} from "../trigger/trigger";
-  import {DeviceClass} from "../interfaces/component";
-  import {onDestroy, onMount} from "svelte";
-  import {Actions} from "../actions/actions";
-  import {SetLayout} from "../trigger/compositor/setLayout";
-  import {ResetLayout} from "../trigger/compositor/resetLayout";
+  import type { ComponentDefinition } from "../interfaces/component";
+  import type { Component } from "../interfaces/component";
+  import type { Trigger } from "../trigger/trigger";
+  import { DeviceClass } from "../interfaces/component";
+  import { onDestroy, onMount } from "svelte";
+  import { Actions } from "../actions/actions";
+  import { SetLayout } from "../trigger/compositor/setLayout";
+  import { ResetLayout } from "../trigger/compositor/resetLayout";
 
   // If the compositor or the contained display component (leaf) should be able to receive events,
   // they need to have a id.
@@ -21,7 +20,7 @@
 
   // A Component (see "composition") can contain multiple display documents. One for each DeviceClass.
   // This variable holds the current ComponentDefinition that was chosen by the Compositor.
-  let componentDefinition: ComponentDefinition|undefined;
+  let componentDefinition: ComponentDefinition | undefined;
   let deviceClass: DeviceClass = DeviceClass.mobile;
 
   // Contains the svelte component instance.
@@ -61,7 +60,7 @@
     },
     [Actions.setLayout]: (trigger: SetLayout) => {
       overrideLayout = trigger.layoutName;
-    }
+    },
   };
 
   function getAreas(componentDefinition) {
@@ -79,7 +78,7 @@
   /**
    * Handles incoming events and calls the corresponding actions.
    */
-  function eventHandler(trigger: Trigger|undefined) {
+  function eventHandler(trigger: Trigger | undefined) {
     // TODO: This is the same code as in App.svelte
     if (trigger.triggers) {
       // This event should trigger some action. Find it in the action repo and execute it.
@@ -139,21 +138,21 @@
 
   function getAreasFromString(areas) {
     const strippedWhitespace =
-            // Replace all single quotes with whitespaces ..
-            areas
-                    .split("'")
-                    .join(" ")
-                    // .. then replaces all double whitespaces with single whitespaces
-                    .split("  ")
-                    .join(" ");
+      // Replace all single quotes with whitespaces ..
+      areas
+        .split("'")
+        .join(" ")
+        // .. then replaces all double whitespaces with single whitespaces
+        .split("  ")
+        .join(" ");
 
     const items = {};
 
     // De-duplicate all area names
     strippedWhitespace
-            .split(" ")
-            .filter((o) => o.trim() !== "")
-            .forEach((o) => (items[o] = true));
+      .split(" ")
+      .filter((o) => o.trim() !== "")
+      .forEach((o) => (items[o] = true));
 
     // Return them as array
     return Object.keys(items);
@@ -171,72 +170,72 @@
   }
 </style>
 
+<svelte:options accessors />
 {#if componentDefinition && (!componentDefinition.children || componentDefinition.children.length === 0 || componentDefinition.component)}
   <!-- This branch handles leaf-components -->
   <section
-          style="grid-area: {componentDefinition.area}; display: grid; grid-template-columns:
-    'minmax(1fr)'; grid-template-rows: 'minmax(1fr)'; overflow: hidden;">
+    style="grid-area: {componentDefinition.area}; display: grid; grid-template-columns:
+    'minmax(1fr)'; grid-template-rows: 'minmax(1fr)'; overflow: hidden; height:100%;">
     {#if componentDefinition.cssClasses}
       <div class={componentDefinition.cssClasses}>
         <svelte:component
-                bind:this={componentInstance}
-                library={library}
-                component={component}
-                this={library.getComponentByName(componentDefinition.component)}
-                data={componentDefinition.data}/>
+          this={library.getComponentByName(componentDefinition.component)}
+          bind:this={componentInstance}
+          {library}
+          {component}
+          data={componentDefinition.data} />
       </div>
     {:else}
       <svelte:component
-              component={component}
-              library={library}
-              bind:this={componentInstance}
-              this={library.getComponentByName(componentDefinition.component)}
-              data={componentDefinition.data}/>
+        this={library.getComponentByName(componentDefinition.component)}
+        {component}
+        {library}
+        bind:this={componentInstance}
+        data={componentDefinition.data} />
     {/if}
   </section>
 {:else if componentDefinition}
   <!-- This branch handles container-components -->
   <section
-          class="compositor"
-          style="grid-area: {componentDefinition.area}; --areas: {getAreas(componentDefinition)};
+    class="compositor"
+    style="grid-area: {componentDefinition.area}; --areas: {getAreas(componentDefinition)};
     --columns: {getColumns(componentDefinition)}; --rows: {getRows(componentDefinition)};
     ">
     {#each componentDefinition.children as child}
       {#if !child[deviceClass]}
-      <!-- WHEN THE DEVICE CLASS DOESN'T EXIST ON THE CHILD, CHOOSE "mobile" -->
-        {#if isAreaAvailable(library.getLayoutByName(componentDefinition.layout), child["mobile"].area)}
+        <!-- WHEN THE DEVICE CLASS DOESN'T EXIST ON THE CHILD, CHOOSE "mobile" -->
+        {#if isAreaAvailable(library.getLayoutByName(componentDefinition.layout), child['mobile'].area)}
           <svelte:self
-                  library={library}
-                  bind:this={componentInstance}
-                  component={child}/>
+            {library}
+            bind:this={componentInstance}
+            component={child} />
         {:else}
-        <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
-          we simply shoot it to the moon.. -->
-          <div style="position:absolute; left:-2000em; top:-2000em; visibility: hidden">
-            <svelte:self
-                    library={library}
-                    bind:this={componentInstance}
-                    component={child}/>
-          </div>
-        {/if}
-      {:else}
-        {#if isAreaAvailable(library.getLayoutByName(componentDefinition.layout), child[deviceClass].area)}
-          <svelte:self
-                  library={library}
-                  bind:this={componentInstance}
-                  component={child}/>
-        {:else}
-        <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
+          <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
           we simply shoot it to the moon.. -->
           <div
-                  style="position:absolute; left:-2000em; top:-2000em; visibility:
-            hidden">
+            style="position:absolute; left:-2000em; top:-2000em; visibility: hidden">
             <svelte:self
-                    library={library}
-                    bind:this={componentInstance}
-                    component={child}/>
+              {library}
+              bind:this={componentInstance}
+              component={child} />
           </div>
         {/if}
+      {:else if isAreaAvailable(library.getLayoutByName(componentDefinition.layout), child[deviceClass].area)}
+        <svelte:self
+          {library}
+          bind:this={componentInstance}
+          component={child} />
+      {:else}
+        <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
+          we simply shoot it to the moon.. -->
+        <div
+          style="position:absolute; left:-2000em; top:-2000em; visibility:
+            hidden">
+          <svelte:self
+            {library}
+            bind:this={componentInstance}
+            component={child} />
+        </div>
       {/if}
     {/each}
   </section>

@@ -13,10 +13,10 @@
   import { safeToken } from "./organisms/safeToken";
   import { productDetail } from "./organisms/productDetail";
   import { actionRepository } from "./actions/actionRepository";
-  import {profile} from "./organisms/profile";
-  import {DummyRequest} from "./trigger/dummyRequest";
-  import {SetLayout} from "./trigger/compositor/setLayout";
-  import {ResetLayout} from "./trigger/compositor/resetLayout";
+  import { profile } from "./organisms/profile";
+  import { DummyRequest } from "./trigger/dummyRequest";
+  import { SetLayout } from "./trigger/compositor/setLayout";
+  import { ResetLayout } from "./trigger/compositor/resetLayout";
 
   // set default component
   let viewDocument = Home;
@@ -63,17 +63,5 @@
   page.start();
 </script>
 
-<style>
-  .app {
-    width: 100vw;
-    height: 100vh;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-  }
-</style>
-
 <Tailwind />
-<div class="app">
-  <GridCompositor {library} component={viewDocument} />
-</div>
+<GridCompositor {library} component={viewDocument} />
