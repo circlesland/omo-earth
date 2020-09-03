@@ -97,14 +97,8 @@
 
   $: {
     if (component) {
-      let def = component[deviceClass];
+      const def = library.runtime.findComponentDefinition(component);
 
-      if (!def) {
-        def = component[DeviceClass.mobile];
-      }
-      if (def) {
-        def = clone(def);
-      }
       if (def && overrideLayout) {
         def.layout = overrideLayout;
       }

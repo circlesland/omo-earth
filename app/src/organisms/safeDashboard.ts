@@ -21,6 +21,17 @@ export const safeDashboard: Component = {
           area: "main",
           cssClasses: "overflow-y-scroll p-12 bg-gray-200",
           component: "SafeDashboard",
+          children: [{
+            mobile: {
+              area:"",
+              component: "OmoBalance"
+            }
+          },{
+            mobile: {
+              area:"",
+              component: "OmoTransactions"
+            }
+          }]
         },
       },
     ],

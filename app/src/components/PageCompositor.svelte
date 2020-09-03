@@ -89,20 +89,7 @@
 
   $: {
     if (component) {
-      let def = component[deviceClass];
-
-      if (!def) {
-        def = component[DeviceClass.mobile];
-      }
-      if (def) {
-        def = clone(def);
-      }
-      if (def && overrideLayout) {
-        def.layout = overrideLayout;
-      }
-
-      componentDefinition = def;
-
+      componentDefinition = library.runtime.findComponentDefinition(component);
       console.log(componentDefinition);
 
       // Remove the instance if the underlying Component its id

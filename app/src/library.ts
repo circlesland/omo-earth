@@ -26,7 +26,7 @@ import { LayoutNavMain } from "./layouts/LayoutNavMain";
 import {LayoutNav} from "./layouts/LayoutNav";
 import type {Observable} from "rxjs";
 import type {Trigger} from "./trigger/trigger";
-import {DeviceClass} from "./interfaces/component";
+import {Component, ComponentDefinition, DeviceClass} from "./interfaces/component";
 
 export const library = {
   getLayoutByName: (name) => {
@@ -111,6 +111,24 @@ export const library = {
       if (window.innerWidth <= 600) return DeviceClass.mobile;
       else if (window.innerWidth <= 1024) return DeviceClass.tablet;
       else return DeviceClass.desktop;
+    },
+    _clone(obj) {
+      const json = JSON.stringify(obj);
+      const clone = JSON.parse(json);
+      return clone;
+    },
+    findComponentDefinition(component:Component) : ComponentDefinition {
+      const deviceClass = library.runtime.getDeviceClass();
+      let def = component[deviceClass];
+
+      if (!def) {
+        def = component[DeviceClass.mobile];
+      }
+      if (def) {
+        def = this._clone(def);
+      }
+
+      return <ComponentDefinition><any>def;
     }
   }
 };

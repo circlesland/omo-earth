@@ -26,17 +26,7 @@
 
   $: {
     if (component) {
-      const deviceClass = library.runtime.getDeviceClass();
-      let def = component[deviceClass];
-
-      if (!def) {
-        def = component[DeviceClass.mobile];
-      }
-      if (def) {
-        def = clone(def);
-      }
-
-      componentDefinition = def;
+      componentDefinition = library.runtime.findComponentDefinition(component);
       id = component.id;
 
       console.log(componentDefinition);
@@ -64,3 +54,11 @@
     height: auto;
   }
 </style>
+
+<section class="slotCompositor">
+  {#if componentDefinition && componentDefinition.children}
+    {#each componentDefinition.children as childComponent}
+      <slot {childComponent}>No data</slot>
+    {/each}
+  {/if}
+</section>

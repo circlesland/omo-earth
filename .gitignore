@@ -117,3 +117,4 @@ bundle.css.map
 public/bundle.js
 
 .history
+/app/public/build/*
