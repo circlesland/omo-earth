@@ -24,41 +24,57 @@
     return clone;
   }
 
+  let headers = [];
+  let footers = [];
+  let items = [];
+
   $: {
     if (component) {
       componentDefinition = library.runtime.findComponentDefinition(component);
       id = component.id;
+    }
+    if (componentDefinition && componentDefinition.children) {
+      const childComponentDefinitions = componentDefinition.children.map(component => {
+        return {
+          component,
+          definition: library.runtime.findComponentDefinition(component)
+        }
+      });
 
-      console.log(componentDefinition);
+      headers = childComponentDefinitions
+              .filter(o => o.definition.area === "header")
+              .map(o => o.component);
+      footers = childComponentDefinitions
+              .filter(o => o.definition.area === "footer")
+              .map(o => o.component);
+      items = childComponentDefinitions
+              .filter(o => o.definition.area !== "header" && o.definition.area !== "footer")
+              .map(o => o.component);
     }
   }
 </script>
 
 <style>
-  .compositor {
-    height: 100%;
-    display: grid;
-    grid-template-areas: var(--areas);
-    grid-template-columns: var(--columns);
-    grid-template-rows: var(--rows);
-    overflow: hidden;
-  }
-
-  .swipe-holder {
-    height: 30vh;
-    width: 100%;
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-  }
 </style>
 
-<section class="slotCompositor">
-  {#if componentDefinition && componentDefinition.children}
-    {#each componentDefinition.children as childComponent}
-      <slot {childComponent}>No data</slot>
-    {/each}
-  {/if}
+<section class="slotCompositor {componentDefinition.cssClasses}">
+  <div class="flex flex-col h-full">
+    <header>
+      {#each headers as headerComponent}
+        <slot name="header" headerComponent={headerComponent}/>
+      {/each}
+    </header>
+    <main class="flex-1 overflow-y-auto">
+      {#each items as itemComponent}
+        <div>
+          <slot name="body" itemComponent={itemComponent}>No data</slot>
+        </div>
+      {/each}
+    </main>
+    <footer>
+      {#each footers as footerComponent}
+        <slot name="footer" footerComponent={footerComponent}/>
+      {/each}
+    </footer>
+  </div>
 </section>

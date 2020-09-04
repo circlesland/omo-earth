@@ -12,7 +12,7 @@ import OmoPlaceholder from "./components/OmoPlaceholder.svelte";
 import OmoProductDetail from "./components/OmoProductDetail.svelte";
 import OmoBalance from "./components/OmoBalance.svelte";
 import OmoProfile from "./components/OmoProfile.svelte";
-import SafeDashboard from "./components/SafeDashboard.svelte";
+import ListCompositor from "./components/ListCompositor.svelte";
 import SafeToken from "./components/SafeToken.svelte";
 import GridCompositor from "./components/GridCompositor.svelte";
 import PageCompositor from "./components/PageCompositor.svelte";
@@ -76,8 +76,8 @@ export const library = {
         return OmoBalance;
       case "OmoProfile":
         return OmoProfile;
-      case "SafeDashboard":
-        return SafeDashboard;
+      case "ListCompositor":
+        return ListCompositor;
       case "SafeToken":
         return SafeToken;
       case "GridCompositor":
@@ -126,6 +126,12 @@ export const library = {
       }
       if (def) {
         def = this._clone(def);
+      }
+
+      if (!def)
+      {
+        console.error(component);
+        throw new Error("Couldnt find a matching component definition in the following Component:" + JSON.stringify(component));
       }
 
       return <ComponentDefinition><any>def;

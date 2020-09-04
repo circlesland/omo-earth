@@ -9,18 +9,8 @@ export const safeDashboard: Component = {
       {
         [DeviceClass.mobile]: {
           area: "main",
-          cssClasses: "overflow-y-scroll p-2 bg-gray-200 overflow-x-hidden",
-          component: "SafeDashboard",
-        },
-        [DeviceClass.tablet]: {
-          area: "main",
-          cssClasses: "overflow-y-scroll p-12 bg-gray-200",
-          component: "SafeDashboard",
-        },
-        [DeviceClass.desktop]: {
-          area: "main",
-          cssClasses: "overflow-y-scroll p-12 bg-gray-200",
-          component: "SafeDashboard",
+          cssClasses: "overflow-y-auto p-2 bg-gray-200 overflow-x-hidden",
+          component: "ListCompositor",
           children: [{
             mobile: {
               area:"",
@@ -30,6 +20,43 @@ export const safeDashboard: Component = {
             mobile: {
               area:"",
               component: "OmoTransactions"
+            }
+          }]
+        },
+        [DeviceClass.tablet]: {
+          area: "main",
+          cssClasses: "overflow-y-auto p-12 bg-gray-200",
+          component: "ListCompositor",
+          children: [{
+            mobile: {
+              area:"",
+              component: "OmoBalance"
+            }
+          },{
+            mobile: {
+              area:"",
+              component: "OmoTransactions"
+            }
+          }]
+        },
+        [DeviceClass.desktop]: {
+          area: "main",
+          cssClasses: " overflow-y-auto p-12 bg-gray-200",
+          component: "ListCompositor",
+          children: [{
+            mobile: {
+              area:"header",
+              component: "OmoBalance"
+            }
+          },{
+            mobile: {
+              area:"body",
+              component: "OmoTransactions"
+            }
+          },{
+            mobile: {
+              area:"footer",
+              component: "OmoBalance"
             }
           }]
         },
