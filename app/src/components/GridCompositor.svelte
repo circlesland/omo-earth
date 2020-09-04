@@ -192,7 +192,7 @@
     {#each componentDefinition.children as child}
       {#if !child[deviceClass]}
         <!-- WHEN THE DEVICE CLASS DOESN'T EXIST ON THE CHILD, CHOOSE "mobile" -->
-        {#if isAreaAvailable(library.getLayoutByName(componentDefinition.layout), child['mobile'].area)}
+        {#if isAreaAvailable(library.getLayoutByName(componentDefinition.layout), library.runtime.findComponentDefinition(component).area)}
           <svelte:self
             {library}
             bind:this={componentInstance}
@@ -208,7 +208,7 @@
               component={child} />
           </div>
         {/if}
-      {:else if isAreaAvailable(library.getLayoutByName(componentDefinition.layout), child[deviceClass].area)}
+      {:else if isAreaAvailable(library.getLayoutByName(componentDefinition.layout), library.runtime.findComponentDefinition(component).area)}
         <svelte:self
           {library}
           bind:this={componentInstance}
