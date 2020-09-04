@@ -13,53 +13,33 @@ export function generatePageSingle(
     mobile: {
       area: "main",
       layout: "LayoutHeaderMainFooter",
-      children: [
-        {
-          mobile: {
-            area: "header",
-            component: "OmoNavTop",
-            data: {
-              title,
-            },
-          },
-        },
-        {
-          id: "content", /* WARNING: This will only work well when this page document is displayed as the only document (full-window) */
+      children: [{
+          area: "header",
+          component: "OmoNavTop",
+          data: {
+            title
+          }
+        }, {
+          id: "content",
           mobile: {
             area: "main",
             layout: "LayoutMain",
-            children: [
-              menu,
-              content
-              // {
-              // mobile:{
-              //   area: "main",
-              //   component: "PageCompositor",
-              //   children:[
-              //     content,
-              //     content,
-              //   ]
-              // }
-              // }
-            ],
+            children: [ menu, content ]
           },
           tablet: {
             area: "main",
             layout: "LayoutNavMain",
-            children: [menu, content],
-          },
-        },
-        {
-          mobile: {
-            area: "footer",
-            component: "OmoNavBottom",
-            data: {
-              triggers: quickActions,
-            },
-          },
-        },
-      ],
-    },
+            children: [ menu, content ]
+          }
+        }, {
+          area: "footer",
+          component: "OmoNavBottom",
+          data: {
+            triggers: quickActions,
+          }
+        }
+      ]
+    }
   };
   return component;
 }

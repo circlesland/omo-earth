@@ -5,17 +5,13 @@ import {DeviceClass} from "../interfaces/component";
 export const productDetail = (id) =>
 {
   const component: Component = {
-    [DeviceClass.mobile]: {
+    area: "main",
+    layout: "LayoutMain",
+    children: [{
       area: "main",
-      layout: "LayoutMain",
-      children: [{
-        [DeviceClass.mobile]: {
-          area: "main",
-          component: "OmoProductDetail",
-          data: {title: "title", id},
-        }
-      }]
-    }
+      component: "OmoProductDetail",
+      data: {title: "title", id}
+    }]
   };
   return component;
 };

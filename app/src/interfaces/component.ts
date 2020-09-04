@@ -26,5 +26,5 @@ export interface Component
    * automatically fall back to the next larger "tablet".
    * Similar, if only "mobile" and "tablet" exists, "desktop" will fall back to the next smaller "tablet".
    */
-  [deviceClass:string]: (ComponentDefinition|string|undefined)
+  [deviceClass:string]: (ComponentDefinition|string|any|undefined)
 }

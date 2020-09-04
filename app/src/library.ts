@@ -132,6 +132,15 @@ export const library = {
         testSize--;
       }
 
+      // TODO: Replace evil duck-typing with correct types
+      let componentAsDefinition:any = component;
+      if (componentAsDefinition.area
+        || componentAsDefinition.layout
+        || componentAsDefinition.component)
+      {
+        return componentAsDefinition;
+      }
+
       throw new Error("Couldn't find a matching component definition in the following Component:" + JSON.stringify(component));
     }
   }

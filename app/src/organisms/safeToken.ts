@@ -2,15 +2,11 @@ import type {Component} from "../interfaces/component";
 import {DeviceClass} from "../interfaces/component";
 
 export const safeToken: Component = {
-  [DeviceClass.mobile]: {
+  area: "main",
+  layout: "LayoutMain",
+  children: [{
     area: "main",
-    layout: "LayoutMain",
-    children: [{
-      [DeviceClass.mobile]: {
-        area: "main",
-        cssClasses: "overflow-y-scroll p-12 bg-gray-200",
-        component: "SafeToken",
-      }
-    }]
-  }
+    cssClasses: "overflow-y-scroll p-12 bg-gray-200",
+    component: "SafeToken",
+  }]
 };
