@@ -89,12 +89,6 @@
     }
   }
 
-  function clone(obj) {
-    const json = JSON.stringify(obj);
-    const clone = JSON.parse(json);
-    return clone;
-  }
-
   $: {
     if (component) {
       const def = library.runtime.findComponentDefinition(component);

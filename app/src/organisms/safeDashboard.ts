@@ -13,12 +13,12 @@ export const safeDashboard: Component = {
           component: "ListCompositor",
           children: [{
             mobile: {
-              area:"",
+              area: "",
               component: "OmoBalance"
             }
-          },{
+          }, {
             mobile: {
-              area:"",
+              area: "",
               component: "OmoTransactions"
             }
           }]
@@ -29,38 +29,17 @@ export const safeDashboard: Component = {
           component: "ListCompositor",
           children: [{
             mobile: {
-              area:"",
+              area: "",
               component: "OmoBalance"
             }
-          },{
+          }, {
             mobile: {
-              area:"",
+              area: "",
               component: "OmoTransactions"
             }
           }]
-        },
-        [DeviceClass.desktop]: {
-          area: "main",
-          cssClasses: " overflow-y-auto p-12 bg-gray-200",
-          component: "ListCompositor",
-          children: [{
-            mobile: {
-              area:"header",
-              component: "OmoBalance"
-            }
-          },{
-            mobile: {
-              area:"body",
-              component: "OmoTransactions"
-            }
-          },{
-            mobile: {
-              area:"footer",
-              component: "OmoBalance"
-            }
-          }]
-        },
-      },
+        }
+      }
     ],
   },
 };

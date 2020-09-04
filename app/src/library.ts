@@ -119,22 +119,20 @@ export const library = {
     },
     findComponentDefinition(component:Component) : ComponentDefinition {
       const deviceClass = library.runtime.getDeviceClass();
-      let def = component[deviceClass];
 
-      if (!def) {
-        def = component[DeviceClass.mobile];
-      }
-      if (def) {
-        def = this._clone(def);
-      }
+      // If not, we must find a fallback (searching from large to small)
+      const sizeMap = [DeviceClass.mobile, DeviceClass.tablet, DeviceClass.desktop];
+      let testSize = sizeMap.indexOf(deviceClass);
 
-      if (!def)
-      {
-        console.error(component);
-        throw new Error("Couldnt find a matching component definition in the following Component:" + JSON.stringify(component));
+      while (testSize >= 0) {
+        const definition = component[sizeMap[testSize]];
+        if (definition)
+          return this._clone(definition);
+
+        testSize--;
       }
 
-      return <ComponentDefinition><any>def;
+      throw new Error("Couldn't find a matching component definition in the following Component:" + JSON.stringify(component));
     }
   }
 };

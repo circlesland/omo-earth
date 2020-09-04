@@ -48,11 +48,6 @@ export function generatePageSingle(
             layout: "LayoutNavMain",
             children: [menu, content],
           },
-          desktop: {
-            area: "main",
-            layout: "LayoutNavMain",
-            children: [menu, content],
-          },
         },
         {
           mobile: {
