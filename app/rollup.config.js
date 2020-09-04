@@ -3,6 +3,7 @@ import typescript from "@rollup/plugin-typescript";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import livereload from "rollup-plugin-livereload";
+import css from 'rollup-plugin-css-only'
 import { terser } from "rollup-plugin-terser";
 import sveltePreprocess from "svelte-preprocess";
 
@@ -64,7 +65,12 @@ export default {
       browser: true,
       dedupe: ["svelte"],
     }),
-    commonjs(),
+    commonjs({
+      namedExports: {
+        'svelte-swiper': ['Swiper', 'SwiperSlide']
+      }
+    }),
+    css({ output: 'public/build/swiper-bundle.css' }),
     typescript({
       sourceMap: !production,
     }),

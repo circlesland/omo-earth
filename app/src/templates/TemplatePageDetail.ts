@@ -23,7 +23,8 @@ export function generatePageSingle(
       mobile: {
         area: "main",
         layout: "LayoutMain",
-        children: [menu, content]
+        component: "PageCompositor",
+        children:[menu, content]
       },
       tablet: {
         area: "main",

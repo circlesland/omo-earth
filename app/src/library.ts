@@ -29,25 +29,6 @@ import type {Trigger} from "./trigger/trigger";
 import {Component, ComponentDefinition, DeviceClass} from "./interfaces/component";
 
 export const library = {
-  getLayoutByName: (name) =>
-  {
-    switch (name)
-    {
-      case "LayoutHeaderMain":
-        return LayoutHeaderMain;
-      case "LayoutHeaderMainFooter":
-        return LayoutHeaderMainFooter;
-      case "LayoutMain":
-        return LayoutMain;
-      case "LayoutTopMainAside":
-        return LayoutTopMainAside;
-      case "LayoutNavMain":
-        return LayoutNavMain;
-      case "LayoutNav":
-        return LayoutNav;
-    }
-    throw new Error("Couldn't find layout with the name " + name);
-  },
   getComponentByName: (name) =>
   {
     switch (name)
@@ -94,7 +75,33 @@ export const library = {
   },
 
   layout: {
-    getAreasFromString(areas) {
+    getLayoutByName: (name) =>
+    {
+      switch (name)
+      {
+        case "LayoutHeaderMain":
+          return LayoutHeaderMain;
+        case "LayoutHeaderMainFooter":
+          return LayoutHeaderMainFooter;
+        case "LayoutMain":
+          return LayoutMain;
+        case "LayoutTopMainAside":
+          return LayoutTopMainAside;
+        case "LayoutNavMain":
+          return LayoutNavMain;
+        case "LayoutNav":
+          return LayoutNav;
+      }
+      throw new Error("Couldn't find layout with the name " + name);
+    },
+    isAreaAvailable(layoutName:string, component:Component) {
+      const layout = library.layout.getLayoutByName(layoutName);
+      const componentDefinition = library.runtime.findComponentDefinition(component);
+      const availableAreas = this._getAreasFromString(layout.areas);
+      const availableArea = availableAreas.find((o) => o === componentDefinition.area);
+      return availableArea;
+    },
+    _getAreasFromString(areas) {
       const strippedWhitespace =
         // Replace all single quotes with whitespaces ..
         areas
@@ -115,13 +122,6 @@ export const library = {
       // Return them as array
       return Object.keys(items);
     },
-    isAreaAvailable(layoutName:string, component:Component) {
-      const layout = library.getLayoutByName(layoutName);
-      const componentDefinition = library.runtime.findComponentDefinition(component);
-      const availableAreas = this.getAreasFromString(layout.areas);
-      const availableArea = availableAreas.find((o) => o === componentDefinition.area);
-      return availableArea;
-    }
   },
 
   runtime: {
@@ -156,6 +156,16 @@ export const library = {
       const json = JSON.stringify(obj);
       const clone = JSON.parse(json);
       return clone;
+    },
+    getInstanceDimensions(id:string) : {w:number, h:number} {
+      const instance = this._instances[id];
+      if (!instance)
+        return undefined;
+
+      return {
+        w: instance.width,
+        h: instance.offsetHeight
+      }
     },
     findComponentDefinition(component: Component): ComponentDefinition
     {

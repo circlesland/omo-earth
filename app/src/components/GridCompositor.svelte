@@ -64,15 +64,15 @@
   };
 
   function getAreas(componentDefinition) {
-    return library.getLayoutByName(componentDefinition.layout).areas;
+    return library.layout.getLayoutByName(componentDefinition.layout).areas;
   }
 
   function getRows(componentDefinition) {
-    return library.getLayoutByName(componentDefinition.layout).rows;
+    return library.layout.getLayoutByName(componentDefinition.layout).rows;
   }
 
   function getColumns(componentDefinition) {
-    return library.getLayoutByName(componentDefinition.layout).columns;
+    return library.layout.getLayoutByName(componentDefinition.layout).columns;
   }
 
   /**
