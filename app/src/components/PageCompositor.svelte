@@ -26,7 +26,7 @@
 </script>
 
 <Swiper>
-  {#each componentDefinition.children as child}
+  {#each componentDefinition.children as child (child.area)}
     {#if !library.runtime.findComponentDefinition(child).component}
       <SwiperSlide>
         <GridCompositor

@@ -169,32 +169,55 @@ export const library = {
     },
     findComponentDefinition(component: Component): ComponentDefinition
     {
-      const deviceClass = library.runtime.getDeviceClass();
+      function collectProperties(obj:Component|ComponentDefinition) {
+        const skip = {
+          [DeviceClass.mobile]: true,
+          [DeviceClass.tablet]: true,
+          [DeviceClass.desktop]: true
+        };
 
-      // Find a matching definition (searching from large to small)
-      const sizeMap = [DeviceClass.mobile, DeviceClass.tablet, DeviceClass.desktop];
-      let testSize = sizeMap.indexOf(deviceClass);
+        const properties = {};
+        Object.keys(obj)
+          .filter(o => !skip[o])
+          .map(o => {return {key: o, value: obj[o]}})
+          .forEach(o => properties[o.key] = o.value);
 
-      for (let i = testSize; i >= 0; i--)
+        return properties;
+      }
+
+      const self = this;
+
+      function findDeviceSpecificDefinition()
       {
-        const definition = component[sizeMap[i]];
-        if (definition)
+        const deviceClass = library.runtime.getDeviceClass();
+
+        // Find a matching definition (searching from large to small)
+        const sizeMap = [DeviceClass.mobile, DeviceClass.tablet, DeviceClass.desktop];
+        let testSize = sizeMap.indexOf(deviceClass);
+
+        for (let i = testSize; i >= 0; i--)
         {
-          return this._clone(definition);
+          const definition = component[sizeMap[i]];
+          if (definition)
+          {
+            return self._clone(definition);
+          }
         }
+
+        return null;
       }
 
-      // No definition was found. Is the Component itself the definition?
-      // TODO: Replace evil duck-typing with correct types
-      let componentAsDefinition: any = component;
-      if (componentAsDefinition.area
-        || componentAsDefinition.layout
-        || componentAsDefinition.component)
-      {
-        return componentAsDefinition;
-      }
+      const deviceDefinition = findDeviceSpecificDefinition();
+      /*if (deviceDefinition)
+        return deviceDefinition;*/
+      const deviceProperties = deviceDefinition ? collectProperties(deviceDefinition) : {};
+      const componentProperties = collectProperties(component);
 
-      throw new Error("Couldn't find a matching component definition in the following Component:" + JSON.stringify(component));
+      Object.keys(deviceProperties).forEach(o => componentProperties[o] = deviceProperties[o]);
+      console.log(componentProperties);
+      return <any>componentProperties;
+
+      //throw new Error("Couldn't find a matching component definition in the following Component:" + JSON.stringify(component));
     }
   }
 };

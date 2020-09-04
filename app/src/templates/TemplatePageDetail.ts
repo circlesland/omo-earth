@@ -20,16 +20,14 @@ export function generatePageSingle(
       }
     }, {
       id: "content",
+      area: "main",
+      children:[menu, content],
+      /* Specify only the parts that differ from the default component configuration */
       mobile: {
-        area: "main",
-        layout: "LayoutMain",
-        component: "PageCompositor",
-        children:[menu, content]
+        component: "PageCompositor"
       },
       tablet: {
-        area: "main",
-        layout: "LayoutNavMain",
-        children: [menu, content]
+        layout: "LayoutNavMain"
       }
     }, {
       area: "footer",
