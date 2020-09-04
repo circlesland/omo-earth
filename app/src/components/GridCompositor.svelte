@@ -118,33 +118,6 @@
       eventSubscription = eventStream.subscribe(eventHandler);
     }
   }
-
-  function isAreaAvailable(parentLayout, childArea) {
-    const availableAreas = getAreasFromString(parentLayout.areas);
-    return availableAreas.find((o) => o === childArea);
-  }
-
-  function getAreasFromString(areas) {
-    const strippedWhitespace =
-      // Replace all single quotes with whitespaces ..
-      areas
-        .split("'")
-        .join(" ")
-        // .. then replaces all double whitespaces with single whitespaces
-        .split("  ")
-        .join(" ");
-
-    const items = {};
-
-    // De-duplicate all area names
-    strippedWhitespace
-      .split(" ")
-      .filter((o) => o.trim() !== "")
-      .forEach((o) => (items[o] = true));
-
-    // Return them as array
-    return Object.keys(items);
-  }
 </script>
 
 <style>
@@ -190,25 +163,7 @@
     --columns: {getColumns(componentDefinition)}; --rows: {getRows(componentDefinition)};
     ">
     {#each componentDefinition.children as child}
-      {#if !child[deviceClass]}
-        <!-- WHEN THE DEVICE CLASS DOESN'T EXIST ON THE CHILD, CHOOSE "mobile" -->
-        {#if isAreaAvailable(library.getLayoutByName(componentDefinition.layout), library.runtime.findComponentDefinition(component).area)}
-          <svelte:self
-            {library}
-            bind:this={componentInstance}
-            component={child} />
-        {:else}
-          <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
-          we simply shoot it to the moon.. -->
-          <div
-            style="position:absolute; left:-2000em; top:-2000em; visibility: hidden">
-            <svelte:self
-              {library}
-              bind:this={componentInstance}
-              component={child} />
-          </div>
-        {/if}
-      {:else if isAreaAvailable(library.getLayoutByName(componentDefinition.layout), library.runtime.findComponentDefinition(component).area)}
+      {#if library.layout.isAreaAvailable(componentDefinition.layout, child)}
         <svelte:self
           {library}
           bind:this={componentInstance}
@@ -216,9 +171,7 @@
       {:else}
         <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
           we simply shoot it to the moon.. -->
-        <div
-          style="position:absolute; left:-2000em; top:-2000em; visibility:
-            hidden">
+        <div style="position:absolute; left:-2000em; top:-2000em; visibility:hidden;">
           <svelte:self
             {library}
             bind:this={componentInstance}

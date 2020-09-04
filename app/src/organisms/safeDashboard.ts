@@ -9,25 +9,24 @@ export const safeDashboard: Component = {
       cssClasses: "overflow-y-auto p-2 bg-gray-200 overflow-x-hidden",
       component: "ListCompositor",
       children: [{
-        area: "",
-        component: "OmoBalance"
+          area: "",
+          component: "OmoBalance"
       }, {
-        area: "",
-        component: "OmoTransactions"
+          area: "",
+          component: "OmoTransactions"
       }]
-    }
-  }, {
+    },
     tablet: {
       area: "main",
       cssClasses: "overflow-y-auto p-12 bg-gray-200",
       component: "ListCompositor",
       children: [{
-        area: "",
-        component: "OmoBalance"
+          area: "",
+          component: "OmoBalance"
       }, {
-        area: "",
-        component: "OmoTransactions"
+          area: "",
+          component: "OmoTransactions"
       }]
     }
-  }],
+  }]
 };

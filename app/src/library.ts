@@ -93,6 +93,37 @@ export const library = {
     }
   },
 
+  layout: {
+    getAreasFromString(areas) {
+      const strippedWhitespace =
+        // Replace all single quotes with whitespaces ..
+        areas
+          .split("'")
+          .join(" ")
+          // .. then replaces all double whitespaces with single whitespaces
+          .split("  ")
+          .join(" ");
+
+      const items = {};
+
+      // De-duplicate all area names
+      strippedWhitespace
+        .split(" ")
+        .filter((o) => o.trim() !== "")
+        .forEach((o) => (items[o] = true));
+
+      // Return them as array
+      return Object.keys(items);
+    },
+    isAreaAvailable(layoutName:string, component:Component) {
+      const layout = library.getLayoutByName(layoutName);
+      const componentDefinition = library.runtime.findComponentDefinition(component);
+      const availableAreas = this.getAreasFromString(layout.areas);
+      const availableArea = availableAreas.find((o) => o === componentDefinition.area);
+      return availableArea;
+    }
+  },
+
   runtime: {
     _instances: {},
     _topics: {},
