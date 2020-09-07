@@ -144,11 +144,9 @@ export const library = {
     },
     remove(id: string)
     {
-      const oldInstance = this._instances[id];
       delete this._instances[id];
       window.eventBroker.removeTopic("omo", id);
       window.trigger(new RemovedRuntimeInstance(id));
-      //console.log("removed instance with id: " + id, oldInstance);
     },
     getDeviceClass(): DeviceClass
     {
@@ -161,16 +159,6 @@ export const library = {
       const json = JSON.stringify(obj);
       const clone = JSON.parse(json);
       return clone;
-    },
-    getInstanceDimensions(id:string) : {w:number, h:number} {
-      const instance = this._instances[id];
-      if (!instance)
-        return undefined;
-
-      return {
-        w: instance.width,
-        h: instance.offsetHeight
-      }
     },
     findComponentDefinition(component: Component): ComponentDefinition
     {

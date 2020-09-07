@@ -7,6 +7,8 @@
   import { Actions } from "../actions/actions";
   import { SetLayout } from "../trigger/compositor/setLayout";
   import { ResetLayout } from "../trigger/compositor/resetLayout";
+  import { InstanceResized } from "../trigger/shell/instanceResized";
+  import { watchResize } from "svelte-watch-resize";
 
 
   // If the compositor or the contained display component (leaf) should be able to receive events,
@@ -121,6 +123,19 @@
       eventSubscription = eventStream.subscribe(eventHandler);
     }
   }
+
+  function onResize(node) {
+    if (!node)
+      return;
+
+    window.trigger(new InstanceResized(
+            id,
+            node.offsetLeft,
+            node.offsetTop,
+            node.offsetWidth,
+            node.offsetHeight
+    ));
+  }
 </script>
 
 <style>
@@ -161,7 +176,33 @@
   </section>
 {:else if componentDefinition}
   <!-- This branch handles container-components -->
-  <section
+  {#if id}
+    <section
+            use:watchResize={onResize}
+            bind:this={domElement}
+            class="compositor"
+            style="grid-area: {componentDefinition.area}; --areas: {getAreas(componentDefinition)};
+              --columns: {getColumns(componentDefinition)}; --rows: {getRows(componentDefinition)};">
+      {#each componentDefinition.children as child}
+        {#if library.layout.isAreaAvailable(componentDefinition.layout, child)}
+          <svelte:self
+                  {library}
+                  bind:this={componentInstance}
+                  component={child} />
+        {:else}
+        <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
+          we simply shoot it to the moon.. -->
+          <div style="position:absolute; left:-2000em; top:-2000em; visibility:hidden;">
+            <svelte:self
+                    {library}
+                    bind:this={componentInstance}
+                    component={child} />
+          </div>
+        {/if}
+      {/each}
+    </section>
+  {:else}
+    <section
     bind:this={domElement}
     class="compositor"
     style="grid-area: {componentDefinition.area}; --areas: {getAreas(componentDefinition)};
@@ -185,4 +226,5 @@
       {/if}
     {/each}
   </section>
+  {/if}
 {/if}
