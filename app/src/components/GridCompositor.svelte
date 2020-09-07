@@ -156,7 +156,6 @@
     bind:this={domElement}
     style="grid-area: {componentDefinition.area}; display: grid; grid-template-columns:
     'minmax(1fr)'; grid-template-rows: 'minmax(1fr)'; overflow: hidden; height:100%;">
-    {#if componentDefinition.cssClasses}
       <div class={componentDefinition.cssClasses}>
         <svelte:component
           this={library.getComponentByName(componentDefinition.component)}
@@ -165,66 +164,31 @@
           {component}
           data={componentDefinition.data} />
       </div>
-    {:else}
-      <svelte:component
-        this={library.getComponentByName(componentDefinition.component)}
-        {component}
-        {library}
-        bind:this={componentInstance}
-        data={componentDefinition.data} />
-    {/if}
   </section>
 {:else if componentDefinition}
   <!-- This branch handles container-components -->
-  {#if id}
-    <section
-            use:watchResize={onResize}
-            bind:this={domElement}
-            class="compositor"
-            style="grid-area: {componentDefinition.area}; --areas: {getAreas(componentDefinition)};
-              --columns: {getColumns(componentDefinition)}; --rows: {getRows(componentDefinition)};">
-      {#each componentDefinition.children as child}
-        {#if library.layout.isAreaAvailable(componentDefinition.layout, child)}
+  <section
+          use:watchResize={onResize}
+          bind:this={domElement}
+          class="compositor"
+          style="grid-area: {componentDefinition.area}; --areas: {getAreas(componentDefinition)};
+            --columns: {getColumns(componentDefinition)}; --rows: {getRows(componentDefinition)};">
+    {#each componentDefinition.children as child}
+      {#if library.layout.isAreaAvailable(componentDefinition.layout, child)}
+        <svelte:self
+                {library}
+                bind:this={componentInstance}
+                component={child} />
+      {:else}
+      <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
+        we simply shoot it to the moon.. -->
+        <div style="position:absolute; left:-2000em; top:-2000em; visibility:hidden;">
           <svelte:self
                   {library}
                   bind:this={componentInstance}
                   component={child} />
-        {:else}
-        <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
-          we simply shoot it to the moon.. -->
-          <div style="position:absolute; left:-2000em; top:-2000em; visibility:hidden;">
-            <svelte:self
-                    {library}
-                    bind:this={componentInstance}
-                    component={child} />
-          </div>
-        {/if}
-      {/each}
-    </section>
-  {:else}
-    <section
-    bind:this={domElement}
-    class="compositor"
-    style="grid-area: {componentDefinition.area}; --areas: {getAreas(componentDefinition)};
-    --columns: {getColumns(componentDefinition)}; --rows: {getRows(componentDefinition)};
-    ">
-    {#each componentDefinition.children as child}
-      {#if library.layout.isAreaAvailable(componentDefinition.layout, child)}
-        <svelte:self
-          {library}
-          bind:this={componentInstance}
-          component={child} />
-      {:else}
-        <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
-          we simply shoot it to the moon.. -->
-        <div style="position:absolute; left:-2000em; top:-2000em; visibility:hidden;">
-          <svelte:self
-            {library}
-            bind:this={componentInstance}
-            component={child} />
         </div>
       {/if}
     {/each}
   </section>
-  {/if}
 {/if}

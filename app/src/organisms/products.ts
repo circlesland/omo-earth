@@ -5,7 +5,7 @@ export const products: Component = {
   layout: "LayoutMain",
   children: [{
     area: "main",
-    cssClasses: "",
+    cssClasses: "overflow-y-auto",
     component: "OmoMarketProducts"
   }]
 };
