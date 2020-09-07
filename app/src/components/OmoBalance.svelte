@@ -1,4 +1,5 @@
 <script lang="ts">
+  export let library;
 </script>
 <section class="overflow-x-hidden">
   <div class="p-6 flex justify-center flex-col text-center bg-white">

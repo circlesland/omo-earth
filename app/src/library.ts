@@ -27,6 +27,8 @@ import {LayoutNav} from "./layouts/LayoutNav";
 import type {Observable} from "rxjs";
 import type {Trigger} from "./trigger/trigger";
 import {Component, ComponentDefinition, DeviceClass} from "./interfaces/component";
+import {NewRuntimeInstance} from "./trigger/shell/newRuntimeInstance";
+import {RemovedRuntimeInstance} from "./trigger/shell/removedRuntimeInstance";
 
 export const library = {
   getComponentByName: (name) =>
@@ -131,7 +133,9 @@ export const library = {
     {
       this._instances[id] = instance;
       this._topics[id] = window.eventBroker.createTopic("omo", id);
-      console.log("registered new instance with id: " + id, instance);
+
+      window.trigger(new NewRuntimeInstance(id, instance));
+
       return this._topics[id].observable;
     },
     find(id: string): any
@@ -143,7 +147,8 @@ export const library = {
       const oldInstance = this._instances[id];
       delete this._instances[id];
       window.eventBroker.removeTopic("omo", id);
-      console.log("removed instance with id: " + id, oldInstance);
+      window.trigger(new RemovedRuntimeInstance(id));
+      //console.log("removed instance with id: " + id, oldInstance);
     },
     getDeviceClass(): DeviceClass
     {
@@ -208,16 +213,13 @@ export const library = {
       }
 
       const deviceDefinition = findDeviceSpecificDefinition();
-      /*if (deviceDefinition)
-        return deviceDefinition;*/
       const deviceProperties = deviceDefinition ? collectProperties(deviceDefinition) : {};
       const componentProperties = collectProperties(component);
 
+      // Override all common properties with the device-specific value (if any)
       Object.keys(deviceProperties).forEach(o => componentProperties[o] = deviceProperties[o]);
-      console.log(componentProperties);
-      return <any>componentProperties;
 
-      //throw new Error("Couldn't find a matching component definition in the following Component:" + JSON.stringify(component));
+      return <any>componentProperties;
     }
   }
 };

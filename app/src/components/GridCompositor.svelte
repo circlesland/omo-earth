@@ -8,6 +8,7 @@
   import { SetLayout } from "../trigger/compositor/setLayout";
   import { ResetLayout } from "../trigger/compositor/resetLayout";
 
+
   // If the compositor or the contained display component (leaf) should be able to receive events,
   // they need to have a id.
   // The id is specified in the "Component" and must be unique.
@@ -17,6 +18,8 @@
   export let component: Component;
 
   export let library;
+
+  export let domElement;
 
   // A Component (see "composition") can contain multiple display documents. One for each DeviceClass.
   // This variable holds the current ComponentDefinition that was chosen by the Compositor.
@@ -135,6 +138,7 @@
 {#if componentDefinition && (!componentDefinition.children || componentDefinition.children.length === 0 || componentDefinition.component)}
   <!-- This branch handles leaf-components -->
   <section
+    bind:this={domElement}
     style="grid-area: {componentDefinition.area}; display: grid; grid-template-columns:
     'minmax(1fr)'; grid-template-rows: 'minmax(1fr)'; overflow: hidden; height:100%;">
     {#if componentDefinition.cssClasses}
@@ -158,6 +162,7 @@
 {:else if componentDefinition}
   <!-- This branch handles container-components -->
   <section
+    bind:this={domElement}
     class="compositor"
     style="grid-area: {componentDefinition.area}; --areas: {getAreas(componentDefinition)};
     --columns: {getColumns(componentDefinition)}; --rows: {getRows(componentDefinition)};
