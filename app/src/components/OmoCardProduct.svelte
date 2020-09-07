@@ -56,7 +56,7 @@
     <!-- svelte-ignore a11y-invalid-attribute -->
     <a
       on:click={() => window.trigger(new NavigateTo('title', 'product/' + data.id))}
-      href=""
+      href="#"
       class="w-full text-center text-white bg-secondary font-bold text-lg px-4
       py-2 uppercase hover:bg-tertiary">
       Buy Now
