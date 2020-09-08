@@ -8,7 +8,6 @@
   import { SetLayout } from "../trigger/compositor/setLayout";
   import { ResetLayout } from "../trigger/compositor/resetLayout";
   import { InstanceResized } from "../trigger/shell/instanceResized";
-  import { watchResize } from "svelte-watch-resize";
 
 
   // If the compositor or the contained display component (leaf) should be able to receive events,
@@ -123,19 +122,6 @@
       eventSubscription = eventStream.subscribe(eventHandler);
     }
   }
-
-  function onResize(node) {
-    if (!node)
-      return;
-
-    window.trigger(new InstanceResized(
-            id,
-            node.offsetLeft,
-            node.offsetTop,
-            node.offsetWidth,
-            node.offsetHeight
-    ));
-  }
 </script>
 
 <style>
@@ -156,19 +142,18 @@
     bind:this={domElement}
     style="grid-area: {componentDefinition.area}; display: grid; grid-template-columns:
     'minmax(1fr)'; grid-template-rows: 'minmax(1fr)'; overflow: hidden; height:100%;">
-      <div class={componentDefinition.cssClasses}>
+     <!-- <div class={componentDefinition.cssClasses} style="width:100%; height:100%; overflow:auto">-->
         <svelte:component
           this={library.getComponentByName(componentDefinition.component)}
           bind:this={componentInstance}
           {library}
           {component}
           data={componentDefinition.data} />
-      </div>
+      <!--</div>-->
   </section>
 {:else if componentDefinition}
   <!-- This branch handles container-components -->
   <section
-          use:watchResize={onResize}
           bind:this={domElement}
           class="compositor"
           style="grid-area: {componentDefinition.area}; --areas: {getAreas(componentDefinition)};

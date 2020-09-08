@@ -14,9 +14,6 @@
   import { productDetail } from "./organisms/productDetail";
   import { actionRepository } from "./actions/actionRepository";
   import { profile } from "./organisms/profile";
-  import { DummyRequest } from "./trigger/dummyRequest";
-  import { SetLayout } from "./trigger/compositor/setLayout";
-  import { ResetLayout } from "./trigger/compositor/resetLayout";
 
   // set default component
   let viewDocument = Home;

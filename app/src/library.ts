@@ -17,6 +17,7 @@ import SafeToken from "./components/SafeToken.svelte";
 import GridCompositor from "./components/GridCompositor.svelte";
 import PageCompositor from "./components/PageCompositor.svelte";
 import SlotCompositor from "./components/SlotCompositor.svelte";
+import OmoColumnContainer from "./components/OmoColumnContainer.svelte";
 
 import {LayoutHeaderMain} from "./layouts/LayoutHeaderMain";
 import {LayoutHeaderMainFooter} from "./layouts/LayoutHeaderMainFooter";
@@ -73,6 +74,8 @@ export const library = {
         return PageCompositor;
       case "SlotCompositor":
         return SlotCompositor;
+      case "OmoColumnContainer":
+        return OmoColumnContainer;
     }
   },
 

@@ -34,16 +34,6 @@ export const actionRepository = {
     if (!store)
       throw new Error("Couldn't find a store with the name '" + trigger.storeName + "'");
 
-    const items = get(store);
-    items.map(o => {
-      if (!o.tags)
-        o.tags = []; // TODO: Don't change the object!!
-      return {
-        id: o.id,
-        tags: o.tags.map(t => {
 
-        })
-      }
-    });
   }
 }

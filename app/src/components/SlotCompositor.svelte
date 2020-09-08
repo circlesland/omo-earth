@@ -18,12 +18,6 @@
   // This variable holds the current ComponentDefinition that was chosen by the Compositor.
   let componentDefinition: ComponentDefinition|undefined;
 
-  function clone(obj) {
-    const json = JSON.stringify(obj);
-    const clone = JSON.parse(json);
-    return clone;
-  }
-
   let headers = [];
   let footers = [];
   let items = [];

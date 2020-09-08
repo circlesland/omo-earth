@@ -1,8 +1,16 @@
 <script>
+  import { NavigateTo } from "../trigger/navigateTo";
+  import {allStores} from "../stores/allStores";
+
   export let data = {};
+
+  function onTagClicked(tag) {
+    console.log(tag);
+  }
+
 </script>
 
-<!-- 
+<!--
 <div class="max-w-sm bg-white shadow-lg rounded-lg overflow-hidden my-4">
   <span
     class="font-title w-full text-center text-sm font-bold inline-block p-2
@@ -45,7 +53,8 @@
           57.144-56s57.144 24.643 57.144 56c0 31.355-25.148 56-57.144 56z" />
       </svg>
       {#each data.tags as tag}
-        <p class="px-2 text-sm">{(allStores[tag.type].byId(tag.id)).name}</p>
+        <p class="px-2 text-sm">
+          <a href="#" on:click={() => onTagClicked(tag)}>{allStores.findByTag(tag).name}</a></p>
       {/each}
     </div>
   </div>
