@@ -18,24 +18,27 @@ import GridCompositor from "./components/GridCompositor.svelte";
 import PageCompositor from "./components/PageCompositor.svelte";
 import SlotCompositor from "./components/SlotCompositor.svelte";
 import OmoColumnContainer from "./components/OmoColumnContainer.svelte";
+import OmoBanner from "./components/OmoBanner.svelte";
 
-import {LayoutHeaderMain} from "./layouts/LayoutHeaderMain";
-import {LayoutHeaderMainFooter} from "./layouts/LayoutHeaderMainFooter";
-import {LayoutMain} from "./layouts/LayoutMain";
-import {LayoutTopMainAside} from "./layouts/LayoutTopMainAside";
-import {LayoutNavMain} from "./layouts/LayoutNavMain";
-import {LayoutNav} from "./layouts/LayoutNav";
-import type {Observable} from "rxjs";
-import type {Trigger} from "./trigger/trigger";
-import {Component, ComponentDefinition, DeviceClass} from "./interfaces/component";
-import {NewRuntimeInstance} from "./trigger/shell/newRuntimeInstance";
-import {RemovedRuntimeInstance} from "./trigger/shell/removedRuntimeInstance";
+import { LayoutHeaderMain } from "./layouts/LayoutHeaderMain";
+import { LayoutHeaderMainFooter } from "./layouts/LayoutHeaderMainFooter";
+import { LayoutMain } from "./layouts/LayoutMain";
+import { LayoutTopMainAside } from "./layouts/LayoutTopMainAside";
+import { LayoutNavMain } from "./layouts/LayoutNavMain";
+import { LayoutNav } from "./layouts/LayoutNav";
+import type { Observable } from "rxjs";
+import type { Trigger } from "./trigger/trigger";
+import {
+  Component,
+  ComponentDefinition,
+  DeviceClass,
+} from "./interfaces/component";
+import { NewRuntimeInstance } from "./trigger/shell/newRuntimeInstance";
+import { RemovedRuntimeInstance } from "./trigger/shell/removedRuntimeInstance";
 
 export const library = {
-  getComponentByName: (name) =>
-  {
-    switch (name)
-    {
+  getComponentByName: (name) => {
+    switch (name) {
       case "OmoNavBottom":
         return OmoNavBottom;
       case "OmoTransactions":
@@ -76,14 +79,14 @@ export const library = {
         return SlotCompositor;
       case "OmoColumnContainer":
         return OmoColumnContainer;
+      case "OmoBanner":
+        return OmoBanner;
     }
   },
 
   layout: {
-    getLayoutByName: (name) =>
-    {
-      switch (name)
-      {
+    getLayoutByName: (name) => {
+      switch (name) {
         case "LayoutHeaderMain":
           return LayoutHeaderMain;
         case "LayoutHeaderMainFooter":
@@ -99,11 +102,15 @@ export const library = {
       }
       throw new Error("Couldn't find layout with the name " + name);
     },
-    isAreaAvailable(layoutName:string, component:Component) {
+    isAreaAvailable(layoutName: string, component: Component) {
       const layout = library.layout.getLayoutByName(layoutName);
-      const componentDefinition = library.runtime.findComponentDefinition(component);
+      const componentDefinition = library.runtime.findComponentDefinition(
+        component
+      );
       const availableAreas = this._getAreasFromString(layout.areas);
-      const availableArea = availableAreas.find((o) => o === componentDefinition.area);
+      const availableArea = availableAreas.find(
+        (o) => o === componentDefinition.area
+      );
       return availableArea;
     },
     _getAreasFromString(areas) {
@@ -132,8 +139,7 @@ export const library = {
   runtime: {
     _instances: {},
     _topics: {},
-    register(id: string, instance: any): Observable<Trigger>
-    {
+    register(id: string, instance: any): Observable<Trigger> {
       this._instances[id] = instance;
       this._topics[id] = window.eventBroker.createTopic("omo", id);
 
@@ -141,61 +147,59 @@ export const library = {
 
       return this._topics[id].observable;
     },
-    find(id: string): any
-    {
+    find(id: string): any {
       return this._instances[id];
     },
-    remove(id: string)
-    {
+    remove(id: string) {
       delete this._instances[id];
       window.eventBroker.removeTopic("omo", id);
       window.trigger(new RemovedRuntimeInstance(id));
     },
-    getDeviceClass(): DeviceClass
-    {
+    getDeviceClass(): DeviceClass {
       if (window.innerWidth <= 600) return DeviceClass.mobile;
       else if (window.innerWidth <= 1024) return DeviceClass.tablet;
       else return DeviceClass.desktop;
     },
-    _clone(obj)
-    {
+    _clone(obj) {
       const json = JSON.stringify(obj);
       const clone = JSON.parse(json);
       return clone;
     },
-    findComponentDefinition(component: Component): ComponentDefinition
-    {
-      function collectProperties(obj:Component|ComponentDefinition) {
+    findComponentDefinition(component: Component): ComponentDefinition {
+      function collectProperties(obj: Component | ComponentDefinition) {
         const skip = {
           [DeviceClass.mobile]: true,
           [DeviceClass.tablet]: true,
-          [DeviceClass.desktop]: true
+          [DeviceClass.desktop]: true,
         };
 
         const properties = {};
         Object.keys(obj)
-          .filter(o => !skip[o])
-          .map(o => {return {key: o, value: obj[o]}})
-          .forEach(o => properties[o.key] = o.value);
+          .filter((o) => !skip[o])
+          .map((o) => {
+            return { key: o, value: obj[o] };
+          })
+          .forEach((o) => (properties[o.key] = o.value));
 
         return properties;
       }
 
       const self = this;
 
-      function findDeviceSpecificDefinition()
-      {
+      function findDeviceSpecificDefinition() {
         const deviceClass = library.runtime.getDeviceClass();
 
         // Find a matching definition (searching from large to small)
-        const sizeMap = [DeviceClass.mobile, DeviceClass.tablet, DeviceClass.desktop];
+        const sizeMap = [
+          DeviceClass.mobile,
+          DeviceClass.tablet,
+          DeviceClass.desktop,
+        ];
         let testSize = sizeMap.indexOf(deviceClass);
 
-        for (let i = testSize; i >= 0; i--)
-        {
+        for (let i = testSize; i >= 0; i--) {
           const definition = component[sizeMap[i]];
-          if (definition)
-          {
+          if (definition) {
             return self._clone(definition);
           }
         }
@@ -204,13 +208,17 @@ export const library = {
       }
 
       const deviceDefinition = findDeviceSpecificDefinition();
-      const deviceProperties = deviceDefinition ? collectProperties(deviceDefinition) : {};
+      const deviceProperties = deviceDefinition
+        ? collectProperties(deviceDefinition)
+        : {};
       const componentProperties = collectProperties(component);
 
       // Override all common properties with the device-specific value (if any)
-      Object.keys(deviceProperties).forEach(o => componentProperties[o] = deviceProperties[o]);
+      Object.keys(deviceProperties).forEach(
+        (o) => (componentProperties[o] = deviceProperties[o])
+      );
 
       return <any>componentProperties;
-    }
-  }
+    },
+  },
 };
