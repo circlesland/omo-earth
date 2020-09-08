@@ -2,7 +2,7 @@
   export let data = {
     title: "omo earth",
     image: "https://source.unsplash.com/random",
-    safe: "/",
+    link: "/",
   };
 </script>
 
