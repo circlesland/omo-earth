@@ -7,6 +7,9 @@
   import { Actions } from "../actions/actions";
   import { SetLayout } from "../trigger/compositor/setLayout";
   import { ResetLayout } from "../trigger/compositor/resetLayout";
+  import { InstanceResized } from "../trigger/shell/instanceResized";
+  import { watchResize } from "svelte-watch-resize";
+
 
   // If the compositor or the contained display component (leaf) should be able to receive events,
   // they need to have a id.
@@ -17,6 +20,8 @@
   export let component: Component;
 
   export let library;
+
+  export let domElement;
 
   // A Component (see "composition") can contain multiple display documents. One for each DeviceClass.
   // This variable holds the current ComponentDefinition that was chosen by the Compositor.
@@ -118,6 +123,19 @@
       eventSubscription = eventStream.subscribe(eventHandler);
     }
   }
+
+  function onResize(node) {
+    if (!node)
+      return;
+
+    window.trigger(new InstanceResized(
+            id,
+            node.offsetLeft,
+            node.offsetTop,
+            node.offsetWidth,
+            node.offsetHeight
+    ));
+  }
 </script>
 
 <style>
@@ -135,9 +153,9 @@
 {#if componentDefinition && (!componentDefinition.children || componentDefinition.children.length === 0 || componentDefinition.component)}
   <!-- This branch handles leaf-components -->
   <section
+    bind:this={domElement}
     style="grid-area: {componentDefinition.area}; display: grid; grid-template-columns:
     'minmax(1fr)'; grid-template-rows: 'minmax(1fr)'; overflow: hidden; height:100%;">
-    {#if componentDefinition.cssClasses}
       <div class={componentDefinition.cssClasses}>
         <svelte:component
           this={library.getComponentByName(componentDefinition.component)}
@@ -146,36 +164,29 @@
           {component}
           data={componentDefinition.data} />
       </div>
-    {:else}
-      <svelte:component
-        this={library.getComponentByName(componentDefinition.component)}
-        {component}
-        {library}
-        bind:this={componentInstance}
-        data={componentDefinition.data} />
-    {/if}
   </section>
 {:else if componentDefinition}
   <!-- This branch handles container-components -->
   <section
-    class="compositor"
-    style="grid-area: {componentDefinition.area}; --areas: {getAreas(componentDefinition)};
-    --columns: {getColumns(componentDefinition)}; --rows: {getRows(componentDefinition)};
-    ">
+          use:watchResize={onResize}
+          bind:this={domElement}
+          class="compositor"
+          style="grid-area: {componentDefinition.area}; --areas: {getAreas(componentDefinition)};
+            --columns: {getColumns(componentDefinition)}; --rows: {getRows(componentDefinition)};">
     {#each componentDefinition.children as child}
       {#if library.layout.isAreaAvailable(componentDefinition.layout, child)}
         <svelte:self
-          {library}
-          bind:this={componentInstance}
-          component={child} />
+                {library}
+                bind:this={componentInstance}
+                component={child} />
       {:else}
-        <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
-          we simply shoot it to the moon.. -->
+      <!-- When a child has no 'area' to go to (it's area is not defined in the parent's layout),
+        we simply shoot it to the moon.. -->
         <div style="position:absolute; left:-2000em; top:-2000em; visibility:hidden;">
           <svelte:self
-            {library}
-            bind:this={componentInstance}
-            component={child} />
+                  {library}
+                  bind:this={componentInstance}
+                  component={child} />
         </div>
       {/if}
     {/each}

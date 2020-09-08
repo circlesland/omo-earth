@@ -40,7 +40,8 @@
     }
   }
 
-  function onMenuItemClick(item) {
+  function onMenuItemClick(item, e) {
+    e.preventDefault();
     const deviceClass = library.runtime.getDeviceClass();
     if (deviceClass === DeviceClass.mobile) {
       window.trigger(new ToggleSideNav());
@@ -65,8 +66,8 @@
       {:else if item._type === 'item'}
         <li class="my-px">
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a href="" 
-            on:click={() => onMenuItemClick(item)}
+          <a href="#"
+            on:click={(e) => onMenuItemClick(item, e)}
             class="flex flex-row font-title text-sm uppercase font-bold
             items-center h-10 px-4 text-gray-500 hover:bg-gray-200
             hover:text-secondary">
