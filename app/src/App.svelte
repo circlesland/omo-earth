@@ -57,7 +57,9 @@
   });
 
   // activate router
-  page.start();
+  page.start({
+    hashbang: true
+  });
 </script>
 
 <Tailwind />
