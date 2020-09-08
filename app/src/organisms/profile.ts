@@ -1,18 +1,19 @@
-import { LayoutMain } from "../layouts/LayoutMain";
-import type {Component} from "../interfaces/component";
+import type { Component } from "../interfaces/component";
 
-export const profile = (id:string) =>
-{
-  const component : Component = {
+export const profile = (id: string) => {
+  const component: Component = {
     area: "main",
     layout: "LayoutMain",
-    children: [{
-      area: "main",
-      component: "OmoProfile",
-      data: {
-        id
-      }
-    }]
-  }
+    children: [
+      {
+        area: "main",
+        cssClasses: "overflow-y-scroll p-12 bg-gray-200",
+        component: "OmoProfile",
+        data: {
+          id,
+        },
+      },
+    ],
+  };
   return component;
 };

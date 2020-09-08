@@ -1,11 +1,8 @@
 <script>
-  import { NavigateTo } from "../trigger/navigateTo";
-  import {allStores} from "../stores/allStores";
-
   export let data = {};
-
 </script>
 
+<!-- 
 <div class="max-w-sm bg-white shadow-lg rounded-lg overflow-hidden my-4">
   <span
     class="font-title w-full text-center text-sm font-bold inline-block p-2
@@ -54,12 +51,42 @@
   </div>
   <div class="font-title flex justify-between w-full">
     <!-- svelte-ignore a11y-invalid-attribute -->
-    <a
+<!-- <a
       on:click={() => window.trigger(new NavigateTo('title', 'product/' + data.id))}
       href=""
       class="w-full text-center text-white bg-secondary font-bold text-lg px-4
       py-2 uppercase hover:bg-tertiary">
       Buy Now
     </a>
+  </div>
+</div> -->
+
+<div class="text-gray-700 w-full bg-white">
+  <div class="h-full border-1 border-gray-200 overflow-hidden">
+    <img
+      class="lg:h-48 md:h-36 w-full object-cover object-center"
+      src={data.image}
+      alt="blog" />
+    <div class="p-6">
+      <h2
+        class="tracking-widest text-xs title-font font-title uppercase
+          text-gray-500 mb-1">
+        {data.category}
+      </h2>
+      <h1 class="title-font font-title text-lg font-medium text-primary mb-3">
+        {data.name}
+      </h1>
+      <p class="leading-relaxed mb-3">{data.description}</p>
+      <span
+        class="text-secondary uppercase font-title mr-3 inline-flex items-center
+          leading-none text-2xl font-bold py-1">
+        {data.price}
+      </span>
+    </div>
+    <div
+      class="py-3 font-bold text-white uppercase text-center bg-green-400
+        hover:bg-green-300 cursor-pointer">
+      Show Detail
+    </div>
   </div>
 </div>
