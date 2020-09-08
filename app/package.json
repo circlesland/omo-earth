@@ -4,7 +4,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w & npm run tsc",
-    "start": "sirv public --single",
+    "start": "sirv public --single --host",
     "validate": "svelte-check",
     "tsc": "npx tsc -w"
   },
