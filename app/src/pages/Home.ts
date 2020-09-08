@@ -8,6 +8,12 @@ export const Home: Component = {
       area: "main",
       component: "OmoBanner",
       data: { title: "Follow your passion", image: "/start.jpg", link: "safe" },
+      children: [
+        {
+          area: "",
+          component: "OmoLogin",
+        },
+      ],
     },
   ],
 };

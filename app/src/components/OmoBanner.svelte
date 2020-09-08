@@ -1,31 +1,45 @@
 <script lang="ts">
+  import OmoLogin from "./OmoLogin.svelte";
+
   export let data = {
     title: "omo earth",
     image: "https://source.unsplash.com/random",
     link: "/",
   };
+
+  let id;
+
+  // The "composition" contains the display document.
+  export let component: Component;
+
+  export let library;
+
+  // A Component (see "composition") can contain multiple display documents. One for each DeviceClass.
+  // This variable holds the current ComponentDefinition that was chosen by the Compositor.
+  let componentDefinition: ComponentDefinition | undefined;
+
+  let childComponents = [];
+
+  $: {
+    if (component) {
+      componentDefinition = library.runtime.findComponentDefinition(component);
+      id = component.id;
+    }
+  }
 </script>
 
 <div
   class="bg-cover bg-center object-fill"
   style="background-image: url({data.image})">
   <div class="h-full flex flex-col justify-center">
-    <div class="flex flex-wrap w-5/6 md:w-2/4 m-auto">
-      <div
-        class="w-full text-center px-16 py-8 rounded-t"
-        style="background-color: rgba(11, 42, 77, 0.4);">
-        <h1
-          class="uppercase text-gray-200 font-title text-4xl md:text-5xl
-            lg:text-6xl">
-          {data.title}
-        </h1>
-      </div>
-      <a
-        href={data.link}
-        class="text-center w-full text-white bg-action py-2 px-4 uppercase
-          text-lg font-bold rounded-b hover:bg-primary">
-        Login
-      </a>
-    </div>
+    {#if componentDefinition.children}
+      {#each componentDefinition.children as childComponent}
+        <svelte:component
+          this={library.getComponentByName(childComponent.component)}
+          {library}
+          {component}
+          data={childComponent.data} />
+      {/each}
+    {/if}
   </div>
 </div>

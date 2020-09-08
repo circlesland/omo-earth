@@ -19,6 +19,7 @@ import PageCompositor from "./components/PageCompositor.svelte";
 import SlotCompositor from "./components/SlotCompositor.svelte";
 import OmoColumnContainer from "./components/OmoColumnContainer.svelte";
 import OmoBanner from "./components/OmoBanner.svelte";
+import OmoLogin from "./components/OmoLogin.svelte";
 
 import { LayoutHeaderMain } from "./layouts/LayoutHeaderMain";
 import { LayoutHeaderMainFooter } from "./layouts/LayoutHeaderMainFooter";
@@ -81,6 +82,8 @@ export const library = {
         return OmoColumnContainer;
       case "OmoBanner":
         return OmoBanner;
+      case "OmoLogin":
+        return OmoLogin;
     }
   },
 
