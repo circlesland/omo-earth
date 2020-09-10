@@ -1,7 +1,7 @@
 <script>
   import OmoModal from "./OmoModal.svelte";
   import IconsFontAwesome from "./IconsFontAwesome.svelte";
-  import {ToggleSideNav} from "../trigger/shell/toggleSideNav";
+  import { ToggleSideNav } from "../trigger/shell/toggleSideNav";
 
   export let data = { triggers: [] };
 
@@ -13,8 +13,12 @@
 
 <OmoModal {triggerRef} bind:isOpen>hello I am modal</OmoModal>
 
-<ul class="flex bg-primary text-white shadow h-full w-full">
-  <li class="mt-auto h-full flex items-center w-16 border-r border-blue-900" on:click={() => window.trigger(new ToggleSideNav())}>
+<ul
+  class="flex bg-white text-gray-600 border-t border-gray-200 shadow h-full
+    w-full">
+  <li
+    class="mt-auto h-full flex items-center w-16 border-r border-gray-200"
+    on:click={() => window.trigger(new ToggleSideNav())}>
     <!-- svelte-ignore a11y-img-redundant-alt -->
     <img src="/images/logo.svg" alt="image" class="p-3" />
   </li>
@@ -36,8 +40,8 @@
     <button
       on:click={() => (isOpen = true)}
       class="h-16 w-10 mx-auto flex flex justify-center items-center w-full
-      text-white hover:bg-gray-100 hover:text-secondary bg-action
-      focus:outline-none">
+        text-white hover:bg-gray-100 hover:text-secondary bg-action
+        focus:outline-none">
       <i class="text-lg fas fa-plus" />
     </button>
   </li>

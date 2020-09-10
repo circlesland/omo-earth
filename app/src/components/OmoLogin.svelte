@@ -29,7 +29,7 @@
       </div>
       <a
         href="/safe"
-        class="rounded-b bg-action py-4 text-center px-17 md:px-12 md:py-4
+        class="rounded-b bg-secondary py-4 text-center px-17 md:px-12 md:py-4
           text-white leading-tight text-2xl font-bold md:text-base font-title
           uppercase">
         Send Login Mail
