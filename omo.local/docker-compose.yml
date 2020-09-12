@@ -9,12 +9,24 @@ services:
     ports:
       - "5432"
 
-  omo-auth:
+  auth:
     depends_on:
       - postgres
     build:
       context: ../auth
-      dockerfile: ../omo.local/omo-auth/Dockerfile
+      dockerfile: ../omo.local/auth/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "80"
+
+  app:
+    depends_on:
+      - postgres
+      - auth
+    build:
+      context: ../app
+      dockerfile: ../omo.local/app/Dockerfile
     env_file:
       - .env
     ports:
@@ -28,7 +40,8 @@ services:
   proxy:
     depends_on:
       - static
-      - omo-auth
+      - auth
+      - app
     build: proxy
     env_file:
       - .env
