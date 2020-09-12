@@ -1,4 +1,5 @@
 <script lang="ts">
+  import OmoFavicon from "./components/OmoFavicon.svelte";
   import GridCompositor from "./components/GridCompositor.svelte";
   import Tailwind from "./Tailwind.svelte";
   import page from "page";
@@ -58,9 +59,10 @@
 
   // activate router
   page.start({
-    hashbang: true
+    hashbang: true,
   });
 </script>
 
+<OmoFavicon />
 <Tailwind />
 <GridCompositor {library} component={viewDocument} />

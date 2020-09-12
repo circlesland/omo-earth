@@ -9,15 +9,16 @@ module.exports = {
   },
   theme: {
     fontFamily: {
-      'title': ['"Josefin Sans"', 'sans-serif'],
+      'title': ['"Baloo Bhai 2"', 'cursive'],
       'subtitle': ['Exo 2', 'sans-serif'],
       'sans': ['"Nunito Sans"', 'sans-serif']
     },
     extend: {
       colors: {
-        primary: '#03174B',
-        secondary: '#233D81',
-        tertiary: '#3182CE',
+        light: "#F5FAFF",
+        dark: "#03174B",
+        primary: '#0C266A',
+        secondary: '#247ACA',
         action: '#2AD78B',
         'smoke-darkest': 'rgba(0, 0, 0, 0.9)',
         'smoke-darker': 'rgba(0, 0, 0, 0.75)',

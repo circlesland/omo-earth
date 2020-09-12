@@ -4,7 +4,9 @@ import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import livereload from "rollup-plugin-livereload";
 import css from 'rollup-plugin-css-only'
-import { terser } from "rollup-plugin-terser";
+import {
+  terser
+} from "rollup-plugin-terser";
 import sveltePreprocess from "svelte-preprocess";
 
 const production = !process.env.ROLLUP_WATCH;
@@ -21,8 +23,7 @@ function serve() {
       if (server) return;
       server = require("child_process").spawn(
         "npm",
-        ["run", "start", "--", "--dev"],
-        {
+        ["run", "start", "--", "--dev"], {
           stdio: ["ignore", "inherit", "inherit"],
           shell: true,
         }
@@ -49,7 +50,7 @@ export default {
       // we'll extract any component CSS out into
       // a separate file - better for performance
       css: (css) => {
-        css.write("public/build/bundle.css");
+        css.write("bundle.css");
       },
       preprocess: sveltePreprocess({
         postcss: true,
@@ -70,7 +71,9 @@ export default {
         'svelte-swiper': ['Swiper', 'SwiperSlide']
       }
     }),
-    css({ output: 'public/build/swiper-bundle.css' }),
+    css({
+      output: 'public/build/swiper-bundle.css'
+    }),
     typescript({
       sourceMap: !production,
     }),

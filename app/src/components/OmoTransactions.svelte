@@ -4,12 +4,12 @@
   import moment from "moment";
 </script>
 
-<section class="bg-white p-8">
-  <div class="font-title text-tertiary text-xl">Transaction History</div>
+<section class="p-8 m-12">
+  <div class="font-sans text-secondary text-xl bg-white">
+    Transaction History
+  </div>
   {#each $transactions as t}
-    <div
-      class="flex h-14 w-full text-secondary border-b border-gray-100
-      hover:bg-gray-100">
+    <div class="flex h-14 w-full text-primary hover:bg-gray-100">
       <div
         class="w-12 h-12 pt-2 flex flex-col justify-center text-center"
         class:text-green-400={t.direction === 'in'}>
@@ -28,7 +28,7 @@
         {/if}
       </div>
       <div class="text-base py-2 px-2 flex-1">
-        <b class="text-secondary font-title">{t.subject}</b>
+        <b class="text-primary font-title">{t.subject}</b>
         <p class="text-xs -mt-1 text-gray-500">
           {moment.unix(t.createdAt).locale('en').fromNow()}
           {#if t.direction === 'in'}
@@ -39,7 +39,7 @@
       <div
         class="font-title h-12 py-2 px-3 text-3xl font-bold"
         class:text-green-400={t.direction === 'in'}
-        class:text-secondary={t.direction === 'out'}>
+        class:text-primary={t.direction === 'out'}>
         {#if t.direction === 'out'}-{t.amount}{:else}{t.amount}{/if}
       </div>
     </div>
