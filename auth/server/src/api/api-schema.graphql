@@ -1,0 +1,42 @@
+scalar Json
+
+type Mutation {
+    # Sends a one time code to the e-mail recipient.
+    login(appId:String! emailAddress:String!) : LoginResponse!
+
+    # Verifies the one time code and issues a JWT that proofs that the owner has access to the email address
+    verify(oneTimeToken:String!) : VerifyResponse!
+}
+
+type Query {
+    keys(kid:String!) : PublicKey
+    version : Version
+}
+
+interface ActionResponse {
+    success: Boolean!
+    errorMessage: String
+}
+
+type PublicKey {
+    id: Int!
+    publicKey: String!
+    validTo: String!
+}
+
+type Version {
+    major: Int!
+    minor: Int!
+    revision: Int!
+}
+
+type LoginResponse implements ActionResponse {
+    success: Boolean!
+    errorMessage: String
+}
+
+type VerifyResponse implements ActionResponse {
+    success: Boolean!
+    errorMessage: String
+    jwt:String!
+}

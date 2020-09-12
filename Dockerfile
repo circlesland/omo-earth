@@ -1,6 +1,6 @@
 FROM node:latest
 
-RUN echo "No cache"
+RUN echo "Still no cache"
 RUN git clone https://github.com/omoearth/omo-earth.git
 RUN cd omo-earth && git checkout dev
 RUN cd omo-earth/app && npm i
