@@ -33,4 +33,4 @@ CREATE UNIQUE INDEX "Apps.appId_unique" ON "public"."Apps"("appId");
 CREATE UNIQUE INDEX "UX_Challenges_Email_Challenge" ON "public"."Challenges"("email", "challenge");
 
 INSERT INTO "Apps" ("appId", "originHeaderValue", "validFrom", "validTo")
-            VALUES ('1', 'https://omo.earth', '2020-01-01', null);
+            VALUES ('1', 'http://localhost:8080', '2020-01-01', null);
