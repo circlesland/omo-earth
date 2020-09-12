@@ -1,15 +1,14 @@
 import jsonwebtoken from 'jsonwebtoken';
-const fetch = require('node-fetch');
+const fetch = require('cross-fetch');
 
 export class Client
 {
-    private readonly _authUrl:string;
-
+    private readonly _issuer:string;
     private readonly _appId:string;
 
-    constructor(appId:string, authUrl:string)
+    constructor(appId:string, issuer:string)
     {
-        this._authUrl = authUrl;
+        this._issuer = issuer;
         this._appId = appId;
     }
 
@@ -28,8 +27,8 @@ export class Client
         const iss = tokenPayload.iss;
         if (!iss)
             throw new Error("No issuer (iss) claim.");
-        if (iss !== this._authUrl)
-            throw new Error("The issuer must match the _authUrl (is: " + iss + "; should be:" + this._authUrl + ")");
+        if (iss !== this._issuer)
+            throw new Error("The issuer must match the _authUrl (is: " + iss + "; should be:" + this._issuer + ")");
 
         const kid = tokenPayload.kid;
         if (!kid)
@@ -51,8 +50,6 @@ export class Client
         const pubKey = key.data.keys.publicKey;
         if (!pubKey)
             throw new Error("Couldn't fetch the public key to verify the jwt");
-
-        //const pubKey = key.keys.publicKey.split("\n");
 
         const verifiedPayload = jsonwebtoken.verify(jwt, pubKey);
         if (!verifiedPayload)
