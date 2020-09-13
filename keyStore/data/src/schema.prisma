@@ -1,40 +1,7 @@
-// This is your Prisma schema file,
-// learn more about it in the docs https://pris.ly/d/prisma-schema
-
 datasource db {
     provider = "postgresql"
     url      = "postgresql://postgres:postgres@localhost:5432/omo-keyStore?schema=public"
 }
-//
-// 1) Ein neuer Nutzer meldet sich per E-Mail Adresse bei OMO an
-// 2) Der "auth" Service schickt dem Nutzer eine E-Mail verification E-Mail
-// 3) Der Nutzer bestätigt, dass er Zugriff auf die angegebene E-Mail Adresse hat
-// 4) Der "auth" Service stellt dem Benutzer einen JWToken aus
-// 5) Der Nutzer trägt diesen Token zum "pods" Service und tauscht ihn dort gegen
-//    eine Session ein
-// 6) Der "pods"-service erstellt einen neues Schlüsselpaar für das
-//    Subjekt (sub-claim) des JWT
-// 7) Der private-key wird mit der Session assoziiert
-//
-// * Alle Benutzer haben einen Keystore.
-//   In diesem liegen alle seine Schlüssel.
-// * Die Schlüssel werden mit einem Master-Schlüssel
-//   entschlüsselt.
-//   Der Master-Schlüssel ist erstmal in Besitz von OMO.
-// * Benutzer können anderen Instanzen Zugriff auf ihren Keystore
-//   gewähren, indem sie die Schlüssel abrufen und eine,
-//   mit einem weiteren private-key verschlüsselte, Kopie
-//   erstellen und wieder in ihrem Keystore ablegen.
-//   Den weiteren key teilen sie dann mit der Instanz, die
-//   Zugriff auf die Schlüssel möchte.
-//
-//
-// * Es sollte möglich sein, dass Nutzer sich alternativ mit einem
-//   PPK anmelden können. In diesem Fall wird eine Challenge
-//   erstellt, die der Nutzer entschlüsselt zurücksenden muss
-//   anstatt den E-Mail Link anzuklichen.
-//   In diesem Fall kann ein Nutzer seine Daten zusätzlich
-//   mit seinem (nur ihm bekannten) private key verschlüsseln.
 
 generator client {
     provider = "prisma-client-js"
@@ -48,23 +15,10 @@ model Authority {
 }
 
 // TODO: Check if Forward Secrecy can be used
-
 // TODO: Are symetric cyphers a suitable solution for entity data encryption (leafs/blobs)
-// TODO: when the sym. keys kan be stored with asym. crypto?
-
+// TODO: when the sym. keys can be stored with asym. crypto?
 // TODO: !! We should not take backups of this DB !! How to deal with that?
 // -> One week rolling backups
-
-
-// The KeyStore is made up from Entries.
-// Every Entry is owned by someone who is identified by his/her public key fingerprint.
-// The contents of each Entry are encrypted with the corresponding public key.
-//    -> It's not possible to create a challenge from the Entry alone // TODO: Check if that's good or bad?
-//
-// The KeyStore should store keys to e.g. for a gnosis safe on etherium or to other stores
-// on IPFS. A User can decrypt and retrieve the stored keys by creating a session at the KeyStore.
-// With this session, the user can retrieve stored keys
-
 // TODO: Describe how users can share access to keys.
 
 // Basic Scenario:
@@ -125,3 +79,4 @@ model Entry {
   // The actual data of that Entry (encrypted with the public key that's identified by the ownerFingerPrint).
   content String
 }
+

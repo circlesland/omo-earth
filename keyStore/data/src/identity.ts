@@ -3,16 +3,17 @@ import {prisma} from "./prisma";
 import * as bs58 from "bs58"
 import {KeyGenerator} from "../../../auth/util/dist/keyGenerator";
 import {ValueGenerator} from "../../../auth/util/dist/valueGenerator";
+import {Entry} from "./entry";
 
 export class Identity
 {
-  private static async ipfsCompatibleHash(data: string)
+  static fingerprintPublicKey(publicKey:string)
   {
-    const hashed = createHash('sha256')
-      .update(data)
-      .digest();
-    const bas58Hash = bs58.encode(Buffer.from("0x12", "hex")) + bs58.encode(hashed);
-    return bas58Hash;
+    const fingerprint = createHash('sha512')
+      .update(publicKey)
+      .digest('hex');
+
+    return fingerprint;
   }
 
   /**
@@ -23,9 +24,6 @@ export class Identity
   static async createFromEmail(emailAddress: string)
   {
     const ppk = await KeyGenerator.generateRsaKeyPair(2048);
-    const fingerprint = createHash('sha512')
-      .update(ppk.publicKeyPem)
-      .digest('hex');
 
     // Store a new identity
     const identity = await prisma.identity.create({
@@ -34,7 +32,7 @@ export class Identity
         challengeEmailAddress: emailAddress,
         indexEntryPrivateKey: ppk.privateKeyPem,
         indexEntryPublicKey: ppk.publicKeyPem,
-        indexEntryKeyFingerprint: fingerprint
+        indexEntryKeyFingerprint: Identity.fingerprintPublicKey(ppk.publicKeyPem)
       }
     });
 
@@ -48,41 +46,18 @@ export class Identity
       throw new Error("There is no known identity with the email address '" + challengeEmailAddress + "'");
 
     const identity = identities[0];
-
-    const contentJson = JSON.stringify(indexEntryContent);
-    const contentJsonBuffer = Buffer.from(contentJson);
-    const encryptedContentJsonBuffer = publicEncrypt(identity.indexEntryPublicKey, contentJsonBuffer);
-    const encryptedContentJsonNase64 = encryptedContentJsonBuffer.toString("base64");
-
-    // Create a new index entry
-    const indexMemEntry = {
-      nonce: ValueGenerator.generateRandomBase64String(32),
-      content: encryptedContentJsonNase64,
-      ownerFingerPrint: identity.indexEntryKeyFingerprint
-    };
-
-    const inMemIndexEntryJson = JSON.stringify(indexMemEntry);
-    const indexEntryHash = await Identity.ipfsCompatibleHash(inMemIndexEntryJson);
-
-    const indexEntry = await prisma.entry.create({
-      data: {
-        nonce: indexMemEntry.nonce,
-        ownerFingerPrint: identity.indexEntryKeyFingerprint,
-        entryHash: indexEntryHash,
-        content: indexMemEntry.content
-      }
-    });
+    const persistedEntry = await Entry.createEntry(identity.indexEntryPublicKey, indexEntryContent);
 
     await prisma.identity.update({
       where:{
         identityId: identity.identityId
       },
       data: {
-        indexEntryHash
+        indexEntryHash: persistedEntry.entryHash
       }
     });
 
-    return indexEntry;
+    return persistedEntry;
   }
 
   static async findById(identityId: string)
