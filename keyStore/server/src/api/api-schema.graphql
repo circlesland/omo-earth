@@ -11,7 +11,9 @@ type Mutation {
     # and associated with the "User" object in the database.
     exchangeToken(jwt:String!) : ExchangeTokenResponse!
 
-    upsertIndexEntry()
+    upsertIndexEntry(indexEntryContent:Json) : UpsertIndexEntryResponse!
+
+    createEntry(publicKey:String entryContent:Json) : CreateEntryResponse!
 }
 
 type Query {
@@ -24,6 +26,16 @@ interface ActionResponse {
 }
 
 type ExchangeTokenResponse implements ActionResponse {
+    success: Boolean!
+    errorMessage: String
+}
+
+type UpsertIndexEntryResponse implements ActionResponse {
+    success: Boolean!
+    errorMessage: String
+}
+
+type CreateEntryResponse implements ActionResponse {
     success: Boolean!
     errorMessage: String
 }

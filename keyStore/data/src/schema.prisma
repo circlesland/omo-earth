@@ -51,8 +51,8 @@ model Identity {
   // user to verify that the user is in possesion of the private key.
   challengePublicKey String?
   // Initially or if the user decides to give us access to his rootStore, this field will contain a privateKey
-  // that allows access to the set of entries which the user encrypted with this key.
-  indexEntryPrivateKey String
+  // that allows access to the set of entries which the user encrypted with this PPK.
+  indexEntryPrivateKey String?
   // Contains the public key counterpart for the "keyStorePrivateKey".
   indexEntryPublicKey String
   // Contains the fingerprint of the "keyStorePublicKey" (key-length + [space character] + base64 encoded SHA256 hash of the public key).
@@ -80,3 +80,10 @@ model Entry {
   content String
 }
 
+model Session {
+  // A session is identified by the hash of the JWT that was exchanged for it +  a random nonce.
+  // This will be sent via host-only cookie.
+  sessionId String @unique
+
+
+}

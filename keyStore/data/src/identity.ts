@@ -1,6 +1,5 @@
-import {createHash, publicEncrypt} from "crypto";
+import {createHash} from "crypto";
 import {prisma} from "./prisma";
-import * as bs58 from "bs58"
 import {KeyGenerator} from "../../../auth/util/dist/keyGenerator";
 import {ValueGenerator} from "../../../auth/util/dist/valueGenerator";
 import {Entry} from "./entry";
@@ -39,6 +38,11 @@ export class Identity
     return identity;
   }
 
+  /**
+   * Sets a new index entry for the identity that is associated with the "challengeEmailAddress".
+   * @param challengeEmailAddress
+   * @param indexEntryContent
+   */
   static async upsertIndexEntry(challengeEmailAddress: string, indexEntryContent:object)
   {
     const identities = await prisma.identity.findMany({where:{challengeEmailAddress}});
