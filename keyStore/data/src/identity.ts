@@ -1,4 +1,4 @@
-import {createHash} from "crypto";
+import {createHash, publicEncrypt} from "crypto";
 import {prisma} from "./prisma";
 import * as bs58 from "bs58"
 import {KeyGenerator} from "../../../auth/util/dist/keyGenerator";
@@ -13,6 +13,12 @@ export class Identity
       .digest();
     const bas58Hash = bs58.encode(Buffer.from("0x12", "hex")) + bs58.encode(hashed);
     return bas58Hash;
+  }
+
+  private static async encryptSimleObject(publicKeyPem:string, simpleObject:object)
+  {
+
+    return simpleObject;
   }
 
   /**
@@ -49,25 +55,27 @@ export class Identity
 
     const identity = identities[0];
 
+    const contentJson = JSON.stringify(indexEntryContent);
+    const contentJsonBuffer = Buffer.from(contentJson);
+    const encryptedContentJsonBuffer = publicEncrypt(identity.indexEntryPublicKey, contentJsonBuffer);
+    const encryptedContentJsonNase64 = encryptedContentJsonBuffer.toString("base64");
+
     // Create a new index entry
     const indexMemEntry = {
       nonce: ValueGenerator.generateRandomBase64String(32),
-      content: indexEntryContent,
+      content: encryptedContentJsonNase64,
       ownerFingerPrint: identity.indexEntryKeyFingerprint
     };
 
     let inMemIndexEntryJson = JSON.stringify(indexMemEntry);
     const indexEntryHash = await Identity.ipfsCompatibleHash(inMemIndexEntryJson);
 
-    delete indexMemEntry.nonce;
-    inMemIndexEntryJson = JSON.stringify(indexMemEntry);
-
     const indexEntry = await prisma.entry.create({
       data: {
         nonce: indexMemEntry.nonce,
         ownerFingerPrint: identity.indexEntryKeyFingerprint,
         entryHash: indexEntryHash,
-        content: inMemIndexEntryJson
+        content: indexMemEntry.content
       }
     });
 
