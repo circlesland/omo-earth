@@ -15,12 +15,6 @@ export class Identity
     return bas58Hash;
   }
 
-  private static async encryptSimleObject(publicKeyPem:string, simpleObject:object)
-  {
-
-    return simpleObject;
-  }
-
   /**
    * Creates a new OMO identity for the specified email-address.
    * The e-mail address must be taken from the "sub" claim of the JWT from omo-auth.
@@ -67,7 +61,7 @@ export class Identity
       ownerFingerPrint: identity.indexEntryKeyFingerprint
     };
 
-    let inMemIndexEntryJson = JSON.stringify(indexMemEntry);
+    const inMemIndexEntryJson = JSON.stringify(indexMemEntry);
     const indexEntryHash = await Identity.ipfsCompatibleHash(inMemIndexEntryJson);
 
     const indexEntry = await prisma.entry.create({
