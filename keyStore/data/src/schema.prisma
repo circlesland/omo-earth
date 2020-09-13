@@ -3,7 +3,7 @@
 
 datasource db {
     provider = "postgresql"
-    url      = "postgresql://postgres:postgres@localhost:5432/omo-pods?schema=public"
+    url      = "postgresql://postgres:postgres@localhost:5432/omo-keyStore?schema=public"
 }
 //
 // 1) Ein neuer Nutzer meldet sich per E-Mail Adresse bei OMO an
@@ -53,9 +53,7 @@ model Authority {
 // TODO: when the sym. keys kan be stored with asym. crypto?
 
 // TODO: !! We should not take backups of this DB !! How to deal with that?
-// -> Set-up a DB cluster that replicates with a delay. If too many (to be defined) changes
-//    occur between two replication batches, cut the replication and create a "split brain"
-//    that can be used to restore to a previous state if necessary.
+// -> One week rolling backups
 
 
 // The KeyStore is made up from Entries.
@@ -108,7 +106,7 @@ model Identity {
   // The "entryHash" that points to the index Entry for this user.
   // The index-Entry stores references (also "entryHashes") to other Entries in a dicitionary: {[name:string]:entryHash}.
   // This acts like an IPNS link as it maps a consistent unique id (identityId) to a moving target (the indexEntryHash).
-  indexEntryHash String
+  indexEntryHash String?
 }
 
 // "Entry" objects store public key encypted data.

@@ -18,6 +18,9 @@
     "typescript": "^3.9.2"
   },
   "dependencies": {
+    "@omo/auth-utils": "../../auth/util",
     "@prisma/client": "^2.5.1",
+    "@types/bs58": "^4.0.1",
+    "bs58": "^4.0.1"
   }
 }
