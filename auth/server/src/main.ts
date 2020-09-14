@@ -30,6 +30,9 @@ export class Main
             resolvers: {
                 Mutation: this._resolvers.mutationResolvers,
                 Query: this._resolvers.queryResolvers
+            },
+            cors: {
+              origin: ["omo.local", "omo.earth"]
             }
         });
     }

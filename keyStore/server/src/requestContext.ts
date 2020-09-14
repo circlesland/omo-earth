@@ -5,6 +5,9 @@ export class RequestContext
     readonly origin:string;
     readonly sessionId?:string;
 
+    readonly setCookies = [];
+    readonly setHeaders = [];
+
     private constructor(origin:string, sessionId?:string)
     {
         this.origin = origin;
@@ -17,9 +20,11 @@ export class RequestContext
             throw new Error("Only queries and mutations are allowed.")
         }
 
-        const originHeaderValue = arg.req.headers["origin"];
+      const originHeaderValue = arg.req.headers["origin"];
+      const cookieValue = arg.req.headers["cookie"];
 
-        console.log("Cookies: " + JSON.stringify(arg.req.cookies));
+      console.log("Origin: " + originHeaderValue);
+      console.log("Cookies: " + cookieValue);
 /*
         const sessionCookie = arg.req.cookies["session"];
         let sessionId:string|undefined = undefined;

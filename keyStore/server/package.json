@@ -19,12 +19,13 @@
     "typescript": "^3.9.2"
   },
   "dependencies": {
-    "dotenv": "^8.2.0",
+    "@omo/keystore-data": "../data",
     "apollo-server": "^2.13.1",
+    "apollo-server-plugin-http-headers": "^0.1.3",
     "bcrypt": "^4.0.1",
+    "dotenv": "^8.2.0",
     "graphql": "^15.0.0",
     "graphql-import": "^1.0.2",
-    "jsonwebtoken": "^8.5.1",
-    "@omo/keystore-data": "../data"
+    "jsonwebtoken": "^8.5.1"
   }
 }

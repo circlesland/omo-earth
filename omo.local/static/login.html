@@ -9,16 +9,32 @@
             const payload = {
                 "operationName": null,
                 "variables": {},
-                "query": "mutation { login(appId: \"\", emailAddress: \"" + emailAddress + "\") { success errorMessage }}"
+                "query": "mutation { login(appId: \"1\", emailAddress: \"" + emailAddress + "\") { success errorMessage }}"
             };
 
             const xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://auth.omo.earth");
+            xhr.withCredentials = true;
+            xhr.open("POST", "http://omo.local:8080/auth");
             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xhr.send(JSON.stringify(payload));
             xhr.onreadystatechange = (e) => {
                 document.getElementById("request").style.visibility = "hidden";
                 document.getElementById("response").style.visibility = "visible";
+            }
+        }
+        function ExchangeTokenForCookie() {
+            const payload = {
+                "operationName": null,
+                "variables": {},
+                "query": "mutation { exchangeToken(jwt:\"\") { success errorMessage }}"
+            };
+            const xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+            xhr.open("POST", "http://omo.local:8080/keyStore");
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify(payload));
+            xhr.onreadystatechange = (e) => {
+                alert("sent");
             }
         }
     </script>
@@ -30,6 +46,7 @@
         <p>Please provide your E-Mail address below:</p>
         <input id="email" type="text"><br/>
         <input type="button" onclick="Login()" value="Send magic link">
+        <input type="button" onclick="ExchangeTokenForCookie()" value="Get cookie">
     </div>
     <div id="response" style="width: 200px; height: 150px; margin: 0 auto; visibility: hidden;">
         <h1>Thank you!</h1>
