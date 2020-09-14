@@ -20,10 +20,22 @@ services:
     ports:
       - "80"
 
+  keystore:
+    depends_on:
+      - postgres
+    build:
+      context: ../
+      dockerfile: omo.local/keyStore/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "80"
+
   app:
     depends_on:
       - postgres
       - auth
+      - keystore
     build:
       context: ../app
       dockerfile: ../omo.local/app/Dockerfile

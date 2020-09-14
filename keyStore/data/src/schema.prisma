@@ -81,9 +81,15 @@ model Entry {
 }
 
 model Session {
-  // A session is identified by the hash of the JWT that was exchanged for it +  a random nonce.
-  // This will be sent via host-only cookie.
+  // The session id is a unique random id.
   sessionId String @unique
-
-
+  // Which Authoritity issued the JWT that lead to this session?
+  issuedBy Authority
+  // When the session was created.
+  createdAt DateTime
+  // The session lifetime in milliseconds (is extended on every user interaction).
+  // The new lifetime is calculated from the point in time of the interaction + the normal configured session lifetime.
+  lifetime Int
+  // Who is identified by the session?
+  identity Identity
 }

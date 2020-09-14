@@ -12,12 +12,12 @@ export class Main
 
     constructor()
     {
-        if (!process.env.AUTH_SERVICE_GRAPHQL_SCHEMA)
+        if (!process.env.KEYSTORE_SERVICE_GRAPHQL_SCHEMA)
         {
-            throw new Error("The AUTH_SERVICE_GRAPHQL_SCHEMA environment variable must contain a valid path that " +
+            throw new Error("The KEYSTORE_SERVICE_GRAPHQL_SCHEMA environment variable must contain a valid path that " +
                 "points to the GraphQL api schema.");
         }
-        const apiSchemaTypeDefs = importSchema(process.env.AUTH_SERVICE_GRAPHQL_SCHEMA);
+        const apiSchemaTypeDefs = importSchema(process.env.KEYSTORE_SERVICE_GRAPHQL_SCHEMA);
 
         this._resolvers = new Resolvers();
 
