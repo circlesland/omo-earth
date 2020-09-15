@@ -30,9 +30,17 @@ export class Client
         if (iss !== this._issuer)
             throw new Error("The issuer must match the _authUrl (is: " + iss + "; should be:" + this._issuer + ")");
 
-        const kid = tokenPayload.kid;
+        let kid = tokenPayload.kid;
         if (!kid)
             throw new Error("No key id (kid) claim.")
+
+      // TODO: This is shit. Find a proper way to configure DNS resolution or add a container that handles DNS
+
+      if (process.env.DEBUG) {
+        const oldKid = kid;
+        kid = kid.replace(process.env.AUTH_SERVICE_BASE_URL, "http://auth");
+        console.warn("Rewrote the KID. Old: '" + oldKid + "'; New: '" + kid + "'");
+      }
 
         const aud = tokenPayload.aud;
         if (typeof aud !== "object")

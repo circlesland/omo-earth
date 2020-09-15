@@ -2,6 +2,7 @@ import {prisma} from "./prisma";
 import {Client} from "@omo/auth-client/dist/client";
 import {ValueGenerator} from "../../../auth/util/dist/valueGenerator";
 import jsonwebtoken from 'jsonwebtoken';
+import {Identity} from "./identity";
 
 export class Session
 {
@@ -38,10 +39,19 @@ export class Session
 
     // Find an identity that matches the subject
     const identities = await prisma.identity.findMany({where:{challengeEmailAddress: sub}});
-    if (!identities || identities.length != 1)
-      throw new Error("Couldn't find an identity for the jwt's subject ('" + sub + "').");
 
-    const identity = identities[0];
+    let identity;
+    if (identities.length == 0) {
+      // If this is the first time that we see this "sub", create a new identity
+      identity = await Identity.createFromEmail(sub);
+    }
+    else
+    {
+      if (!identities || identities.length != 1)
+        throw new Error("Couldn't find an identity for the jwt's subject ('" + sub + "').");
+
+      identity = identities[0];
+    }
 
     const session = await prisma.session.create({
       data: {
