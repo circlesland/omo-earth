@@ -140,8 +140,8 @@ export class Resolvers
         const aud = [forAppId];
 
         // RFC 7519: 4.1.4.  "exp" (Expiration Time) Claim
-        const expiresInMinutes = parseInt(process.env.AUTH_SERVICE_JWT_EXP_IN_SEC);
-        const exp = Math.floor(Date.now() / 1000) + (expiresInMinutes * 60)
+        const expInSeconds = parseInt(process.env.AUTH_SERVICE_JWT_EXP_IN_SEC);
+        const exp = Math.floor(Date.now() / 1000) + expInSeconds;
 
         // RFC 7519: 4.1.5.  "nbf" (Not Before) Claim
         // TODO: Sync with key rotation
