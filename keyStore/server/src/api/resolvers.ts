@@ -1,39 +1,58 @@
 import {
-    MutationResolvers,
-    QueryResolvers
+  MutationResolvers,
+  QueryResolvers
 } from "../generated/graphql";
+import {Session} from "../../../data/dist/session";
 
 export class Resolvers
 {
-    // TODO: Add rate limiting (e.g. with https://www.npmjs.com/package/graphql-rate-limit-directive)
+  // TODO: Add rate limiting (e.g. with https://www.npmjs.com/package/graphql-rate-limit-directive)
 
-    readonly queryResolvers: QueryResolvers;
-    readonly mutationResolvers: MutationResolvers;
+  readonly queryResolvers: QueryResolvers;
+  readonly mutationResolvers: MutationResolvers;
 
-    constructor()
-    {
-        this.mutationResolvers = {
-          exchangeToken: (parent, args, context) => {
-            context.setCookies.push({
-              name: "session",
-              value: "sessionFoo"
-              /*options: {
-                domain: "omo.local",
-                expires: new Date("2021-01-01T00:00:00"),
-                httpOnly: false,
-                maxAge: 3600,
-                path: "/",
-                sameSite: true,
-                secure: false
-              }*/
-            });
-            return {
-              success: true
+  static readonly sessionTimeoutInSeconds = 60;
+
+  constructor()
+  {
+    if (!process.env.DOMAIN)
+      throw new Error("process.env.DOMAIN must be set to a domain name or ip address.");
+
+    this.mutationResolvers = {
+      exchangeToken: async (parent, {jwt}, context) =>
+      {
+        try
+        {
+          const session = await Session.createSessionFromJWT(jwt);
+
+          context.setCookies.push({
+            name: "session",
+            value: session.sessionId,
+            // Use a session cookie that should only last for the one browser session
+            options: {
+              domain: process.env.DOMAIN,
+              httpOnly: true,
+              path: "/",
+              sameSite: true,
+              secure: !process.env.DEBUG
             }
-          }
-        };
+          });
 
-        this.queryResolvers = {
-        };
-    }
+          return {
+            success: true
+          }
+        }
+        catch (e)
+        {
+          console.error(e);
+          return {
+            success: false,
+            errorMessage: "Couldn't create the session cookie from the supplied JWT. Please try again with a new JWT."
+          }
+        }
+      }
+    };
+
+    this.queryResolvers = {};
+  }
 }

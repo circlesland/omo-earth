@@ -87,9 +87,10 @@ model Session {
   issuedBy Authority
   // When the session was created.
   createdAt DateTime
-  // The session lifetime in milliseconds (is extended on every user interaction).
-  // The new lifetime is calculated from the point in time of the interaction + the normal configured session lifetime.
-  lifetime Int
+  // Usually the session ends when the user closes the browser window/tab (session-cookie)
+  // but there is also a fixed max. session length.
+  // This fields specifies the max. session lifetime in seconds.
+  maxLifetime Int
   // Who is identified by the session?
   identity Identity
 }
