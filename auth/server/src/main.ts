@@ -32,7 +32,13 @@ export class Main
                 Query: this._resolvers.queryResolvers
             },
             cors: {
-              origin: ["omo.local", "omo.earth"]
+              // TODO: Generate the CORS policy from config
+              origin: ["http://omo.local:8080",
+                "http://omo.local:80",
+                "http://omo.earth:8080",
+                "http://omo.earth:80",
+                "http://localhost:5000"],
+              credentials: true
             }
         });
     }

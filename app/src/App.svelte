@@ -5,6 +5,7 @@
   import page from "page";
   import { library } from "./library";
   import { Home } from "./pages/Home";
+  import { SignIn } from "./pages/SignIn";
   import { Blog } from "./pages/Blog";
   import { Market } from "./pages/Market";
   import { Safe } from "./pages/Safe";
@@ -23,6 +24,37 @@
   // reference is set to the route's component
   page("/", () => {
     viewDocument = Home;
+  });
+  page("/sign-in/onetime/:code", (ctx) => {
+    viewDocument = SignIn;
+    function verifyToken(oneTimeToken) {
+      const payload = {
+        "operationName": null,
+        "variables": {},
+        "query": "mutation { verify(oneTimeToken: \"" + oneTimeToken + "\") { success errorMessage jwt }}"
+      };
+
+      const xhr = new XMLHttpRequest();
+      xhr.withCredentials = true;
+      xhr.open("POST", "http://omo.local:8080/auth");
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.send(JSON.stringify(payload));
+      xhr.onreadystatechange = (e) => {
+        console.log("onreadystatechange:", e)
+        if (xhr.readyState !== XMLHttpRequest.DONE) {
+          return;
+        }
+        const responseData = JSON.parse(xhr.response);
+        if (responseData.data){
+          localStorage.setItem("JWT", responseData.data.verify.jwt);
+          window.close();
+        }
+        if (responseData.errors){
+          alert("Couldn't login. Please try again");
+        }
+      }
+    }
+    verifyToken(ctx.params.code);
   });
   page("/safe", () => {
     viewDocument = Safe(safeDashboard);

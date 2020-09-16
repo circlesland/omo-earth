@@ -17,6 +17,10 @@ services:
       dockerfile: ../omo.local/auth/Dockerfile
     env_file:
       - .env
+    environment:
+      # Sucks: The hash is a comment in .env-files, so this variable must be set
+      # inside of this file.
+      - APP_ONE_TIME_TOKEN_SIGNIN_URL=http://localhost:5000/#!/sign-in/onetime
     ports:
       - "80"
 
