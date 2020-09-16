@@ -29,7 +29,7 @@ export class Resolvers
                     if (!app)
                         throw new Error("The app with the id '" + appId + "' couldn't be found.")
 
-                    if (app.originHeaderValue !== origin)
+                    if (app.originHeaderValue !== origin && (!process.env.DEBUG || process.env.DEBUG !== "true")) // Validate the Origin only when not in DEBUG mode
                         throw new Error("The origin of the request doesn't map with the configured origin for app '" + appId + "'");
 
                     const challenge = await Challenge.requestChallenge(emailAddress, appId, 8, 120);
@@ -147,7 +147,7 @@ export class Resolvers
         // TODO: Sync with key rotation
         // const nbf =
 
-        // RFC 7519: 4.1.6.  "iat" (Issued At) Claim
+        // RFC 7519: 4.1.6.  "iat" (Issued At) Clai
         const iat = Date.now() / 1000
 
         // RFC 7519: 4.1.7.  "jti" (JWT ID) Claim
