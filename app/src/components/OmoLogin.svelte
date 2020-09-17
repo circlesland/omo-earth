@@ -4,6 +4,31 @@
   let emailAddress = "";
   let status = "new";
 
+  const authUrl = "http://omo.local:8080/auth";
+  const keystoreUrl = "http://omo.local:8080/keyStore";
+
+
+  function ExchangeTokenForCookie(jwt) {
+    status = "waitingForSession";
+    const payload = {
+      "operationName": null,
+      "variables": {},
+      "query": "mutation { exchangeToken(jwt:\"" + jwt + "\") { success errorMessage }}"
+    };
+    const xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    xhr.open("POST", keystoreUrl);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(payload));
+    xhr.onreadystatechange = (e) => {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        status = "done";
+        localStorage.removeItem("JWT");
+        page("/safe");
+      }
+    }
+  }
+
   function sendMagicLink(emailAddress) {
     status = "sending";
 
@@ -14,18 +39,17 @@
     };
 
     const xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-    xhr.open("POST", "http://omo.local:8080/auth");
+    xhr.open("POST", authUrl);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify(payload));
     xhr.onreadystatechange = (e) => {
       if (xhr.readyState === XMLHttpRequest.DONE) {
-        status = "waiting";
+        status = "waitingForUser";
         localStorage.removeItem("JWT");
 
         var checker = setInterval(() => {
           if (localStorage.getItem("JWT")) {
-            alert("You're successfully logged-on")
+            ExchangeTokenForCookie(localStorage.getItem("JWT"));
             clearInterval(checker);
           }
         }, 100);
@@ -77,12 +101,28 @@
           Sending a magic login link to your email address ...
         </div>
       </form>
-    {:else if status === "waiting"}
+    {:else if status === "waitingForUser"}
       <form action="" class="mt-2 flex flex-col lg:w-1/2 w-8/12">
         <div
                 class="flex flex-wrap items-stretch w-full relative h-18 bg-white
           items-center rounded-t pr-10">
           Please click the link in the e-mail to log-on.
+        </div>
+      </form>
+    {:else if status === "waitingForSession"}
+      <form action="" class="mt-2 flex flex-col lg:w-1/2 w-8/12">
+        <div
+                class="flex flex-wrap items-stretch w-full relative h-18 bg-white
+          items-center rounded-t pr-10">
+          Exchanging the JWT for a session at the keyStore ..
+        </div>
+      </form>
+    {:else if status === "done"}
+      <form action="" class="mt-2 flex flex-col lg:w-1/2 w-8/12">
+        <div
+                class="flex flex-wrap items-stretch w-full relative h-18 bg-white
+          items-center rounded-t pr-10">
+          You're logged on.
         </div>
       </form>
     {/if}
