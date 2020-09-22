@@ -4,6 +4,9 @@ import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import livereload from "rollup-plugin-livereload";
 import css from 'rollup-plugin-css-only'
+import builtins from 'rollup-plugin-node-builtins';
+import json from '@rollup/plugin-json';
+import nodeGlobals from 'rollup-plugin-node-globals'
 import {
   terser
 } from "rollup-plugin-terser";
@@ -44,18 +47,7 @@ export default {
     file: "public/build/bundle.js",
   },
   plugins: [
-    svelte({
-      // enable run-time checks when not in production
-      dev: !production,
-      // we'll extract any component CSS out into
-      // a separate file - better for performance
-      css: (css) => {
-        css.write("bundle.css");
-      },
-      preprocess: sveltePreprocess({
-        postcss: true,
-      }),
-    }),
+    json(),
 
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In
@@ -71,11 +63,25 @@ export default {
         'svelte-swiper': ['Swiper', 'SwiperSlide']
       }
     }),
+    nodeGlobals(),
+    builtins({crypto: true}),
     css({
       output: 'public/build/swiper-bundle.css'
     }),
     typescript({
       sourceMap: !production,
+    }),
+    svelte({
+      // enable run-time checks when not in production
+      dev: !production,
+      // we'll extract any component CSS out into
+      // a separate file - better for performance
+      css: (css) => {
+        css.write("bundle.css");
+      },
+      preprocess: sveltePreprocess({
+        postcss: true,
+      }),
     }),
 
     // In dev mode, call `npm run start` once

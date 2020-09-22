@@ -35,7 +35,6 @@ export class Client
             throw new Error("No key id (kid) claim.")
 
       // TODO: This is shit. Find a proper way to configure DNS resolution or add a container that handles DNS
-
       if (process.env.DEBUG) {
         const oldKid = kid;
         kid = kid.replace(process.env.AUTH_SERVICE_BASE_URL, "http://auth");

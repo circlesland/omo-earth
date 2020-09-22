@@ -14,8 +14,9 @@
   import { products } from "./organisms/products";
   import { safeToken } from "./organisms/safeToken";
   import { productDetail } from "./organisms/productDetail";
-  import { actionRepository } from "./actions/actionRepository";
+  import {actionRepository, jwtLocalStorageKey} from "./actions/actionRepository";
   import { profile } from "./organisms/profile";
+  import {ExchangeMagicLoginCodeForJwt} from "./trigger/auth/exchangeMagicLinkCodeForJwt";
 
   // set default component
   let viewDocument = Home;
@@ -26,35 +27,11 @@
     viewDocument = Home;
   });
   page("/sign-in/onetime/:code", (ctx) => {
+    // Display a spinner (should be displayed only for a short time, since the
+    // tab should close itself when the code was exchanged for a JWT and the JWT
+    // was written to the localStorage).
     viewDocument = SignIn;
-    function verifyToken(oneTimeToken) {
-      const payload = {
-        "operationName": null,
-        "variables": {},
-        "query": "mutation { verify(oneTimeToken: \"" + oneTimeToken + "\") { success errorMessage jwt }}"
-      };
-
-      const xhr = new XMLHttpRequest();
-      xhr.withCredentials = true;
-      xhr.open("POST", "http://omo.local:8080/auth");
-      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-      xhr.send(JSON.stringify(payload));
-      xhr.onreadystatechange = (e) => {
-        console.log("onreadystatechange:", e)
-        if (xhr.readyState !== XMLHttpRequest.DONE) {
-          return;
-        }
-        const responseData = JSON.parse(xhr.response);
-        if (responseData.data){
-          localStorage.setItem("JWT", responseData.data.verify.jwt);
-          window.close();
-        }
-        if (responseData.errors){
-          alert("Couldn't login. Please try again");
-        }
-      }
-    }
-    verifyToken(ctx.params.code);
+    window.trigger(new ExchangeMagicLoginCodeForJwt(ctx.params.code));
   });
   page("/safe", () => {
     viewDocument = Safe(safeDashboard);

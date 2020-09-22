@@ -1,61 +1,9 @@
 <script lang="ts">
   import IconsFontAwesome from "./IconsFontAwesome.svelte";
+  import {RequestMagicLoginLink} from "../trigger/auth/requestMagicLoginLink";
 
   let emailAddress = "";
   let status = "new";
-
-  const authUrl = "http://omo.local:8080/auth";
-  const keystoreUrl = "http://omo.local:8080/keyStore";
-
-
-  function ExchangeTokenForCookie(jwt) {
-    status = "waitingForSession";
-    const payload = {
-      "operationName": null,
-      "variables": {},
-      "query": "mutation { exchangeToken(jwt:\"" + jwt + "\") { success errorMessage }}"
-    };
-    const xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-    xhr.open("POST", keystoreUrl);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.send(JSON.stringify(payload));
-    xhr.onreadystatechange = (e) => {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        status = "done";
-        localStorage.removeItem("JWT");
-        page("/safe");
-      }
-    }
-  }
-
-  function sendMagicLink(emailAddress) {
-    status = "sending";
-
-    const payload = {
-      "operationName": null,
-      "variables": {},
-      "query": "mutation { login(appId: \"1\", emailAddress: \"" + emailAddress + "\") { success errorMessage }}"
-    };
-
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", authUrl);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.send(JSON.stringify(payload));
-    xhr.onreadystatechange = (e) => {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        status = "waitingForUser";
-        localStorage.removeItem("JWT");
-
-        var checker = setInterval(() => {
-          if (localStorage.getItem("JWT")) {
-            ExchangeTokenForCookie(localStorage.getItem("JWT"));
-            clearInterval(checker);
-          }
-        }, 100);
-      }
-    }
-  }
 </script>
 
 <IconsFontAwesome/>
@@ -85,9 +33,8 @@
                   bind:value={emailAddress}
                   placeholder="Email"/>
         </div>
-        <a
-                on:click={() => sendMagicLink(emailAddress)}
-                class="rounded-b bg-secondary py-4 text-center px-17 md:px-12 md:py-4
+        <a on:click={() => window.trigger(new RequestMagicLoginLink(emailAddress))}
+           class="rounded-b bg-secondary py-4 text-center px-17 md:px-12 md:py-4
           text-white leading-tight text-2xl font-bold md:text-base font-title
           uppercase">
           Send Login Mail

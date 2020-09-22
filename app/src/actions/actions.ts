@@ -5,5 +5,10 @@ export enum Actions
   filterBy = "filterBy",
   setLayout = "setLayout",
   resetLayout = "resetLayout",
-  toggleSideNav = "toggleSideNav"
+  toggleSideNav = "toggleSideNav",
+  requestMagicLoginLink = "requestMagicLoginLink",
+  exchangeJwtForSessionCookie = "exchangeJwtForSessionCookie",
+  receivedJwt = "receivedJwt",
+  loggedOn = "loggedOn",
+  exchangeMagicLoginCodeForJwt = "exchangeMagicLoginCodeForJwt"
 }

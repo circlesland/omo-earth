@@ -73,7 +73,7 @@ model Entry {
   // A IPFS hash for the contents of this entry (nonce + ownerFingerPrint + content)
   entryHash String @unique
   // A (per Entry) unique random id. // TODO: It should be possible to create (non sensitive/public) Entries where the "nonce" shouldn't be included in the "entryHash". This would allow for a correct data deduplication. - Or not?
-  nonce String
+  nonce String?
   // The fingerprint of the owner's public key.
   ownerFingerPrint String
   // The actual data of that Entry (encrypted with the public key that's identified by the ownerFingerPrint).
