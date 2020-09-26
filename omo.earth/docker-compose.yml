@@ -43,6 +43,10 @@ services:
     build:
       context: ../app
       dockerfile: ../omo.earth/app/Dockerfile
+      args:
+        - PROXY_PROTOCOL=${PROXY_PROTOCOL}
+        - PROXY_EXTERN_DOMAIN=${PROXY_EXTERN_DOMAIN}
+        - PROXY_EXTERN_PORT=${PROXY_EXTERN_PORT}
     env_file:
       - .env
     ports:

@@ -8,7 +8,14 @@ export class Session
 {
   static async findByValidSessionId(sessionId: string)
   {
-    const session = await prisma.session.findOne({where: {sessionId}});
+    const session = await prisma.session.findOne({
+      where: {
+        sessionId
+      },
+      include: {
+        identity: true
+      }
+    });
     if (!session)
       return null;
 

@@ -3,6 +3,8 @@ import {
   QueryResolvers
 } from "../generated/graphql";
 import {Session} from "../../../data/dist/session";
+import {Entry} from "../../../data/dist/entry";
+import {Identity} from "@omo/keystore-data/dist/identity";
 
 export class Resolvers
 {
@@ -48,6 +50,54 @@ export class Resolvers
           return {
             success: false,
             errorMessage: "Couldn't create the session cookie from the supplied JWT. Please try again with a new JWT."
+          }
+        }
+      },
+      createEntry: async (parent, {publicKey, entryContent}, context) => {
+        try
+        {
+          if (!publicKey)
+            throw new Error("No public key was supplied.");
+
+          const entry = await Entry.createEntry(publicKey, entryContent);
+          console.log(JSON.stringify(entry));
+
+          return {
+            success: true
+          }
+        }
+        catch (e)
+        {
+          console.error(e);
+          return {
+            success: false,
+            errorMessage: "Couldn't create the entry."
+          }
+        }
+      },
+      upsertIndexEntry: async (parent, {indexEntryContent}, context) => {
+        try
+        {
+          const session = await Session.findByValidSessionId(context.sessionId);
+          if (!session)
+            throw new Error("Invalid session");
+
+          if (!session.identity || !session.identity.challengeEmailAddress)
+            throw new Error("Invalid session")
+
+          const result = await Identity.upsertIndexEntry(session.identity.challengeEmailAddress, indexEntryContent);
+          console.log(JSON.stringify(result));
+
+          return {
+            success: true
+          }
+        }
+        catch (e)
+        {
+          console.error(e);
+          return {
+            success: false,
+            errorMessage: "Couldn't create the entry."
           }
         }
       }
