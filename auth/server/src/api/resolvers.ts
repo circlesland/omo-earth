@@ -125,18 +125,16 @@ export class Resolvers
 
   private static async _generateJwt(forEmail: string, forAppId: string)
   {
-    if (!process.env.AUTH_SERVICE_JWT_EXP_IN_SEC)
+    if (!process.env.AUTH_JWT_EXP_IN_SEC)
     {
-      throw new Error("The AUTH_SERVICE_JWT_EXP_IN_SEC environment variable must contain a numeric " +
+      throw new Error("The AUTH_JWT_EXP_IN_SEC environment variable must contain a numeric " +
         "value that specifies the token expiration duration in minutes.")
     }
-    if (!process.env.AUTH_SERVICE_JWT_ISSUER)
-    {
-      throw new Error("The AUTH_SERVICE_JWT_ISSUER environment variable must contain a value.")
-    }
+
+    const externalUrl = `${process.env.PROXY_PROTOCOL}${process.env.PROXY_EXTERN_DOMAIN}${process.env.PROXY_EXTERN_PORT == "443" || process.env.PROXY_EXTERN_PORT == "80" ? "" : ":" + process.env.PROXY_EXTERN_PORT}/${process.env.PROXY_SERVICE_AUTH_PATH}`;
 
     // RFC 7519: 4.1.1.  "iss" (Issuer) Claim
-    const iss = process.env.AUTH_SERVICE_JWT_ISSUER;
+    const iss = externalUrl;
 
     // RFC 7519: 4.1.2.  "sub" (Subject) Claim
     const sub = forEmail;
@@ -145,7 +143,7 @@ export class Resolvers
     const aud = [forAppId];
 
     // RFC 7519: 4.1.4.  "exp" (Expiration Time) Claim
-    const expInSeconds = parseInt(process.env.AUTH_SERVICE_JWT_EXP_IN_SEC);
+    const expInSeconds = parseInt(process.env.AUTH_JWT_EXP_IN_SEC);
     const exp = Math.floor(Date.now() / 1000) + expInSeconds;
 
     // RFC 7519: 4.1.5.  "nbf" (Not Before) Claim
@@ -162,7 +160,7 @@ export class Resolvers
     if (!keypair)
       throw new Error("No valid key available to sign the jwt.")
 
-    const kid = process.env.AUTH_SERVICE_BASE_URL + "/graphql?query=query%20%7B%20keys%28kid%3A%22" + keypair.id + "%22%29%20%7Bid%2C%20validTo%2C%20publicKey%20%7D%7D";
+    const kid = externalUrl + "/graphql?query=query%20%7B%20keys%28kid%3A%22" + keypair.id + "%22%29%20%7Bid%2C%20validTo%2C%20publicKey%20%7D%7D";
 
     const tokenData = {
       iss, sub, aud, exp, iat, jti, kid

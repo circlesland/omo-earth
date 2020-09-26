@@ -15,8 +15,8 @@ export class Resolvers
 
   constructor()
   {
-    if (!process.env.DOMAIN)
-      throw new Error("process.env.DOMAIN must be set to a domain name or ip address.");
+    if (!process.env.PROXY_DOMAIN)
+      throw new Error("process.env.PROXY_DOMAIN must be set to a domain name or ip address.");
 
     this.mutationResolvers = {
       exchangeToken: async (parent, {jwt}, context) =>
@@ -30,7 +30,7 @@ export class Resolvers
             value: session.sessionId,
             // Use a session cookie that should only last for the one browser session
             options: {
-              domain: process.env.DOMAIN,
+              domain: process.env.PROXY_DOMAIN,
               httpOnly: true,
               path: "/",
               sameSite: true,

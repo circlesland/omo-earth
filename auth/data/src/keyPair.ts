@@ -46,8 +46,8 @@ export class KeyPair
 
     public static async createKeyPair()
     {
-        if (!process.env.AUTH_SERVICE_ROTATE_EVERY_N_SECONDS)
-            throw new Error("process.env.AUTH_SERVICE_ROTATE_EVERY_N_SECONDS is not set!");
+        if (!process.env.AUTH_ROTATE_EVERY_N_SECONDS)
+            throw new Error("process.env.AUTH_ROTATE_EVERY_N_SECONDS is not set!");
 
         const newKeyPair = await KeyGenerator.generateRsaKeyPair();
         const now = new Date();
@@ -58,7 +58,7 @@ export class KeyPair
                 privateKeyJwk: newKeyPair.privateKeyJwk,
                 publicKeyJwk: newKeyPair.publicKeyJwk,
                 validFrom: now,
-                validTo: new Date(now.getTime() + (parseInt(process.env.AUTH_SERVICE_ROTATE_EVERY_N_SECONDS) * 1000))
+                validTo: new Date(now.getTime() + (parseInt(process.env.AUTH_ROTATE_EVERY_N_SECONDS) * 1000))
             }
         });
 

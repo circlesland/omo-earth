@@ -1,6 +1,6 @@
 import page from "page";
 import {Actions} from "./actions";
-import type {NavigateTo} from "../trigger/navigateTo";
+import {NavigateTo} from "../trigger/navigateTo";
 import type {DummyTrigger} from "../trigger/dummyTrigger";
 import type {FilterBy} from "../trigger/filterBy";
 import type {ToggleSideNav} from "../trigger/shell/toggleSideNav";
@@ -12,7 +12,6 @@ import {SetLayout} from "../trigger/compositor/setLayout";
 import {ResetLayout} from "../trigger/compositor/resetLayout";
 import type {RequestMagicLoginLink} from "../trigger/auth/requestMagicLoginLink";
 import {ExchangeJwtForSessionCookie} from "../trigger/auth/exchangeJwtForSessionCookie";
-import {ReceivedJwt} from "../trigger/auth/receivedJwt";
 import {LoggedOn} from "../trigger/auth/loggedOn";
 import type {ExchangeMagicLoginCodeForJwt} from "../trigger/auth/exchangeMagicLinkCodeForJwt";
 
@@ -25,8 +24,28 @@ const config = {
     url: "http://omo.local:8080/auth",
     appId: "1"
   },
-  keyStoreServerUrl: "http://omo.local:8080/keyStore"
+  keyStoreServerUrl: "http://omo.local:8080/keystore"
 };
+
+const parseXhrResponse = (xhr:XMLHttpRequest, method:string) => {
+  let responseObject;
+  try
+  {
+    responseObject = JSON.parse(xhr.responseText);
+    if (!responseObject || !responseObject.data)
+      throw new Error("JSON.parse() returned a malformed or empty object. Input was: " + xhr.responseText);
+
+    if (!responseObject.data[method].success)
+      throw new Error("A request was completed with an error: " + responseObject.data.exchangeToken.errorMessage);
+
+    window.trigger(new LoggedOn(""));
+  }
+  catch (e)
+  {
+    throw new Error("Couldn't process the response.");
+  }
+  return responseObject;
+}
 
 export const actionRepository = {
   [Actions.dummyAction]:(trigger:DummyTrigger) => {
@@ -108,11 +127,7 @@ export const actionRepository = {
       if (xhr.readyState !== XMLHttpRequest.DONE)
         return; // We're only interested in the final result ..
 
-      if (xhr.responseType != "json")
-      {
-        // .. and only if its JSON
-        throw new Error("Expected a response in JSON format.");
-      }
+      parseXhrResponse(xhr, "login");
 
       // When we got a result with "success" == true,
       // Wait for the user to click the magic link.
@@ -127,15 +142,12 @@ export const actionRepository = {
 
         // The JWT was written by the magic-login-link landingpage.
         // Send it via Trigger/Event and remove the entry from the local storage ..
-        window.trigger(new ReceivedJwt(localStorage.getItem(jwtLocalStorageKey)));
+        window.trigger(new ExchangeJwtForSessionCookie(localStorage.getItem(jwtLocalStorageKey)));
         localStorage.removeItem(jwtLocalStorageKey);
         // .. then stop the timer
         clearInterval(checker);
       }, 100);
     }
-  },
-  [Actions.receivedJwt]: (trigger:ReceivedJwt) => {
-    window.trigger(new ExchangeJwtForSessionCookie(trigger.jwt));
   },
   [Actions.exchangeJwtForSessionCookie]: (trigger:ExchangeJwtForSessionCookie) => {
     const payload = {
@@ -150,12 +162,13 @@ export const actionRepository = {
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify(payload));
     xhr.onreadystatechange = (e) => {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        status = "done";
-        localStorage.removeItem(jwtLocalStorageKey);
-        window.trigger(new LoggedOn(""));
-        //window.trigger(new NavigateTo("To safe", "/safe"))
-      }
+      if (xhr.readyState !== XMLHttpRequest.DONE)
+        return; // We're only interested in the final result ..
+
+      parseXhrResponse(xhr, "exchangeToken");
+
+      localStorage.removeItem(jwtLocalStorageKey);
+      window.trigger(new NavigateTo("To safe", "/safe"));
     }
   }
 }

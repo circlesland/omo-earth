@@ -14,15 +14,20 @@ export class Main
 
     constructor()
     {
-        if (!process.env.AUTH_SERVICE_GRAPHQL_SCHEMA)
+        if (!process.env.AUTH_GRAPHQL_SCHEMA)
         {
-            throw new Error("The AUTH_SERVICE_GRAPHQL_SCHEMA environment variable must contain a valid path that " +
+            throw new Error("The AUTH_GRAPHQL_SCHEMA environment variable must contain a valid path that " +
                 "points to the GraphQL api schema.");
         }
-        const apiSchemaTypeDefs = importSchema(process.env.AUTH_SERVICE_GRAPHQL_SCHEMA);
+        if (!process.env.AUTH_CORS_ORIGINS){
+          throw new Error("The AUTH_CORS_ORIGINS environment variable must contain a valid URL terminated by a semicolon. Values in this list are allowed to request the api service.")
+        }
+        const apiSchemaTypeDefs = importSchema(process.env.AUTH_GRAPHQL_SCHEMA);
 
         this._resolvers = new Resolvers();
         this._keyRotator = new KeyRotator();
+
+        const corsOrigins = process.env.AUTH_CORS_ORIGINS.split(";");
 
         this._server = new ApolloServer({
             context: RequestContext.create,
@@ -32,12 +37,7 @@ export class Main
                 Query: this._resolvers.queryResolvers
             },
             cors: {
-              // TODO: Generate the CORS policy from config
-              origin: ["http://omo.local:8080",
-                "http://omo.local:80",
-                "http://omo.earth:8080",
-                "http://omo.earth:80",
-                "http://localhost:5000"],
+              origin: corsOrigins,
               credentials: true
             }
         });
@@ -45,20 +45,20 @@ export class Main
 
     async run()
     {
-        if (!process.env.AUTH_SERVICE_PORT)
+        if (!process.env.AUTH_PORT)
         {
-            throw new Error("The AUTH_SERVICE_PORT environment variable is not set.");
+            throw new Error("The AUTH_PORT environment variable is not set.");
         }
-        if (!process.env.AUTH_SERVICE_ROTATE_EVERY_N_SECONDS)
+        if (!process.env.AUTH_ROTATE_EVERY_N_SECONDS)
         {
-            throw new Error("The AUTH_SERVICE_ROTATE_EVERY_N_SECONDS environment variable is not set.");
+            throw new Error("The AUTH_ROTATE_EVERY_N_SECONDS environment variable is not set.");
         }
 
         await this._server.listen({
-            port: parseInt(process.env.AUTH_SERVICE_PORT)
+            port: parseInt(process.env.AUTH_PORT)
         });
 
-        await this._keyRotator.start(parseInt(process.env.AUTH_SERVICE_ROTATE_EVERY_N_SECONDS));
+        await this._keyRotator.start(parseInt(process.env.AUTH_ROTATE_EVERY_N_SECONDS));
     }
 }
 

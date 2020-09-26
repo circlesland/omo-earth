@@ -20,7 +20,7 @@ services:
     environment:
       # Sucks: The hash is a comment in .env-files, so this variable must be set
       # inside of this file.
-      - APP_ONE_TIME_TOKEN_SIGNIN_URL=http://localhost:5000/#!/sign-in/onetime
+      - AUTH_APP_REDIRECT=http://omo.local:8080/#!/sign-in/onetime
     ports:
       - "80"
 
@@ -58,8 +58,33 @@ services:
       - static
       - auth
       - app
-    build: proxy
+    build:
+      context: proxy
+      dockerfile: Dockerfile
+      args:
+        - PROXY_PROTOCOL=${PROXY_PROTOCOL}
+        - PROXY_DOMAIN=${PROXY_DOMAIN}
+        - PROXY_PORT=${PROXY_PORT}
+        - PROXY_EXTERN_DOMAIN=${PROXY_EXTERN_DOMAIN}
+        - PROXY_EXTERN_PORT=${PROXY_EXTERN_PORT}
+        - PROXY_SERVICE_STATIC_PATH=${PROXY_SERVICE_STATIC_PATH}
+        - PROXY_SERVICE_AUTH_PATH=${PROXY_SERVICE_AUTH_PATH}
+        - PROXY_SERVICE_KEYSTORE_PATH=${PROXY_SERVICE_KEYSTORE_PATH}
+        - PROXY_SERVICE_APP_PATH=${PROXY_SERVICE_APP_PATH}
+        - STATIC_PROTOCOL=${STATIC_PROTOCOL}
+        - STATIC_DOMAIN=${STATIC_DOMAIN}
+        - STATIC_PORT=${STATIC_PORT}
+        - APP_PROTOCOL=${APP_PROTOCOL}
+        - APP_DOMAIN=${APP_DOMAIN}
+        - APP_PORT=${APP_PORT}
+        - AUTH_PROTOCOL=${AUTH_PROTOCOL}
+        - AUTH_DOMAIN=${AUTH_DOMAIN}
+        - AUTH_PORT=${AUTH_PORT}
+        - KEYSTORE_PROTOCOL=${KEYSTORE_PROTOCOL}
+        - KEYSTORE_DOMAIN=${KEYSTORE_DOMAIN}
+        - KEYSTORE_PORT=${KEYSTORE_PORT}
     env_file:
       - .env
+
     ports:
       - "8080:80"
