@@ -30,7 +30,7 @@ export class Resolvers
             value: session.sessionId,
             // Use a session cookie that should only last for the one browser session
             options: {
-              domain: process.env.PROXY_DOMAIN,
+              domain: process.env.PROXY_EXTERN_DOMAIN,
               httpOnly: true,
               path: "/",
               sameSite: true,
