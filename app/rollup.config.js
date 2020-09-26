@@ -12,6 +12,8 @@ import {
   terser
 } from "rollup-plugin-terser";
 import sveltePreprocess from "svelte-preprocess";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -50,9 +52,9 @@ export default {
   plugins: [
     replace({
       // TODO: Replace with variables from .env
-      __PROXY_EXTERN_DOMAIN__: "omo.local",
-      __PROXY_EXTERN_PORT__: "8080",
-      __PROXY_PROTOCOL__: "http://"
+      __PROXY_EXTERN_DOMAIN__: process.env.PROXY_EXTERN_DOMAIN,
+      __PROXY_EXTERN_PORT__: process.env.PROXY_EXTERN_PORT,
+      __PROXY_PROTOCOL__: process.env.PROXY_PROTOCOL
     }),
     json(),
 

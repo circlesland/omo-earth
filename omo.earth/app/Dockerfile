@@ -3,6 +3,8 @@ FROM node:latest
 RUN git clone https://github.com/omoearth/omo-earth.git
 RUN cd omo-earth && git checkout dev
 
+#COPY ../.env omo-earth/app/.env
+
 RUN cd omo-earth/app && npm i
 RUN cd omo-earth/app && npm run build
 
