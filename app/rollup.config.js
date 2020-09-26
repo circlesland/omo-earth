@@ -7,6 +7,7 @@ import css from 'rollup-plugin-css-only'
 import builtins from 'rollup-plugin-node-builtins';
 import json from '@rollup/plugin-json';
 import nodeGlobals from 'rollup-plugin-node-globals'
+import replace from '@rollup/plugin-replace';
 import {
   terser
 } from "rollup-plugin-terser";
@@ -47,6 +48,12 @@ export default {
     file: "public/build/bundle.js",
   },
   plugins: [
+    replace({
+      // TODO: Replace with variables from .env
+      __PROXY_EXTERN_DOMAIN__: "omo.local",
+      __PROXY_EXTERN_PORT__: "8080",
+      __PROXY_PROTOCOL__: "http://"
+    }),
     json(),
 
     // If you have external dependencies installed from

@@ -19,12 +19,13 @@ let sideBarToggleState:boolean = true;
 
 export const jwtLocalStorageKey = "magic-login-jwt";
 
+const externalUrl = "__PROXY_PROTOCOL__" + "__PROXY_EXTERN_DOMAIN__" + ":" + "__PROXY_EXTERN_PORT__";
 const config = {
   auth: {
-    url: "http://omo.local:8080/auth",
+    url: externalUrl + "/auth",
     appId: "1"
   },
-  keyStoreServerUrl: "http://omo.local:8080/keystore"
+  keyStoreServerUrl: externalUrl + "/keystore"
 };
 
 const parseXhrResponse = (xhr:XMLHttpRequest, method:string) => {
