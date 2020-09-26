@@ -9,10 +9,40 @@ services:
     ports:
       - "5432"
 
-  omo-auth:
+  auth:
     depends_on:
       - postgres
-    build: omo-auth
+    build:
+      context: ../auth
+      dockerfile: ../omo.earth/auth/Dockerfile
+    env_file:
+      - .env
+    environment:
+      # Sucks: The hash is a comment in .env-files, so this variable must be set
+      # inside of this file.
+      - AUTH_APP_REDIRECT=http://omo.earth/#!/sign-in/onetime
+    ports:
+      - "80"
+
+  keystore:
+    depends_on:
+      - postgres
+    build:
+      context: ../
+      dockerfile: omo.earth/keyStore/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "80"
+
+  app:
+    depends_on:
+      - postgres
+      - auth
+      - keystore
+    build:
+      context: ../app
+      dockerfile: ../omo.earth/app/Dockerfile
     env_file:
       - .env
     ports:
@@ -26,12 +56,36 @@ services:
   proxy:
     depends_on:
       - static
-      - omo-auth
-    build: proxy
+      - auth
+      - app
+    build:
+      context: proxy
+      dockerfile: Dockerfile
+      args:
+        - PROXY_PROTOCOL=${PROXY_PROTOCOL}
+        - PROXY_DOMAIN=${PROXY_DOMAIN}
+        - PROXY_PORT=${PROXY_PORT}
+        - PROXY_EXTERN_DOMAIN=${PROXY_EXTERN_DOMAIN}
+        - PROXY_EXTERN_PORT=${PROXY_EXTERN_PORT}
+        - PROXY_SERVICE_STATIC_PATH=${PROXY_SERVICE_STATIC_PATH}
+        - PROXY_SERVICE_AUTH_PATH=${PROXY_SERVICE_AUTH_PATH}
+        - PROXY_SERVICE_KEYSTORE_PATH=${PROXY_SERVICE_KEYSTORE_PATH}
+        - PROXY_SERVICE_APP_PATH=${PROXY_SERVICE_APP_PATH}
+        - STATIC_PROTOCOL=${STATIC_PROTOCOL}
+        - STATIC_DOMAIN=${STATIC_DOMAIN}
+        - STATIC_PORT=${STATIC_PORT}
+        - APP_PROTOCOL=${APP_PROTOCOL}
+        - APP_DOMAIN=${APP_DOMAIN}
+        - APP_PORT=${APP_PORT}
+        - AUTH_PROTOCOL=${AUTH_PROTOCOL}
+        - AUTH_DOMAIN=${AUTH_DOMAIN}
+        - AUTH_PORT=${AUTH_PORT}
+        - KEYSTORE_PROTOCOL=${KEYSTORE_PROTOCOL}
+        - KEYSTORE_DOMAIN=${KEYSTORE_DOMAIN}
+        - KEYSTORE_PORT=${KEYSTORE_PORT}
     env_file:
       - .env
-    volumes:
-      - /etc/letsencrypt/:/etc/letsencrypt/
+
     ports:
       - "80:80"
       - "443:443"

@@ -1,6 +1,13 @@
 #!/bin/sh
 
-cd data || exit
+cd ../auth/util || exit
+rm -r dist
+rm -r node_modules
+rm -f package-lock.json
+npm i || exit
+npx tsc || exit
+
+cd ../../keyStore/data || exit
 rm -r dist
 rm -r node_modules
 rm -f package-lock.json

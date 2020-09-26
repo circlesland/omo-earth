@@ -8,7 +8,7 @@ EOF`
 
 TEMPLATE=`cat << EOF
 server {
-  server_name localhost;
+  server_name ${PROXY_EXTERN_DOMAIN};
 
   listen ${PROXY_PORT};
 
