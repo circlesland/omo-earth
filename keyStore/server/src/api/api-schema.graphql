@@ -11,12 +11,20 @@ type Mutation {
     # and associated with the "User" object in the database.
     exchangeToken(jwt:String!) : ExchangeTokenResponse!
 
-    upsertIndexEntry(indexEntryContent:Json) : UpsertIndexEntryResponse!
+    # Creates a new entry. If the public key is ommitted, the session owner
+    # will be the owner of the entry.
+    createEntry(publicKey:String entryContent:Json!) : CreateEntryResponse!
 
-    createEntry(publicKey:String entryContent:Json) : CreateEntryResponse!
+    # Gets the entry by its hash and lists it in the own index file
+    # if the index owner is also the entry owner.
+    importEntry(entryHash:String! name:String! overwrite:Boolean) : ImportEntryResponse!
+
+    # Removes an entry from the index.
+    removeEntry(name:String!) : RemoveEntryResponse!
 }
 
 type Query {
+    indexEntry: Entry
     findEntryByHash(hash:String!): Entry
     findEntryByHashCleartext(hash:String!): Entry
 }
@@ -38,14 +46,24 @@ type ExchangeTokenResponse implements ActionResponse {
     errorMessage: String
 }
 
-type UpsertIndexEntryResponse implements ActionResponse {
-    success: Boolean!
-    errorMessage: String
-}
-
 type CreateEntryResponse implements ActionResponse {
     success: Boolean!
     errorMessage: String
+    entryHash: String
+}
+
+type RemoveEntryResponse implements ActionResponse {
+    success: Boolean!
+    errorMessage: String
+    entryHash: String
+    name: String
+}
+
+type ImportEntryResponse implements ActionResponse {
+    success: Boolean!
+    errorMessage: String
+    entryHash: String
+    name: String
 }
 
 type Version {

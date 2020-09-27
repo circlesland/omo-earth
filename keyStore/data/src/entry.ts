@@ -18,7 +18,7 @@ export class Entry
     return hashed;
   }
 
-  static async createEntry(sessionId:string, entryContent:object, ownerPublicKey?:string)
+  static async createEntry(sessionId:string, entryContent:object, ownerPublicKey:string|null|undefined)
   {
     const session = await Session.findByValidSessionId(sessionId);
     if (!session)
@@ -31,7 +31,7 @@ export class Entry
       ownerPublicKey = session.identity.indexEntryPublicKey;
 
     const creatorFingerPrint = Identity.fingerprintPublicKey(session.identity.indexEntryPublicKey);
-    const ownerFingerPrint = Identity.fingerprintPublicKey(ownerPublicKey);
+    const ownerFingerPrint = Identity.fingerprintPublicKey(<string>ownerPublicKey);
     const contentJson = JSON.stringify(entryContent);
     const contentJsonBuffer = Buffer.from(contentJson, "utf8");
     const encryptedContentJsonBuffer = publicEncrypt(session.identity.indexEntryPublicKey, contentJsonBuffer);

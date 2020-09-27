@@ -10,5 +10,9 @@ export enum Actions
   exchangeJwtForSessionCookie = "exchangeJwtForSessionCookie",
   receivedJwt = "receivedJwt",
   loggedOn = "loggedOn",
-  exchangeMagicLoginCodeForJwt = "exchangeMagicLoginCodeForJwt"
+  exchangeMagicLoginCodeForJwt = "exchangeMagicLoginCodeForJwt",
+  addKey = "addKey",
+  removeKey = "removeKey",
+  shareKey = "shareKey",
+  importKey = "importKey",
 }

@@ -57,14 +57,11 @@ export class Resolvers
       createEntry: async (parent, {publicKey, entryContent}, context) => {
         try
         {
-          if (!publicKey)
-            throw new Error("No public key was supplied.");
-
           const entry = await Entry.createEntry(context.sessionId, entryContent, publicKey);
-          console.log(JSON.stringify(entry));
 
           return {
-            success: true
+            success: true,
+            entryHash: entry.entryHash
           }
         }
         catch (e)
@@ -76,14 +73,36 @@ export class Resolvers
           }
         }
       },
-      upsertIndexEntry: async (parent, {indexEntryContent}, context) => {
+      importEntry: async (parent, {entryHash, name, overwrite}, context) => {
         try
         {
-          const result = await Identity.upsertIndexEntry(context.sessionId, indexEntryContent);
-          console.log(JSON.stringify(result));
+          const session = await Session.findByValidSessionId(context.sessionId);
+          if (!session || !session.identity || !session.identity.indexEntryPublicKey)
+            throw new Error("Invalid session");
+
+          const indexEntry = await findIndexEntry(context.sessionId);
+          const indexEntryContent = indexEntry && indexEntry.content
+            ? JSON.parse(indexEntry.content)
+            : <any>{};
+
+          const entryToImport = await Entry.findByHash(entryHash);
+          if (!entryToImport)
+            throw new Error("Couldn't find an entry with hash " + entryHash + " to import");
+
+          if (entryToImport.ownerFingerPrint != Identity.fingerprintPublicKey(session.identity.indexEntryPublicKey))
+            throw new Error("You're not the owner of the specified entry and therefore cannot import it.")
+
+          if (indexEntryContent[name] && !overwrite)
+            throw new Error("There is already an entry with this name. Set the 'overwrite' parameter to 'true' if overwriting is intended.");
+
+          indexEntryContent[name] = entryHash;
+
+          const upsertIndexEntryResult = await Identity.upsertIndexEntry(context.sessionId, indexEntryContent);
 
           return {
-            success: true
+            success: true,
+            entryHash: upsertIndexEntryResult.entryHash,
+            name: name
           }
         }
         catch (e)
@@ -91,29 +110,74 @@ export class Resolvers
           console.error(e);
           return {
             success: false,
-            errorMessage: "Couldn't create the entry."
+            errorMessage: "Couldn't import the entry."
+          }
+        }
+      },
+      removeEntry: async (parent, {name}, context) => {
+        try {
+          const indexEntry = await findIndexEntry(context.sessionId);
+          const indexEntryContent = indexEntry && indexEntry.content
+            ? JSON.parse(indexEntry.content)
+            : <any>{};
+
+          if (!indexEntryContent[name])
+            throw new Error("Couldn't find a index entry with name '" + name + "'");
+
+          delete indexEntryContent[name];
+
+          const newIndexEntry = await Identity.upsertIndexEntry(context.sessionId, indexEntryContent);
+
+          return {
+            success: true,
+            entryHash: newIndexEntry.entryHash,
+            name: name
+          }
+        }
+        catch (e)
+        {
+          console.error(e);
+          return {
+            success: false,
+            errorMessage: "Couldn't remove the entry from the index."
           }
         }
       }
     };
 
+    const findEntryByHashCleartext = async (hash:string, sessionId:string) => {
+      const session = await Session.findByValidSessionId(sessionId);
+      if (!session || !session.identity || !session.identity.indexEntryPrivateKey)
+        throw new Error("Invalid session");
+
+      const entry = await Entry.findByHash(hash);
+      if (!entry)
+        return null;
+
+      const clearText = publicDecrypt(session.identity.indexEntryPrivateKey, Buffer.from(entry.content, "base64"));
+      entry.content = JSON.parse(clearText.toString("utf8"));
+
+      return entry;
+    };
+
+    const findIndexEntry = async (sessionId:string) => {
+      const session = await Session.findByValidSessionId(sessionId);
+      if (!session || !session.identity || !session.identity.indexEntryHash)
+        throw new Error("Invalid session");
+
+      let indexEntry = !session.identity.indexEntryHash ? Promise.resolve(null) : await findEntryByHashCleartext(session.identity.indexEntryHash, sessionId);
+      return await indexEntry;
+    }
+
     this.queryResolvers = {
+      indexEntry: async (parent, {}, context) => {
+        return findIndexEntry(context.sessionId);
+      },
       findEntryByHash: async (parent, {hash}, context) => {
         return await Entry.findByHash(hash);
       },
       findEntryByHashCleartext: async (parent, {hash}, context) => {
-        const session = await Session.findByValidSessionId(context.sessionId);
-        if (!session || !session.identity || !session.identity.indexEntryPrivateKey)
-          throw new Error("Invalid session");
-
-        const entry = await Entry.findByHash(hash);
-        if (!entry)
-          return null;
-
-        const clearText = publicDecrypt(session.identity.indexEntryPrivateKey, Buffer.from(entry.content, "base64"));
-        entry.content = JSON.parse(clearText.toString("utf8"));
-
-        return entry;
+        return findEntryByHashCleartext(hash, context.sessionId);
       }
     };
   }

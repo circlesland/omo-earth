@@ -13,13 +13,20 @@ import {ResetLayout} from "../trigger/compositor/resetLayout";
 import type {RequestMagicLoginLink} from "../trigger/auth/requestMagicLoginLink";
 import {ExchangeJwtForSessionCookie} from "../trigger/auth/exchangeJwtForSessionCookie";
 import type {ExchangeMagicLoginCodeForJwt} from "../trigger/auth/exchangeMagicLinkCodeForJwt";
+import type {AddKey} from "../trigger/keyStore/addKey";
+import {AuthClient} from "../graphQL/auth/authClient";
+import {KeyStoreClient} from "../graphQL/keyStore/keyStoreClient";
+import type {ImportKey} from "../trigger/keyStore/importKey";
+import type {RemoveKey} from "../trigger/keyStore/removeKey";
+import type {ShareKey} from "../trigger/keyStore/shareKey";
 
 let sideBarToggleState:boolean = true;
 
 export const jwtLocalStorageKey = "magic-login-jwt";
 
 const externalUrl = "__PROXY_PROTOCOL__" + "__PROXY_EXTERN_DOMAIN__" + ":" + "__PROXY_EXTERN_PORT__";
-const config = {
+
+const conf = {
   auth: {
     url: externalUrl + "/auth",
     appId: "1"
@@ -27,46 +34,8 @@ const config = {
   keyStoreServerUrl: externalUrl + "/keystore"
 };
 
-const mutate = (url:string, mutation:string, payload:{operationName:string|null, variables:object, query:string}) : Promise<any> => {
-  return new Promise((resolve, reject) => {
-    try
-    {
-      const xhr = new XMLHttpRequest();
-      xhr.withCredentials = true;
-      xhr.open("POST", url);
-      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-      xhr.send(JSON.stringify(payload));
-      xhr.onreadystatechange = (e) =>
-      {
-        if (xhr.readyState !== XMLHttpRequest.DONE)
-          return; // We're only interested in the final result ..
+export const config = conf;
 
-        const responseData = parseXhrResponse(xhr, mutation);
-        resolve(responseData);
-      }
-    } catch (e) {
-      reject(e);
-    }
-  });
-}
-
-const parseXhrResponse = (xhr:XMLHttpRequest, method:string) => {
-  let responseObject;
-  try
-  {
-    responseObject = JSON.parse(xhr.responseText);
-    if (!responseObject || !responseObject.data)
-      throw new Error("JSON.parse() returned a malformed or empty object. Input was: " + xhr.responseText);
-
-    if (!responseObject.data[method].success)
-      throw new Error("A request was completed with an error: " + responseObject.data.exchangeToken.errorMessage);
-  }
-  catch (e)
-  {
-    throw new Error("Couldn't process the response.");
-  }
-  return responseObject;
-}
 
 export const actionRepository = {
   [Actions.dummyAction]:(trigger:DummyTrigger) => {
@@ -101,15 +70,9 @@ export const actionRepository = {
    * won't work !!
    */
   [Actions.exchangeMagicLoginCodeForJwt]: async (trigger:ExchangeMagicLoginCodeForJwt) => {
-    const payload = {
-      "operationName": null,
-      "variables": {},
-      "query": "mutation { verify(oneTimeToken: \"" + trigger.oneTimeToken + "\") { success errorMessage jwt }}"
-    };
-
-    const result = await mutate(config.auth.url, "verify", payload);
-    if (result.data){
-      localStorage.setItem(jwtLocalStorageKey, result.data.verify.jwt);
+    const result = await AuthClient.instance.exchangeOneTimeTokenForJwt(trigger.oneTimeToken);
+    if (result){
+      localStorage.setItem(jwtLocalStorageKey, result.jwt);
       window.close();
     }
   },
@@ -118,16 +81,11 @@ export const actionRepository = {
    * @param trigger
    */
   [Actions.requestMagicLoginLink]:async (trigger:RequestMagicLoginLink) => {
-    const payload = {
-      "operationName": null,
-      "variables": {},
-      "query": "mutation { login(appId: \"" + config.auth.appId + "\", emailAddress: \"" + trigger.emailAddress + "\") { success errorMessage }}"
-    };
-
     // Below we're waiting for a new JWT so any pre-existing JWT must be deleted first.
     localStorage.removeItem(jwtLocalStorageKey);
 
-    await mutate(config.auth.url, "login", payload);
+    const result = await AuthClient.instance.requestMagicLoginLink(conf.auth.appId, trigger.emailAddress);
+    console.log(result);
 
     // When we got a result with "success" == true,
     // Wait for the user to click the magic link.
@@ -149,15 +107,18 @@ export const actionRepository = {
     }, 100);
   },
   [Actions.exchangeJwtForSessionCookie]: async (trigger:ExchangeJwtForSessionCookie) => {
-    const payload = {
-      "operationName": null,
-      "variables": {},
-      "query": "mutation { exchangeToken(jwt:\"" + trigger.jwt + "\") { success errorMessage }}"
-    };
-
-    await mutate(config.keyStoreServerUrl, "exchangeToken", payload);
+    const result = await KeyStoreClient.instance.exchangeTokenForSession(trigger.jwt);
+    console.log(result);
 
     localStorage.removeItem(jwtLocalStorageKey);
     window.trigger(new NavigateTo("To safe", "/safe"));
+  },
+  [Actions.addKey]: async (trigger:AddKey) => {
+  },
+  [Actions.importKey]: async (trigger:ImportKey) => {
+  },
+  [Actions.removeKey]: async (trigger:RemoveKey) => {
+  },
+  [Actions.shareKey]: async (trigger:ShareKey) => {
   }
 }
