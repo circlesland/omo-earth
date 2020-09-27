@@ -13,7 +13,7 @@ import {ResetLayout} from "../trigger/compositor/resetLayout";
 import type {RequestMagicLoginLink} from "../trigger/auth/requestMagicLoginLink";
 import {ExchangeJwtForSessionCookie} from "../trigger/auth/exchangeJwtForSessionCookie";
 import type {ExchangeMagicLoginCodeForJwt} from "../trigger/auth/exchangeMagicLinkCodeForJwt";
-import type {AddKey} from "../trigger/keyStore/addKey";
+import {AddKey} from "../trigger/keyStore/addKey";
 import {AuthClient} from "../graphQL/auth/authClient";
 import {KeyStoreClient} from "../graphQL/keyStore/keyStoreClient";
 import type {ImportKey} from "../trigger/keyStore/importKey";
@@ -111,9 +111,18 @@ export const actionRepository = {
     console.log(result);
 
     localStorage.removeItem(jwtLocalStorageKey);
+
+    window.trigger(new AddKey(Date.now().toString(), "privatekey", "publickey"));
+
     window.trigger(new NavigateTo("To safe", "/safe"));
   },
   [Actions.addKey]: async (trigger:AddKey) => {
+    const keyEntry = await KeyStoreClient.instance.createEntry({
+      publicKey: trigger.publicKey,
+      privateKey: trigger.privateKey
+    });
+    const newIndexEntry = await KeyStoreClient.instance.importEntry(keyEntry.entryHash, trigger.name);
+    console.log(newIndexEntry);
   },
   [Actions.importKey]: async (trigger:ImportKey) => {
   },

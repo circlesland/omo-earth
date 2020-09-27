@@ -58,6 +58,7 @@ CREATE TABLE "public"."Identity" (
 
 CREATE TABLE "public"."Entry" (
                                   "entryHash" text   NOT NULL ,
+                                  "creatorFingerPrint" text   NOT NULL ,
                                   "ownerFingerPrint" text   NOT NULL ,
                                   "content" text   NOT NULL
 );

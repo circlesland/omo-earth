@@ -163,9 +163,9 @@ export class Resolvers
     const findIndexEntry = async (sessionId:string) => {
       const session = await Session.findByValidSessionId(sessionId);
       if (!session || !session.identity || !session.identity.indexEntryHash)
-        throw new Error("Invalid session");
+        return null;
 
-      let indexEntry = !session.identity.indexEntryHash ? Promise.resolve(null) : await findEntryByHashCleartext(session.identity.indexEntryHash, sessionId);
+      let indexEntry = !session.identity.indexEntryHash ? await null : await findEntryByHashCleartext(session.identity.indexEntryHash, sessionId);
       return await indexEntry;
     }
 

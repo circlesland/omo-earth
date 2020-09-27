@@ -18,8 +18,7 @@ export class AuthClient {
   {
     this._client = new ApolloClient({
       uri: config.auth.url,
-      cache: new InMemoryCache(),
-      credentials: 'same-origin'
+      cache: new InMemoryCache()
     });
   }
 

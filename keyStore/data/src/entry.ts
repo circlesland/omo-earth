@@ -2,6 +2,7 @@ import {prisma} from "./prisma";
 import {publicEncrypt} from "crypto";
 import {Identity} from "./identity";
 import {Session} from "./session";
+var crypto = require('crypto');
 const multihash = require('multihashes');
 
 export class Entry
@@ -14,8 +15,13 @@ export class Entry
   private static async ipfsCompatibleHash(data: string)
   {
     const dataArr = Uint8Array.from(Buffer.from(data, "utf8"));
-    const hashed = multihash.toB58String(multihash.encode(dataArr, 'sha2-256'));
-    return hashed;
+    const sha256Digest = crypto.createHash("sha256").update(dataArr).digest();
+    const hashArr = multihash.encode(sha256Digest, 'sha2-256');
+    const hashedBase58 = multihash.toB58String(hashArr);
+
+    console.log("ipfsCompatibleHash.hashedBase58:", hashedBase58);
+
+    return hashedBase58;
   }
 
   static async createEntry(sessionId:string, entryContent:object, ownerPublicKey:string|null|undefined)

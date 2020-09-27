@@ -25,16 +25,16 @@ export class RequestContext
 
       console.log("Origin: " + originHeaderValue);
       console.log("Cookies: " + cookieValue);
-/*
-        const sessionCookie = arg.req.cookies["session"];
-        let sessionId:string|undefined = undefined;
-        if(sessionCookie) {
-          sessionCookie
-        }
-*/
-        //if (!originHeaderValue)
-        //    throw new Error("The incoming request doesn't have an Origin-header.")
+      let sessionId:string|undefined = undefined;
 
-        return new RequestContext(<string>originHeaderValue);
+      const cookieValueStartIndex = cookieValue?.indexOf("=");
+      if(cookieValueStartIndex && cookieValue && cookieValue.substr(0, cookieValueStartIndex) == "session") {
+        sessionId = decodeURIComponent(cookieValue.substring(cookieValueStartIndex + 1));
+        console.log("sessionId: " + sessionId);
+      }
+      //if (!originHeaderValue)
+      //    throw new Error("The incoming request doesn't have an Origin-header.")
+
+      return new RequestContext(<string>originHeaderValue,  sessionId);
     }
 }

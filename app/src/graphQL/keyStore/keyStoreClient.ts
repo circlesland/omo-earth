@@ -19,7 +19,7 @@ export class KeyStoreClient {
     this._client = new ApolloClient({
       uri: config.keyStoreServerUrl,
       cache: new InMemoryCache(),
-      credentials: 'same-origin'
+      credentials: 'include'
     });
   }
 
