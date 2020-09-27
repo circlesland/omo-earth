@@ -66,16 +66,16 @@ model Identity {
 // "Entry" objects store public key encypted data.
 // Owners can identify their Entries with the fingerprint of the public key they used to encrypt the content.
 // Every entry can also be uniquely identified by it's "entryHash".
-// The "entryHash" property contains an IPFS compatible hash of the concatenated values of "entryId", "ownerFingerPrint" and "content".
+// The "entryHash" property contains an IPFS compatible hash of the concatenated values of creatorFingerPrint + ownerFingerPrint + content.
 // -> Each Entry can have exactly one Owner as long as no private keys are shared.
 // -> It must be assumed that entries cannot be deleted or modeified once they've been created.
 model Entry {
-  // A IPFS hash for the contents of this entry (nonce + ownerFingerPrint + content)
-  entryHash String @unique
-  // A (per Entry) unique random id. // TODO: It should be possible to create (non sensitive/public) Entries where the "nonce" shouldn't be included in the "entryHash". This would allow for a correct data deduplication. - Or not?
-  nonce String?
+  // The fingeprint of the creator's public key.
+  creatorFingerPrint String
   // The fingerprint of the owner's public key.
   ownerFingerPrint String
+  // A IPFS hash for the contents of this entry (creatorFingerPrint + ownerFingerPrint + content)
+  entryHash String @unique
   // The actual data of that Entry (encrypted with the public key that's identified by the ownerFingerPrint).
   content String
 }

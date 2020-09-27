@@ -1,8 +1,8 @@
 import {prisma} from "./prisma";
-import {ValueGenerator} from "../../../auth/util/dist/valueGenerator";
-import {createHash, publicEncrypt} from "crypto";
+import {publicEncrypt} from "crypto";
 import {Identity} from "./identity";
-import * as bs58 from "bs58";
+import {Session} from "./session";
+const multihash = require('multihashes');
 
 export class Entry
 {
@@ -13,26 +13,38 @@ export class Entry
 
   private static async ipfsCompatibleHash(data: string)
   {
-    const hashed = createHash('sha256')
-      .update(data)
-      .digest();
-    const bas58Hash = bs58.encode(Buffer.from("0x12", "hex")) + bs58.encode(hashed);
-    return bas58Hash;
+    const dataArr = Uint8Array.from(Buffer.from(data));
+    const hashed = multihash.toB58String(multihash.encode(dataArr, 'sha2-256'));
+    return hashed;
   }
 
-  static async createEntry(publicKey:string, entryContent:object)
+  static async createEntry(sessionId:string, entryContent:object, ownerPublicKey?:string)
   {
-    const ownerFingerPrint = Identity.fingerprintPublicKey(publicKey);
+    const session = await Session.findByValidSessionId(sessionId);
+    if (!session)
+      throw new Error("Invalid session");
+
+    if (!session.identity || !session.identity.indexEntryPublicKey)
+      throw new Error("Invalid session")
+
+    if (!ownerPublicKey)
+      ownerPublicKey = session.identity.indexEntryPublicKey;
+
+    if (!ownerPublicKey)
+      throw new Error("No owner public key");
+
+    const creatorFingerPrint = Identity.fingerprintPublicKey(session.identity.indexEntryPublicKey);
+    const ownerFingerPrint = Identity.fingerprintPublicKey(ownerPublicKey);
     const contentJson = JSON.stringify(entryContent);
-    const contentJsonBuffer = Buffer.from(contentJson);
-    const encryptedContentJsonBuffer = publicEncrypt(publicKey, contentJsonBuffer);
+    const contentJsonBuffer = Buffer.from(contentJson, "utf8");
+    const encryptedContentJsonBuffer = publicEncrypt(session.identity.indexEntryPublicKey, contentJsonBuffer);
     const encryptedContentJsonNase64 = encryptedContentJsonBuffer.toString("base64");
 
     // Create a new index entry
     const memEntry = {
-      nonce: ValueGenerator.generateRandomBase64String(32),
-      content: encryptedContentJsonNase64,
-      ownerFingerPrint: ownerFingerPrint
+      creatorFingerPrint,
+      ownerFingerPrint,
+      content: encryptedContentJsonNase64
     };
 
     const memEntryJson = JSON.stringify(memEntry);
@@ -40,8 +52,8 @@ export class Entry
 
     const persistedEntry = await prisma.entry.create({
       data: {
-        nonce: memEntry.nonce,
-        ownerFingerPrint: ownerFingerPrint,
+        creatorFingerPrint,
+        ownerFingerPrint,
         entryHash: entryHash,
         content: memEntry.content
       }

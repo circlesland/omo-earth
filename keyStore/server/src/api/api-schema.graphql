@@ -17,7 +17,15 @@ type Mutation {
 }
 
 type Query {
-    version : Version
+    findEntryByHash(hash:String!): Entry
+    findEntryByHashCleartext(hash:String!): Entry
+}
+
+type Entry {
+    creatorFingerPrint: String!
+    ownerFingerPrint: String!
+    entryHash: String!
+    content: String!
 }
 
 interface ActionResponse {

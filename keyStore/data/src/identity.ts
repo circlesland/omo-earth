@@ -3,6 +3,7 @@ import {prisma} from "./prisma";
 import {KeyGenerator} from "../../../auth/util/dist/keyGenerator";
 import {ValueGenerator} from "../../../auth/util/dist/valueGenerator";
 import {Entry} from "./entry";
+import {Session} from "./session";
 
 export class Identity
 {
@@ -40,21 +41,23 @@ export class Identity
 
   /**
    * Sets a new index entry for the identity that is associated with the "challengeEmailAddress".
-   * @param challengeEmailAddress
+   * @param sessionId the session id
    * @param indexEntryContent
    */
-  static async upsertIndexEntry(challengeEmailAddress: string, indexEntryContent:object)
+  static async upsertIndexEntry(sessionId:string, indexEntryContent:object)
   {
-    const identities = await prisma.identity.findMany({where:{challengeEmailAddress}});
-    if (!identities || identities.length !== 1)
-      throw new Error("There is no known identity with the email address '" + challengeEmailAddress + "'");
+    const session = await Session.findByValidSessionId(sessionId);
+    if (!session)
+      throw new Error("Invalid session");
 
-    const identity = identities[0];
-    const persistedEntry = await Entry.createEntry(identity.indexEntryPublicKey, indexEntryContent);
+    if (!session.identity || !session.identity.indexEntryPublicKey)
+      throw new Error("Invalid session")
+
+    const persistedEntry = await Entry.createEntry(sessionId, indexEntryContent, session.identity.indexEntryPublicKey);
 
     await prisma.identity.update({
       where:{
-        identityId: identity.identityId
+        identityId: session.identity.identityId
       },
       data: {
         indexEntryHash: persistedEntry.entryHash

@@ -1,31 +1,31 @@
 CREATE TABLE "public"."Apps" (
-    "id" SERIAL,
-    "appId" text   NOT NULL ,
-    "originHeaderValue" text   NOT NULL ,
-    "validFrom" timestamp(3)   NOT NULL ,
-    "validTo" timestamp(3)   ,
-    PRIMARY KEY ("id")
+                                 "id" SERIAL,
+                                 "appId" text   NOT NULL ,
+                                 "originHeaderValue" text   NOT NULL ,
+                                 "validFrom" timestamp(3)   NOT NULL ,
+                                 "validTo" timestamp(3)   ,
+                                 PRIMARY KEY ("id")
 );
 
 CREATE TABLE "public"."Challenges" (
-    "id" SERIAL,
-    "validTo" timestamp(3)   NOT NULL ,
-    "email" text   NOT NULL ,
-    "appId" text   NOT NULL ,
-    "challenge" text   NOT NULL ,
-    "done" boolean   NOT NULL ,
-    PRIMARY KEY ("id")
+                                       "id" SERIAL,
+                                       "validTo" timestamp(3)   NOT NULL ,
+                                       "email" text   NOT NULL ,
+                                       "appId" text   NOT NULL ,
+                                       "challenge" text   NOT NULL ,
+                                       "done" boolean   NOT NULL ,
+                                       PRIMARY KEY ("id")
 );
 
 CREATE TABLE "public"."KeyPairs" (
-    "id" SERIAL,
-    "validFrom" timestamp(3)   NOT NULL ,
-    "validTo" timestamp(3)   NOT NULL ,
-    "privateKeyPem" text   NOT NULL ,
-    "publicKeyPem" text   NOT NULL ,
-    "privateKeyJwk" text   NOT NULL ,
-    "publicKeyJwk" text   NOT NULL ,
-    PRIMARY KEY ("id")
+                                     "id" SERIAL,
+                                     "validFrom" timestamp(3)   NOT NULL ,
+                                     "validTo" timestamp(3)   NOT NULL ,
+                                     "privateKeyPem" text   NOT NULL ,
+                                     "publicKeyPem" text   NOT NULL ,
+                                     "privateKeyJwk" text   NOT NULL ,
+                                     "publicKeyJwk" text   NOT NULL ,
+                                     PRIMARY KEY ("id")
 );
 
 CREATE UNIQUE INDEX "Apps.appId_unique" ON "public"."Apps"("appId");
@@ -33,7 +33,7 @@ CREATE UNIQUE INDEX "Apps.appId_unique" ON "public"."Apps"("appId");
 CREATE UNIQUE INDEX "UX_Challenges_Email_Challenge" ON "public"."Challenges"("email", "challenge");
 
 INSERT INTO "Apps" ("appId", "originHeaderValue", "validFrom", "validTo")
-            VALUES ('1', 'http://omo.local:8080', '2020-01-01', null);
+VALUES ('1', 'http://omo.local:8080', '2020-01-01', null);
 
 
 
@@ -58,7 +58,6 @@ CREATE TABLE "public"."Identity" (
 
 CREATE TABLE "public"."Entry" (
                                   "entryHash" text   NOT NULL ,
-                                  "nonce" text   NOT NULL ,
                                   "ownerFingerPrint" text   NOT NULL ,
                                   "content" text   NOT NULL
 );
@@ -81,6 +80,5 @@ ALTER TABLE "public"."Session" ADD FOREIGN KEY ("authorityId") REFERENCES "publi
 
 ALTER TABLE "public"."Session" ADD FOREIGN KEY ("identityIdentityId") REFERENCES "public"."Identity"("identityId") ON DELETE CASCADE ON UPDATE CASCADE;
 
-
-
-INSERT INTO "Authority" (issuer, "appId") VALUES ('http://omo.local:8080/auth', '1');
+-- TODO: Get URL from ENV
+INSERT INTO "Authority" (issuer, "appId") VALUES ('https://omo.earth/auth', '1');

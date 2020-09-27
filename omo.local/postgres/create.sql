@@ -58,7 +58,6 @@ CREATE TABLE "public"."Identity" (
 
 CREATE TABLE "public"."Entry" (
                                   "entryHash" text   NOT NULL ,
-                                  "nonce" text   NOT NULL ,
                                   "ownerFingerPrint" text   NOT NULL ,
                                   "content" text   NOT NULL
 );
@@ -81,6 +80,5 @@ ALTER TABLE "public"."Session" ADD FOREIGN KEY ("authorityId") REFERENCES "publi
 
 ALTER TABLE "public"."Session" ADD FOREIGN KEY ("identityIdentityId") REFERENCES "public"."Identity"("identityId") ON DELETE CASCADE ON UPDATE CASCADE;
 
-
-
+-- TODO: Get URL from ENV
 INSERT INTO "Authority" (issuer, "appId") VALUES ('http://omo.local:8080/auth', '1');
