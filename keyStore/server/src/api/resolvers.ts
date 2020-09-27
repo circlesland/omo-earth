@@ -111,7 +111,7 @@ export class Resolvers
           return null;
 
         const clearText = publicDecrypt(session.identity.indexEntryPrivateKey, Buffer.from(entry.content, "base64"));
-        entry.content = clearText.toString("utf8");
+        entry.content = JSON.parse(clearText.toString("utf8"));
 
         return entry;
       }

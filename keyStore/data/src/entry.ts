@@ -13,7 +13,7 @@ export class Entry
 
   private static async ipfsCompatibleHash(data: string)
   {
-    const dataArr = Uint8Array.from(Buffer.from(data));
+    const dataArr = Uint8Array.from(Buffer.from(data, "utf8"));
     const hashed = multihash.toB58String(multihash.encode(dataArr, 'sha2-256'));
     return hashed;
   }
@@ -29,9 +29,6 @@ export class Entry
 
     if (!ownerPublicKey)
       ownerPublicKey = session.identity.indexEntryPublicKey;
-
-    if (!ownerPublicKey)
-      throw new Error("No owner public key");
 
     const creatorFingerPrint = Identity.fingerprintPublicKey(session.identity.indexEntryPublicKey);
     const ownerFingerPrint = Identity.fingerprintPublicKey(ownerPublicKey);
