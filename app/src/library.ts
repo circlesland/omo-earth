@@ -12,6 +12,7 @@ import OmoPlaceholder from "./components/OmoPlaceholder.svelte";
 import OmoProductDetail from "./components/OmoProductDetail.svelte";
 import OmoBalance from "./components/OmoBalance.svelte";
 import OmoProfile from "./components/OmoProfile.svelte";
+import OmoMyProfile from "./components/OmoMyProfile.svelte";
 import ListCompositor from "./components/ListCompositor.svelte";
 import SafeToken from "./components/SafeToken.svelte";
 import GridCompositor from "./components/GridCompositor.svelte";
@@ -68,6 +69,8 @@ export const library = {
         return OmoBalance;
       case "OmoProfile":
         return OmoProfile;
+      case "OmoMyProfile":
+        return OmoMyProfile;
       case "ListCompositor":
         return ListCompositor;
       case "SafeToken":

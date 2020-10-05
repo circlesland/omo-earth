@@ -33,7 +33,7 @@ type Entry {
     creatorFingerPrint: String!
     ownerFingerPrint: String!
     entryHash: String!
-    content: String!
+    content: Json!
 }
 
 interface ActionResponse {

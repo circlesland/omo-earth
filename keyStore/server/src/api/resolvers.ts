@@ -5,7 +5,7 @@ import {
 import {Session} from "../../../data/dist/session";
 import {Entry} from "../../../data/dist/entry";
 import {Identity} from "@omo/keystore-data/dist/identity";
-import {publicDecrypt} from "crypto";
+import {privateDecrypt} from "crypto";
 
 export class Resolvers
 {
@@ -82,15 +82,15 @@ export class Resolvers
 
           const indexEntry = await findIndexEntry(context.sessionId);
           const indexEntryContent = indexEntry && indexEntry.content
-            ? JSON.parse(indexEntry.content)
+            ? indexEntry.content
             : <any>{};
 
           const entryToImport = await Entry.findByHash(entryHash);
           if (!entryToImport)
             throw new Error("Couldn't find an entry with hash " + entryHash + " to import");
 
-          if (entryToImport.ownerFingerPrint != Identity.fingerprintPublicKey(session.identity.indexEntryPublicKey))
-            throw new Error("You're not the owner of the specified entry and therefore cannot import it.")
+          if (entryToImport.ownerFingerPrint != session.identity.indexEntryKeyFingerprint)
+            throw new Error("You're not the owner of the specified entry and therefore cannot import it.");
 
           if (indexEntryContent[name] && !overwrite)
             throw new Error("There is already an entry with this name. Set the 'overwrite' parameter to 'true' if overwriting is intended.");
@@ -118,7 +118,7 @@ export class Resolvers
         try {
           const indexEntry = await findIndexEntry(context.sessionId);
           const indexEntryContent = indexEntry && indexEntry.content
-            ? JSON.parse(indexEntry.content)
+            ? indexEntry.content
             : <any>{};
 
           if (!indexEntryContent[name])
@@ -154,7 +154,8 @@ export class Resolvers
       if (!entry)
         return null;
 
-      const clearText = publicDecrypt(session.identity.indexEntryPrivateKey, Buffer.from(entry.content, "base64"));
+      const clearText = privateDecrypt(session.identity.indexEntryPrivateKey, Buffer.from(entry.content, "base64"));
+      console.log("clearText: ", clearText.toString("utf8"));
       entry.content = JSON.parse(clearText.toString("utf8"));
 
       return entry;

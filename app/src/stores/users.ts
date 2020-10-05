@@ -1,9 +1,13 @@
 import { writable } from "svelte/store";
 
 function createStore() {
+  /**
+   * Contains all users. one of them is the currently loggedOn user.
+   */
   const data = [
     {
       loggedOn: true,
+      isOnline: true,
       id: "1",
       name: "Max Mustermann",
       email: "max@die-mustermanns.de",
@@ -11,7 +15,8 @@ function createStore() {
       city: "Berlin",
     },
     {
-      loggedOn: true,
+      loggedOn: false,
+      isOnline: true,
       id: "2",
       name: "Sabine Mustermann",
       email: "sabine@die-mustermanns.de",
@@ -19,7 +24,8 @@ function createStore() {
       city: "Munich",
     },
     {
-      loggedOn: true,
+      loggedOn: false,
+      isOnline: false,
       id: "3",
       name: "Felix Mustermann",
       email: "felix@die-mustermanns.de",
@@ -28,6 +34,7 @@ function createStore() {
     },
     {
       loggedOn: false,
+      isOnline: true,
       id: "4",
       name: "Marta Mustermann",
       email: "marta@die-mustermanns.de",

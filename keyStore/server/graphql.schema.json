@@ -1,6 +1,5 @@
 {
   "__schema": {
-    "description": null,
     "queryType": {
       "name": "Query"
     },
@@ -347,7 +346,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "Json",
                 "ofType": null
               }
             },

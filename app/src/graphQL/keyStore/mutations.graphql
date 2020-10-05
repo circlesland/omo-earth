@@ -1,0 +1,32 @@
+mutation ExchangeToken($jwt:String!) {
+    exchangeToken(jwt: $jwt) {
+        success
+        errorMessage
+    }
+}
+
+mutation CreateEntry($entryContent:Json!, $publicKey:String) {
+    createEntry(publicKey: $publicKey, entryContent: $entryContent) {
+        success
+        errorMessage
+        entryHash
+    }
+}
+
+mutation ImportEntry($entryHash:String!, $name:String!) {
+    importEntry(entryHash: $entryHash, name: $name) {
+        success
+        errorMessage
+        entryHash
+        name
+    }
+}
+
+mutation RemoveEntry($name:String!) {
+    removeEntry(name: $name) {
+        success
+        errorMessage
+        entryHash
+        name
+    }
+}

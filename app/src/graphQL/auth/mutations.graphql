@@ -1,0 +1,14 @@
+mutation Login($appId:String!, $emailAddress:String!) {
+    login(appId: $appId, emailAddress: $emailAddress) {
+        success
+        errorMessage
+    }
+}
+
+mutation Verify($oneTimeToken:String!) {
+    verify(oneTimeToken: $oneTimeToken) {
+        success
+        errorMessage
+        jwt
+    }
+}

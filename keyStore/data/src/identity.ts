@@ -29,10 +29,10 @@ export class Identity
     const identity = await prisma.identity.create({
       data: {
         identityId: ValueGenerator.generateRandomBase64String(32),
-        challengeEmailAddress: emailAddress,
+        emailAddress: emailAddress,
         indexEntryPrivateKey: ppk.privateKeyPem,
         indexEntryPublicKey: ppk.publicKeyPem,
-        indexEntryKeyFingerprint: Identity.fingerprintPublicKey(ppk.publicKeyPem)
+        indexEntryKeyFingerprint: Identity.fingerprintPublicKey(ppk.publicKeyPem),
       }
     });
 

@@ -19,6 +19,9 @@ import {KeyStoreClient} from "../graphQL/keyStore/keyStoreClient";
 import type {ImportKey} from "../trigger/keyStore/importKey";
 import type {RemoveKey} from "../trigger/keyStore/removeKey";
 import type {ShareKey} from "../trigger/keyStore/shareKey";
+import jwt_decode from "jwt-decode";
+import {users} from "../stores/users";
+import {me} from "../stores/me";
 
 let sideBarToggleState:boolean = true;
 
@@ -35,7 +38,6 @@ const conf = {
 };
 
 export const config = conf;
-
 
 export const actionRepository = {
   [Actions.dummyAction]:(trigger:DummyTrigger) => {
@@ -108,12 +110,16 @@ export const actionRepository = {
   },
   [Actions.exchangeJwtForSessionCookie]: async (trigger:ExchangeJwtForSessionCookie) => {
     const result = await KeyStoreClient.instance.exchangeTokenForSession(trigger.jwt);
-    console.log(result);
+    if (!result || !result.success) {
+      throw new Error("Couldn't exchange the JWT for a session at the keystore.")
+    }
 
+    const decodedJwt = jwt_decode(trigger.jwt);
+    console.log("JWT:", decodedJwt);
+    me.update(o => o.email = decodedJwt.sub);
     localStorage.removeItem(jwtLocalStorageKey);
 
     window.trigger(new AddKey(Date.now().toString(), "privatekey", "publickey"));
-
     window.trigger(new NavigateTo("To safe", "/safe"));
   },
   [Actions.addKey]: async (trigger:AddKey) => {
@@ -121,13 +127,14 @@ export const actionRepository = {
       publicKey: trigger.publicKey,
       privateKey: trigger.privateKey
     });
-    const newIndexEntry = await KeyStoreClient.instance.importEntry(keyEntry.entryHash, trigger.name);
-    console.log(newIndexEntry);
+    await KeyStoreClient.instance.importEntry(keyEntry.entryHash, trigger.name);
   },
   [Actions.importKey]: async (trigger:ImportKey) => {
   },
   [Actions.removeKey]: async (trigger:RemoveKey) => {
   },
   [Actions.shareKey]: async (trigger:ShareKey) => {
+    // 1) Read the key data
+    // 2) Create a new entry with the key data and encrypt it with the recipient's key
   }
 }

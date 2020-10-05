@@ -1,37 +1,33 @@
 import { writable } from 'svelte/store';
 
 function createStore() {
-  const { subscribe, set, update } = writable({
-    loggedOn: true,
-    id: 1,
-    name: "Max Mustermann",
-    email: "max@die-mustermanns.de",
-    picture: "https://source.unsplash.com/random",
-    trustedPersons: [{
-      type: "users",
-      id: "2"
-    },{
-      type: "users",
-      id: "3"
-    },{
-      type: "users",
-      id: "4"
-    }],
-    trustingPersons: [{
-      type: "users",
-      id: "2"
-    },{
-      type: "users",
-      id: "3"
-    },{
-      type: "users",
-      id: "4"
-    }]
-  });
+  console.log("creating 'me' store ..")
+  const existingUser = sessionStorage.getItem("me");
+  console.log("creating 'me' store .. Existing user (from sessionStorage): ", existingUser);
+
+  const user : {email:string, [other:string]:any} =
+    !!existingUser
+    ? JSON.parse(existingUser)
+    : {
+      loggedOn: false,
+      id: 1,
+      email: "~you're_not@logged.on~",
+    };
+
+  console.log("creating 'me' store .. user is now: ", user);
+  const { subscribe, set, update } = writable(user);
 
   return {
-    subscribe
+    subscribe,
+    set,
+    update
   };
 }
 
 export const me = createStore()
+
+me.subscribe((s) => {
+  console.log("persisting 'me' store to sessionStorage .. ");
+  sessionStorage.setItem("me", JSON.stringify(s));
+  console.log("Persisted ", s)
+});

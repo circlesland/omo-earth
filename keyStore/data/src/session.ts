@@ -45,7 +45,7 @@ export class Session
     const sub = await client.verify(jwt);
 
     // Find an identity that matches the subject
-    const identities = await prisma.identity.findMany({where:{challengeEmailAddress: sub}});
+    const identities = await prisma.identity.findMany({where:{emailAddress: sub}});
 
     let identity;
     if (identities.length == 0) {

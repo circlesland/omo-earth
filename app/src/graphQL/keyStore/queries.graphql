@@ -1,0 +1,26 @@
+query IndexEntry {
+    indexEntry {
+        creatorFingerPrint
+        ownerFingerPrint
+        entryHash
+        content
+    }
+}
+
+query FindEntryByHash($hash:String!) {
+    findEntryByHash(hash:$hash) {
+        creatorFingerPrint
+        ownerFingerPrint
+        entryHash
+        content
+    }
+}
+
+query FindEntryByHashCleartext($hash:String!) {
+    findEntryByHashCleartext(hash:$hash) {
+        creatorFingerPrint
+        ownerFingerPrint
+        entryHash
+        content
+    }
+}

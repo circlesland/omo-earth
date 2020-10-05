@@ -44,12 +44,7 @@ model Identity {
   // Users can have an email address associated with them instead of a public key.
   // This address is then used (just like the email address) to send a challenge to the
   // user to verify that the user has access to the emial address.
-  challengeEmailAddress String?
-  // SOURCED FROM JWT's "sub" CLAIM:
-  // Users can have a public key associated with them  instead of an email address.
-  // This key is then used (just like the email address) to send a challenge to the
-  // user to verify that the user is in possesion of the private key.
-  challengePublicKey String?
+  emailAddress String?
   // Initially or if the user decides to give us access to his rootStore, this field will contain a privateKey
   // that allows access to the set of entries which the user encrypted with this PPK.
   indexEntryPrivateKey String?
@@ -60,6 +55,45 @@ model Identity {
   // The "entryHash" that points to the index Entry for this user.
   // The index-Entry stores references (also "entryHashes") to other Entries in a dicitionary: {[name:string]:entryHash}.
   // This acts like an IPNS link as it maps a consistent unique id (identityId) to a moving target (the indexEntryHash).
+  indexEntryHash String?
+
+  agents Agent[] @relation("IdentityAgents")
+}
+
+enum AgentType {
+  // Internally managed agent with private key (e.g. for e-mail challenge verification)
+  Internal
+  // A smartcard
+  Smartcard
+  // A desktop device
+  Desktop
+  // A mobile device
+  Device
+  // Other agents that can be used to recover an Identity.
+  // Recovery Agents cannot 'become' (act as) the linked identity but can only
+  // vote for key recovery to a new Agent.
+  Recovery
+}
+
+// Eine Identity hat mehrere Agents, die in ihrem Namen handeln können.
+// Jeder Agent soll die Identität einnehmen können.
+//
+// -> Die Identität muss alle validen Agents kennen
+//    -> Agents werden anhand ihres public keys authentifiziert
+//
+
+model Agent {
+  createdAt DateTime @default(now())
+  identity Identity  @relation("IdentityAgents", fields: [identityId], references: [identityId])
+  identityId String
+  name String @unique
+  type AgentType
+  publicKey String
+  publicKeyFingerprint String
+  privateKey String? // When "type == AgentType.Internal" then this field contains a private key.
+  config String?
+  disabledSince DateTime?
+
   indexEntryHash String?
 }
 

@@ -48,7 +48,7 @@ CREATE TABLE "public"."Authority" (
 
 CREATE TABLE "public"."Identity" (
                                      "identityId" text   NOT NULL ,
-                                     "challengeEmailAddress" text   ,
+                                     "emailAddress" text   ,
                                      "challengePublicKey" text   ,
                                      "indexEntryPrivateKey" text   ,
                                      "indexEntryPublicKey" text   NOT NULL ,

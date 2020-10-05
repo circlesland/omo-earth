@@ -24,7 +24,9 @@ export class Main
     const apiSchemaTypeDefs = importSchema(process.env.KEYSTORE_GRAPHQL_SCHEMA);
 
     this._resolvers = new Resolvers();
+
     const corsOrigins = process.env.KEYSTORE_CORS_ORIGINS.split(";");
+    console.log("cors origins: ", corsOrigins);
 
     this._server = new ApolloServer({
       context: RequestContext.create,

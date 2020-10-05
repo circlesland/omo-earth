@@ -28,6 +28,7 @@ export class Main
         this._keyRotator = new KeyRotator();
 
         const corsOrigins = process.env.AUTH_CORS_ORIGINS.split(";");
+        console.log("cors origins: ", corsOrigins);
 
         this._server = new ApolloServer({
             context: RequestContext.create,

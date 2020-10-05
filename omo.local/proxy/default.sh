@@ -27,10 +27,10 @@ $SET_HEADER_BLOCK
     proxy_pass ${KEYSTORE_PROTOCOL}${KEYSTORE_DOMAIN}:${KEYSTORE_PORT};
   }
 
-  location /${PROXY_SERVICE_APP_PATH} {
-$SET_HEADER_BLOCK
-    proxy_pass ${APP_PROTOCOL}${APP_DOMAIN}:${APP_PORT};
-  }
+#  location /${PROXY_SERVICE_APP_PATH} {
+#$SET_HEADER_BLOCK
+#    proxy_pass ${APP_PROTOCOL}${APP_DOMAIN}:${APP_PORT};
+#  }
 }
 EOF`
 echo "$TEMPLATE" > default.conf

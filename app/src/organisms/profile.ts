@@ -8,7 +8,7 @@ export const profile = (id: string) => {
       {
         area: "main",
         cssClasses: "overflow-y-scroll p-12 bg-gray-200",
-        component: "OmoProfile",
+        component: "OmoMyProfile",
         data: {
           id,
         },

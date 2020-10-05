@@ -20,7 +20,7 @@ services:
     environment:
       # Sucks: The hash is a comment in .env-files, so this variable must be set
       # inside of this file.
-      - AUTH_APP_REDIRECT=http://omo.local:8080/#!/sign-in/onetime
+      - AUTH_APP_REDIRECT=http://omo.local:5000/#!/sign-in/onetime
     ports:
       - "80"
 
@@ -35,22 +35,22 @@ services:
     ports:
       - "80"
 
-  app:
-    depends_on:
-      - postgres
-      - auth
-      - keystore
-    build:
-      context: ../app
-      dockerfile: ../omo.local/app/Dockerfile
-      args:
-        - PROXY_PROTOCOL=${PROXY_PROTOCOL}
-        - PROXY_EXTERN_DOMAIN=${PROXY_EXTERN_DOMAIN}
-        - PROXY_EXTERN_PORT=${PROXY_EXTERN_PORT}
-    env_file:
-      - .env
-    ports:
-      - "80"
+#  app:
+#    depends_on:
+#      - postgres
+#      - auth
+#      - keystore
+#    build:
+#      context: ../app
+#      dockerfile: ../omo.local/app/Dockerfile
+#      args:
+#        - PROXY_PROTOCOL=${PROXY_PROTOCOL}
+#        - PROXY_EXTERN_DOMAIN=${PROXY_EXTERN_DOMAIN}
+#        - PROXY_EXTERN_PORT=${PROXY_EXTERN_PORT}
+#    env_file:
+#      - .env
+#    ports:
+#      - "80"
 
   static:
     build: static
@@ -61,7 +61,7 @@ services:
     depends_on:
       - static
       - auth
-      - app
+      #- app
     build:
       context: proxy
       dockerfile: Dockerfile
