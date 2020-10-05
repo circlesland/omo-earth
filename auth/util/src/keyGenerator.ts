@@ -45,8 +45,6 @@ export class KeyGenerator
                         publicKeyJwk: JSON.stringify(publicKeyJwk)
                     };
 
-                    console.log(multiFormatKeyPair);
-
                     resolve(multiFormatKeyPair);
                 });
         });

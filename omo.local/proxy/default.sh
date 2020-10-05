@@ -6,9 +6,16 @@ SET_HEADER_BLOCK=`cat << 'EOF'
     proxy_set_header Cookie $http_cookie;
 EOF`
 
+RATE_LIMITING=`cat << 'EOF'
+limit_req_zone $binary_remote_addr zone=zone1:10m rate=2r/s;
+limit_req_zone $binary_remote_addr zone=zone2:10m rate=4r/s;
+EOF`
+
 TEMPLATE=`cat << EOF
+$RATE_LIMITING
+
 server {
-  server_name localhost;
+  server_name omo.local;
 
   listen ${PROXY_PORT};
 
@@ -18,11 +25,13 @@ $SET_HEADER_BLOCK
   }
 
   location /${PROXY_SERVICE_AUTH_PATH} {
+    limit_req zone=zone1 burst=4;
 $SET_HEADER_BLOCK
     proxy_pass ${AUTH_PROTOCOL}${AUTH_DOMAIN}:${AUTH_PORT};
   }
 
   location /${PROXY_SERVICE_KEYSTORE_PATH} {
+    limit_req zone=zone2 burst=16;
 $SET_HEADER_BLOCK
     proxy_pass ${KEYSTORE_PROTOCOL}${KEYSTORE_DOMAIN}:${KEYSTORE_PORT};
   }

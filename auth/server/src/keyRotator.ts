@@ -23,8 +23,9 @@ export class KeyRotator
           const now = new Date();
 
           // TODO: Add the "valid from" claim to the jwt and create overlapping keys
-          if (!this._validTo || now < this._validTo)
+          if (!this._validTo || now < this._validTo) {
             return;
+          }
 
           this._validTo = await KeyRotator._ensureValidKeyPair();
         }, 500);
