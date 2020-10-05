@@ -14,14 +14,14 @@ import type {RequestMagicLoginLink} from "../trigger/auth/requestMagicLoginLink"
 import {ExchangeJwtForSessionCookie} from "../trigger/auth/exchangeJwtForSessionCookie";
 import type {ExchangeMagicLoginCodeForJwt} from "../trigger/auth/exchangeMagicLinkCodeForJwt";
 import {AddKey} from "../trigger/keyStore/addKey";
-import {AuthClient} from "../graphQL/auth/authClient";
-import {KeyStoreClient} from "../graphQL/keyStore/keyStoreClient";
 import type {ImportKey} from "../trigger/keyStore/importKey";
 import type {RemoveKey} from "../trigger/keyStore/removeKey";
 import type {ShareKey} from "../trigger/keyStore/shareKey";
 import jwt_decode from "jwt-decode";
 import {users} from "../stores/users";
 import {me} from "../stores/me";
+import {authClient} from "../graphQL/auth/authClient";
+import {keyStoreClient} from "../graphQL/keyStore/keyStoreClient";
 
 let sideBarToggleState:boolean = true;
 
@@ -72,11 +72,15 @@ export const actionRepository = {
    * won't work !!
    */
   [Actions.exchangeMagicLoginCodeForJwt]: async (trigger:ExchangeMagicLoginCodeForJwt) => {
-    const result = await AuthClient.instance.exchangeOneTimeTokenForJwt(trigger.oneTimeToken);
-    if (result){
-      localStorage.setItem(jwtLocalStorageKey, result.jwt);
-      window.close();
+    const result =  await authClient.Verify({
+      oneTimeToken: trigger.oneTimeToken
+    });
+    if (result.errors && result.errors.length > 0) {
+      throw new Error(result.errors.map(o => o.message) .join("\n"));
     }
+
+    localStorage.setItem(jwtLocalStorageKey, result.data.verify.jwt);
+    window.close();
   },
   /**
    * Requests a magic login link for an email address.
@@ -86,8 +90,13 @@ export const actionRepository = {
     // Below we're waiting for a new JWT so any pre-existing JWT must be deleted first.
     localStorage.removeItem(jwtLocalStorageKey);
 
-    const result = await AuthClient.instance.requestMagicLoginLink(conf.auth.appId, trigger.emailAddress);
-    console.log(result);
+    const result =  await authClient.Login({
+      appId: conf.auth.appId,
+      emailAddress: trigger.emailAddress
+    });
+    if (result.errors && result.errors.length > 0) {
+      throw new Error(result.errors.map(o => o.message) .join("\n"));
+    }
 
     // When we got a result with "success" == true,
     // Wait for the user to click the magic link.
@@ -109,8 +118,14 @@ export const actionRepository = {
     }, 100);
   },
   [Actions.exchangeJwtForSessionCookie]: async (trigger:ExchangeJwtForSessionCookie) => {
-    const result = await KeyStoreClient.instance.exchangeTokenForSession(trigger.jwt);
-    if (!result || !result.success) {
+
+    const result =  await keyStoreClient.ExchangeToken({
+      jwt: trigger.jwt
+    });
+    if (result.errors && result.errors.length > 0) {
+      throw new Error(result.errors.map(o => o.message) .join("\n"));
+    }
+    if (!result.data.exchangeToken.success) {
       throw new Error("Couldn't exchange the JWT for a session at the keystore.")
     }
 
@@ -123,11 +138,25 @@ export const actionRepository = {
     window.trigger(new NavigateTo("To safe", "/safe"));
   },
   [Actions.addKey]: async (trigger:AddKey) => {
-    const keyEntry = await KeyStoreClient.instance.createEntry({
+    /*
+    const keyEntry =  await keyStoreClient.CreateEntry({
       publicKey: trigger.publicKey,
-      privateKey: trigger.privateKey
+      privateKey: trigger.privateKey,
+
     });
+    if (keyEntry.errors && keyEntry.errors.length > 0) {
+      throw new Error(keyEntry.errors.map(o => o.message) .join("\n"));
+    }
     await KeyStoreClient.instance.importEntry(keyEntry.entryHash, trigger.name);
+
+    const importedEntry = await keyStoreClient.ImportEntry({
+      name: trigger.name,
+      entryHash: keyEntry.entryHash
+    });
+    if (importedEntry.errors && importedEntry.errors.length > 0) {
+      throw new Error(importedEntry.errors.map(o => o.message) .join("\n"));
+    }
+    */
   },
   [Actions.importKey]: async (trigger:ImportKey) => {
   },

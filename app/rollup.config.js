@@ -54,7 +54,9 @@ export default {
       // TODO: Replace with variables from .env
       __PROXY_EXTERN_DOMAIN__: process.env.PROXY_EXTERN_DOMAIN,
       __PROXY_EXTERN_PORT__: process.env.PROXY_EXTERN_PORT,
-      __PROXY_PROTOCOL__: process.env.PROXY_PROTOCOL
+      __PROXY_PROTOCOL__: process.env.PROXY_PROTOCOL,
+      __PROXY_SERVICE_AUTH_PATH__: process.env.PROXY_SERVICE_AUTH_PATH,
+      __PROXY_SERVICE_KEYSTORE_PATH__: process.env.PROXY_SERVICE_KEYSTORE_PATH
     }),
     json(),
 
