@@ -1,21 +1,23 @@
 import { writable } from 'svelte/store';
+import type {Entry} from "../graphQL/keyStore/generated";
 
 function createStore() {
-  console.log("creating 'me' store ..")
-  const existingUser = sessionStorage.getItem("me");
-  console.log("creating 'me' store .. Existing user (from sessionStorage): ", existingUser);
+  const existingIndexEntry = sessionStorage.getItem("me");
 
-  const user : {email:string, [other:string]:any} =
-    !!existingUser
-    ? JSON.parse(existingUser)
-    : {
-      loggedOn: false,
-      id: 1,
-      email: "~you're_not@logged.on~",
-    };
+  const emptyEntry:Entry = {
+    ownerFingerPrint: null,
+    creatorFingerPrint: null,
+    entryHash: null,
+    content: {
+      email: null
+    },
+  };
 
-  console.log("creating 'me' store .. user is now: ", user);
-  const { subscribe, set, update } = writable(user);
+  const indexEntry = existingIndexEntry
+    ? JSON.parse(existingIndexEntry)
+    : emptyEntry;
+
+  const { subscribe, set, update } = writable(indexEntry);
 
   return {
     subscribe,
@@ -27,7 +29,5 @@ function createStore() {
 export const me = createStore()
 
 me.subscribe((s) => {
-  console.log("persisting 'me' store to sessionStorage .. ");
   sessionStorage.setItem("me", JSON.stringify(s));
-  console.log("Persisted ", s)
 });

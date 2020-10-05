@@ -3,6 +3,7 @@ import {KeyPair} from "@omo/auth-data/dist/keyPair";
 export class KeyRotator
 {
     private _intervalHandle?:number;
+    private _validTo?:Date;
 
     async start(invalidateEveryNSeconds: number)
     {
@@ -15,12 +16,18 @@ export class KeyRotator
             throw new Error("The minimum lifetime of key pairs must be 30 seconds.")
         }
 
-        await this._ensureValidKeyPair();
+        this._validTo = await KeyRotator._ensureValidKeyPair();
 
         setInterval(async () =>
         {
-            await this._ensureValidKeyPair();
-        }, invalidateEveryNSeconds * 1000);
+          const now = new Date();
+
+          // TODO: Add the "valid from" claim to the jwt and create overlapping keys
+          if (!this._validTo || now < this._validTo)
+            return;
+
+          this._validTo = await KeyRotator._ensureValidKeyPair();
+        }, 500);
     }
 
     stop()
@@ -32,17 +39,19 @@ export class KeyRotator
         }
         clearInterval(this._intervalHandle);
         this._intervalHandle = undefined;
+        this._validTo = undefined;
     }
 
     /**
      * Checks if a valid key pair exists. If not, a new one is created.
      * @private
      */
-    private async _ensureValidKeyPair()
+    private static async _ensureValidKeyPair() : Promise<Date>
     {
-        const keyPair = await KeyPair.findValidKey();
+        let keyPair = await KeyPair.findValidKey();
         if (!keyPair) {
-            await KeyPair.createKeyPair();
+           keyPair = await KeyPair.createKeyPair();
         }
+        return keyPair.validTo;
     }
 }

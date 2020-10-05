@@ -21,37 +21,48 @@
   // set default component
   let viewDocument = Home;
 
+  function route(path:string, handler/*:(ctx:any)=>void*/) {
+    const handlerWrapper = (ctx) => {
+      if (!sessionStorage.getItem("me")) {
+        viewDocument = Home;
+      } else {
+        handler(ctx);
+      }
+    };
+    page(path, handlerWrapper);
+  }
+
   // Map routes to page. If a route is hit the current
   // reference is set to the route's component
-  page("/", () => {
+  route("/", () => {
     viewDocument = Home;
   });
-  page("/sign-in/onetime/:code", (ctx) => {
+  route("/sign-in/onetime/:code", (ctx) => {
     // Display a spinner (should be displayed only for a short time, since the
     // tab should close itself when the code was exchanged for a JWT and the JWT
     // was written to the localStorage).
     viewDocument = SignIn;
     window.trigger(new ExchangeMagicLoginCodeForJwt(ctx.params.code));
   });
-  page("/safe", () => {
+  route("/safe", () => {
     viewDocument = Safe(safeDashboard);
   });
-  page("/safe/dashboard", () => {
+  route("/safe/dashboard", () => {
     viewDocument = Safe(safeDashboard);
   });
-  page("/safe/token", () => {
+  route("/safe/token", () => {
     viewDocument = Safe(safeToken);
   });
-  page("/safe/profile/:id", (ctx) => {
+  route("/safe/profile/:id", (ctx) => {
     viewDocument = Safe(profile(ctx.params.id));
   });
-  page("/product/:id", (ctx) => {
+  route("/product/:id", (ctx) => {
     viewDocument = Product(productDetail(ctx.params.id));
   });
-  page("/blog", () => {
+  route("/blog", () => {
     viewDocument = Blog;
   });
-  page("/market", () => {
+  route("/market", () => {
     viewDocument = Market(products);
   });
 

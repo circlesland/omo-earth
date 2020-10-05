@@ -8,7 +8,6 @@ export interface PrivateKey {
   fingerprint: string
 }
 
-
 export interface Entry {
   meta: {
     creator: PublicKey

@@ -22,6 +22,7 @@ import {users} from "../stores/users";
 import {me} from "../stores/me";
 import {authClient} from "../graphQL/auth/authClient";
 import {keyStoreClient} from "../graphQL/keyStore/keyStoreClient";
+import type {Entry} from "../graphQL/keyStore/generated";
 
 let sideBarToggleState:boolean = true;
 
@@ -131,7 +132,11 @@ export const actionRepository = {
 
     const decodedJwt = jwt_decode(trigger.jwt);
     console.log("JWT:", decodedJwt);
-    me.update(o => o.email = decodedJwt.sub);
+
+    me.update(o => {
+      o.content.email = decodedJwt.sub;
+      return o;
+    });
     localStorage.removeItem(jwtLocalStorageKey);
 
     window.trigger(new AddKey(Date.now().toString(), "privatekey", "publickey"));

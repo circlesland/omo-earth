@@ -33,7 +33,7 @@
         {name}
       {/await}    
     </div>-->
-    <p class="text-center text-gray-600 uppercase">{$me.name}</p>
+    <p class="text-center text-gray-600 uppercase">{$me.content.email}</p>
     <div class="text-sm font-light text-center py-1 px-4">My Pledge</div>
   </div>
   <!-- 
