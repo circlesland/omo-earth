@@ -1,5 +1,5 @@
 CREATE DATABASE "omo-auth";
-\CONNECT "omo-auth";
+\c "omo-auth";
 
 create table "_Migration"
 (
@@ -73,8 +73,8 @@ alter table "SigningKeyPairs"
     owner to postgres;
 
 
-CREATE DATABASE "omo-data";
-\CONNECT "omo-data";
+--CREATE DATABASE "omo-data";
+\c "omo-data";
 
 create table "_Migration"
 (

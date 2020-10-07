@@ -9,8 +9,8 @@ cd ../data || exit
 ./rebuild.sh || exit
 
 pwd
-echo "Building ../../keyStore/server .."
-cd ../../keyStore/server || exit
+echo "Building ../keyStore/server .."
+cd ../keyStore/server || exit
 rm -r -f   dist
 rm -r -f   node_modules
 rm -f package-lock.json

@@ -40,7 +40,7 @@ $SET_HEADER_BLOCK
   location /${PROXY_SERVICE_SAFE_PATH} {
     limit_req zone=zone2 burst=16 nodelay;
 $SET_HEADER_BLOCK
-    proxy_pass ${KEYSTORE_PROTOCOL}${KEYSTORE_DOMAIN}:${KEYSTORE_PORT};
+    proxy_pass ${SAFE_PROTOCOL}${SAFE_DOMAIN}:${SAFE_PORT};
   }
 
   location /${PROXY_SERVICE_MARKETPLACE_PATH} {
