@@ -27,9 +27,36 @@ services:
   keystore:
     depends_on:
       - postgres
+      - auth
     build:
       context: ../
       dockerfile: omo.local/keyStore/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "80"
+
+  marketplace:
+    depends_on:
+      - postgres
+      - auth
+      - keystore
+    build:
+      context: ../
+      dockerfile: omo.local/marketplace/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "80"
+
+  safe:
+    depends_on:
+      - postgres
+      - auth
+      - keystore
+    build:
+      context: ../
+      dockerfile: omo.local/safe/Dockerfile
     env_file:
       - .env
     ports:
@@ -57,22 +84,13 @@ services:
     ports:
       - "80"
 
-  safe:
-    depends_on:
-      - postgres
-    build:
-      context: ../
-      dockerfile: omo.local/safe/Dockerfile
-    env_file:
-      - .env
-    ports:
-      - "80"
-
   proxy:
     depends_on:
       - static
       - auth
+      - keystore
       - safe
+      - marketplace
       #- app
     build:
       context: proxy
@@ -88,6 +106,7 @@ services:
         - PROXY_SERVICE_KEYSTORE_PATH=${PROXY_SERVICE_KEYSTORE_PATH}
         - PROXY_SERVICE_SAFE_PATH=${PROXY_SERVICE_SAFE_PATH}
         - PROXY_SERVICE_APP_PATH=${PROXY_SERVICE_APP_PATH}
+        - PROXY_SERVICE_MARKETPLACE_PATH=${PROXY_SERVICE_MARKETPLACE_PATH}
         - STATIC_PROTOCOL=${STATIC_PROTOCOL}
         - STATIC_DOMAIN=${STATIC_DOMAIN}
         - STATIC_PORT=${STATIC_PORT}
@@ -103,6 +122,9 @@ services:
         - SAFE_PROTOCOL=${SAFE_PROTOCOL}
         - SAFE_DOMAIN=${SAFE_DOMAIN}
         - SAFE_PORT=${SAFE_PORT}
+        - MARKETPLACE_PROTOCOL=${MARKETPLACE_PROTOCOL}
+        - MARKETPLACE_DOMAIN=${MARKETPLACE_DOMAIN}
+        - MARKETPLACE_PORT=${MARKETPLACE_PORT}
     env_file:
       - .env
 

@@ -21,18 +21,18 @@ COPY ./data/tsconfig.json ./data/tsconfig.json
 RUN cd ./data/ && npm i
 RUN cd ./data/ && npx tsc
 
-COPY ./safe/server/src ./safe/server/src
-COPY ./safe/server/package.json ./safe/server/package.json
-COPY ./safe/server/tsconfig.json ./safe/server/tsconfig.json
-COPY ./safe/server/codegen.yml ./safe/server/codegen.yml
+COPY ./marketplace/server/src ./marketplace/server/src
+COPY ./marketplace/server/package.json ./marketplace/server/package.json
+COPY ./marketplace/server/tsconfig.json ./marketplace/server/tsconfig.json
+COPY ./marketplace/server/codegen.yml ./marketplace/server/codegen.yml
 
-COPY ./safe/rebuild.sh ./safe/rebuild.sh
+COPY ./marketplace/rebuild.sh ./marketplace/rebuild.sh
 
-RUN cd safe && ./rebuild.sh
+RUN cd marketplace && ./rebuild.sh
 
-# Alias host "omo.local" with "auth" so that the safe can reach the auth-container.
+# Alias host "omo.local" with "auth" so that the marketplace can reach the auth-container.
 # DOESN'T WORK - FCK...
 # RUN echo "omo.local auth" > /etc/host.aliases
 # RUN sh -c "export HOSTALIASES=/etc/host.aliases"
 
-CMD ["node", "safe/server/dist/main.js"]
+CMD ["node", "marketplace/server/dist/main.js"]

@@ -21,7 +21,7 @@ rm -f package-lock.json
 npm i || exit
 npx tsc || exit
 
-cd ../../safe/server || exit
+cd ../../marketplace/server || exit
 rm -r dist
 rm -r node_modules
 rm -f package-lock.json
