@@ -1,32 +1,8 @@
 FROM node:latest
 
-COPY ./auth/util/src ./auth/util/src
-COPY ./auth/util/package.json ./auth/util/package.json
-COPY ./auth/util/tsconfig.json ./auth/util/tsconfig.json
-
-RUN cd ./auth/util/ && npm i
-RUN cd ./auth/util/ && npx tsc
-
-COPY ./auth/client/src ./auth/client/src
-COPY ./auth/client/package.json ./auth/client/package.json
-COPY ./auth/client/tsconfig.json ./auth/client/tsconfig.json
-
-RUN cd ./auth/client/ && npm i
-RUN cd ./auth/client/ && npx tsc
-
-COPY ./data/src ./data/src
-COPY ./data/package.json ./data/package.json
-COPY ./data/tsconfig.json ./data/tsconfig.json
-
-RUN cd ./data/ && npm i
-RUN cd ./data/ && npx tsc
-
-COPY ./marketplace/server/src ./marketplace/server/src
-COPY ./marketplace/server/package.json ./marketplace/server/package.json
-COPY ./marketplace/server/tsconfig.json ./marketplace/server/tsconfig.json
-COPY ./marketplace/server/codegen.yml ./marketplace/server/codegen.yml
-
-COPY ./marketplace/rebuild.sh ./marketplace/rebuild.sh
+COPY ./auth ./auth
+COPY ./data ./data
+COPY ./marketplace ./marketplace
 
 RUN cd marketplace && ./rebuild.sh
 

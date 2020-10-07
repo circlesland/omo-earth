@@ -1,29 +1,20 @@
 #!/bin/bash
 
+currentDir=`pwd`
+
 echo "Building data .."
 pwd
-echo "Building ../auth/util .."
-cd ../auth/util || exit
-rm -r dist
-rm -r node_modules
-rm -f package-lock.json
+echo "Building ../auth .."
+cd ../auth || exit
+./rebuild.sh || exit
+
+pwd
+echo "Building ../data .."
+cd ../data || exit
+rm -r -f dist
+rm -r -f node_modules
+rm -f  package-lock.json
 npm i || exit
 npx tsc || exit
 
-pwd
-echo "Building ../client .."
-cd ../client || exit
-rm -r dist
-rm -r node_modules
-rm -f package-lock.json
-npm i || exit
-npx tsc || exit
-
-pwd
-echo "Building ../../data .."
-cd ../../data || exit
-rm -r dist
-rm -r node_modules
-rm -f package-lock.json
-npm i || exit
-npx tsc || exit
+cd $currentDir || exit
