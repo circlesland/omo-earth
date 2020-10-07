@@ -50,7 +50,7 @@ $SET_HEADER_BLOCK
   }
 
 #  location /${PROXY_SERVICE_APP_PATH} {
-#$SET_HEADER_BLOCK
+# SET_HEADER_BLOCK
 #    proxy_pass ${APP_PROTOCOL}${APP_DOMAIN}:${APP_PORT};
 #  }
 }
