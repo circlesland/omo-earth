@@ -73,6 +73,10 @@ alter table "SigningKeyPairs"
     owner to postgres;
 
 
+INSERT INTO "Apps" ("appId", "originHeaderValue", "validFrom", "validTo")
+VALUES ('1', 'http://omo.local:8080', '2020-01-01', null);
+
+
 --CREATE DATABASE "omo-data";
 \c "omo-data";
 
