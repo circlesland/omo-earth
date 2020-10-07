@@ -1,12 +1,5 @@
 #!/bin/sh
 
-cd ../data || exit
-rm -r dist
-rm -r node_modules
-rm -f package-lock.json
-npm i || exit
-npx tsc || exit
-
 cd ../auth/util || exit
 rm -r dist
 rm -r node_modules
@@ -21,7 +14,7 @@ rm -f package-lock.json
 npm i || exit
 npx tsc || exit
 
-cd ../../keyStore/server || exit
+cd ../../safe/server || exit
 rm -r dist
 rm -r node_modules
 rm -f package-lock.json

@@ -8,7 +8,7 @@ import {Mailer} from "@omo/auth-mailer/dist/mailer";
 import {login} from "@omo/auth-mailer/dist/templates/login";
 import jsonwebtoken from 'jsonwebtoken';
 import {ValueGenerator} from "@omo/auth-util/dist/valueGenerator";
-import {KeyPair} from "@omo/auth-data/dist/keyPair";
+import {SigningKeyPair} from "@omo/auth-data/dist/signingKeyPair";
 import {Apps} from "@omo/auth-data/dist/apps";
 
 export class Resolvers
@@ -102,7 +102,7 @@ export class Resolvers
           throw new Error("No key id (kid) was supplied.")
 
         const keyId = parseInt(kid);
-        const pk = await KeyPair.findPublicKeyById(keyId);
+        const pk = await SigningKeyPair.findPublicKeyById(keyId);
         if (!pk)
           throw new Error("Couldn't find a key with the specified id.");
 
@@ -156,7 +156,7 @@ export class Resolvers
     // RFC 7519: 4.1.7.  "jti" (JWT ID) Claim
     const jti = ValueGenerator.generateRandomUrlSafeString(24);
 
-    const keypair = await KeyPair.findValidKey();
+    const keypair = await SigningKeyPair.findValidKey();
     if (!keypair)
       throw new Error("No valid key available to sign the jwt.")
 

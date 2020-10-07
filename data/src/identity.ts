@@ -1,9 +1,9 @@
 import {createHash} from "crypto";
 import {prisma} from "./prisma";
-import {KeyGenerator} from "../../../auth/util/dist/keyGenerator";
-import {ValueGenerator} from "../../../auth/util/dist/valueGenerator";
-import {Entry} from "./entry";
+import {KeyGenerator} from "@omo/auth-utils/dist/keyGenerator";
+import {ValueGenerator} from "@omo/auth-utils/dist/valueGenerator";
 import {Session} from "./session";
+import {Entry} from "./entry";
 
 export class Identity
 {

@@ -1,5 +1,5 @@
 {
-  "name": "@omo/keystore",
+  "name": "@omo/safe",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
@@ -19,7 +19,7 @@
     "typescript": "^3.9.2"
   },
   "dependencies": {
-    "@omo/data": "../../data",
+    "@omo/data": "../data",
     "apollo-server": "^2.13.1",
     "apollo-server-plugin-http-headers": "^0.1.3",
     "bcrypt": "^4.0.1",

@@ -1,11 +1,11 @@
 import {prisma} from "./prisma";
 import {KeyGenerator} from "@omo/auth-util/dist/keyGenerator";
 
-export class KeyPair
+export class SigningKeyPair
 {
     public static async findPublicKeyById(id: number)
     {
-        return await prisma.keyPairs.findOne({
+        return await prisma.signingKeyPairs.findOne({
             where: {
                 id: id
             },
@@ -21,7 +21,7 @@ export class KeyPair
     {
         const now = new Date();
 
-        const validKeyPairs = await prisma.keyPairs.findMany({
+        const validKeyPairs = await prisma.signingKeyPairs.findMany({
                 where: {
                     validFrom: {
                         lte: now
@@ -51,7 +51,7 @@ export class KeyPair
 
         const newKeyPair = await KeyGenerator.generateRsaKeyPair();
         const now = new Date();
-        const newKeyPairEntry = await prisma.keyPairs.create({
+        const newKeyPairEntry = await prisma.signingKeyPairs.create({
             data: {
                 privateKeyPem: newKeyPair.privateKeyPem,
                 publicKeyPem: newKeyPair.publicKeyPem,

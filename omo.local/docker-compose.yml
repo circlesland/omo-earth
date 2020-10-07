@@ -57,10 +57,22 @@ services:
     ports:
       - "80"
 
+  safe:
+    depends_on:
+      - postgres
+    build:
+      context: ../
+      dockerfile: omo.local/safe/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "80"
+
   proxy:
     depends_on:
       - static
       - auth
+      - safe
       #- app
     build:
       context: proxy
@@ -74,6 +86,7 @@ services:
         - PROXY_SERVICE_STATIC_PATH=${PROXY_SERVICE_STATIC_PATH}
         - PROXY_SERVICE_AUTH_PATH=${PROXY_SERVICE_AUTH_PATH}
         - PROXY_SERVICE_KEYSTORE_PATH=${PROXY_SERVICE_KEYSTORE_PATH}
+        - PROXY_SERVICE_SAFE_PATH=${PROXY_SERVICE_SAFE_PATH}
         - PROXY_SERVICE_APP_PATH=${PROXY_SERVICE_APP_PATH}
         - STATIC_PROTOCOL=${STATIC_PROTOCOL}
         - STATIC_DOMAIN=${STATIC_DOMAIN}
@@ -87,6 +100,9 @@ services:
         - KEYSTORE_PROTOCOL=${KEYSTORE_PROTOCOL}
         - KEYSTORE_DOMAIN=${KEYSTORE_DOMAIN}
         - KEYSTORE_PORT=${KEYSTORE_PORT}
+        - SAFE_PROTOCOL=${SAFE_PROTOCOL}
+        - SAFE_DOMAIN=${SAFE_DOMAIN}
+        - SAFE_PORT=${SAFE_PORT}
     env_file:
       - .env
 

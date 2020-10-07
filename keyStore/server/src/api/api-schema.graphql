@@ -27,6 +27,7 @@ type Query {
     indexEntry: Entry
     findEntryByHash(hash:String!): Entry
     findEntryByHashCleartext(hash:String!): Entry
+    version : Version
 }
 
 type Entry {

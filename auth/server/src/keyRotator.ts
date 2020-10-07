@@ -1,4 +1,4 @@
-import {KeyPair} from "@omo/auth-data/dist/keyPair";
+import {SigningKeyPair} from "@omo/auth-data/dist/signingKeyPair";
 
 export class KeyRotator
 {
@@ -49,9 +49,9 @@ export class KeyRotator
      */
     private static async _ensureValidKeyPair() : Promise<Date>
     {
-        let keyPair = await KeyPair.findValidKey();
+        let keyPair = await SigningKeyPair.findValidKey();
         if (!keyPair) {
-           keyPair = await KeyPair.createKeyPair();
+           keyPair = await SigningKeyPair.createKeyPair();
         }
         return keyPair.validTo;
     }

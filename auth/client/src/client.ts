@@ -2,6 +2,9 @@ import jsonwebtoken from 'jsonwebtoken';
 
 const fetch = require('cross-fetch');
 
+/**
+ * This client can be used solely to verify JWT tokens that have been issued by this service.
+ */
 export class Client
 {
   private readonly _issuer: string;

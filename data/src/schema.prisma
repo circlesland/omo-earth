@@ -1,42 +1,12 @@
 datasource db {
     provider = "postgresql"
-    url      = "postgresql://postgres:postgres@localhost:5432/omo-keyStore?schema=public"
+    url      = "postgresql://postgres:postgres@localhost:5432/omo-data?schema=public"
 }
 
 generator client {
     provider = "prisma-client-js"
 }
 
-// Authorities are trusted services that issue JWTs which this service accepts as authentication
-model Authority {
-  id Int @default(autoincrement()) @id
-  issuer String
-  appId String
-}
-
-// TODO: Check if Forward Secrecy can be used
-// TODO: Are symetric cyphers a suitable solution for entity data encryption (leafs/blobs)
-// TODO: when the sym. keys can be stored with asym. crypto?
-// TODO: !! We should not take backups of this DB !! How to deal with that?
-// -> One week rolling backups
-// TODO: Describe how users can share access to keys.
-
-// Basic Scenario:
-// -------------------------------------
-// 1) User signs up
-// 2) We generate a PPK for the user and store it in an Identity object
-// 3) The user now can create and read Entries via our service
-// 4) The user decides to not like our service anymore
-// 5) He/her exports his/her keys
-// 6) He/her claims control over the "identityId" (IPNS)
-// 7) He/her creates a new Identity document and points the IPNS link to the new document.
-
-// Identity objects are only persisted on the OMO server. They are optional.
-// The whole infrastructure should be usable without a central Identity.
-// Everything except the "identityId" is mutable, so a User can e.g. switch from
-// an email based authentication to a PPK based one.
-// The indexEntryHash further changes on every update of the indexEntry.
-// A client could provide the whole mechanism of this Identity on it's own.
 model Identity {
   // A IPNS link to the "indexEntryHash".
   identityId String @unique
@@ -57,44 +27,7 @@ model Identity {
   // This acts like an IPNS link as it maps a consistent unique id (identityId) to a moving target (the indexEntryHash).
   indexEntryHash String?
 
-  agents Agent[] @relation("IdentityAgents")
-}
-
-enum AgentType {
-  // Internally managed agent with private key (e.g. for e-mail challenge verification)
-  Internal
-  // A smartcard
-  Smartcard
-  // A desktop device
-  Desktop
-  // A mobile device
-  Device
-  // Other agents that can be used to recover an Identity.
-  // Recovery Agents cannot 'become' (act as) the linked identity but can only
-  // vote for key recovery to a new Agent.
-  Recovery
-}
-
-// Eine Identity hat mehrere Agents, die in ihrem Namen handeln können.
-// Jeder Agent soll die Identität einnehmen können.
-//
-// -> Die Identität muss alle validen Agents kennen
-//    -> Agents werden anhand ihres public keys authentifiziert
-//
-
-model Agent {
-  createdAt DateTime @default(now())
-  identity Identity  @relation("IdentityAgents", fields: [identityId], references: [identityId])
-  identityId String
-  name String @unique
-  type AgentType
-  publicKey String
-  publicKeyFingerprint String
-  privateKey String? // When "type == AgentType.Internal" then this field contains a private key.
-  config String?
-  disabledSince DateTime?
-
-  indexEntryHash String?
+  // agents Agent[] @relation("IdentityAgents")
 }
 
 // "Entry" objects store public key encypted data.
@@ -114,6 +47,13 @@ model Entry {
   content String
 }
 
+// Authorities are trusted services that issue JWTs which this service accepts as authentication
+model Authority {
+  id Int @default(autoincrement()) @id
+  issuer String
+  appId String
+}
+
 model Session {
   // The session id is a unique random id.
   sessionId String @unique
@@ -128,3 +68,40 @@ model Session {
   // Who is identified by the session?
   identity Identity
 }
+
+//enum AgentType {
+//  // Internally managed agent with private key (e.g. for e-mail challenge verification)
+//  Internal
+//  // A smartcard
+//  Smartcard
+//  // A desktop device
+//  Desktop
+//  // A mobile device
+//  Device
+//  // Other agents that can be used to recover an Identity.
+//  // Recovery Agents cannot 'become' (act as) the linked identity but can only
+//  // vote for key recovery to a new Agent.
+//  Recovery
+//}
+
+// Eine Identity hat mehrere Agents, die in ihrem Namen handeln können.
+// Jeder Agent soll die Identität einnehmen können.
+//
+// -> Die Identität muss alle validen Agents kennen
+//    -> Agents werden anhand ihres public keys authentifiziert
+//
+
+// model Agent {
+//    createdAt DateTime @default(now())
+//    identity Identity  @relation("IdentityAgents", fields: [identityId], references: [identityId])
+//    identityId String
+//    name String @unique
+//    type AgentType
+//    publicKey String
+//    publicKeyFingerprint String
+//    privateKey String? // When "type == AgentType.Internal" then this field contains a private key.
+//    config String?
+//    disabledSince DateTime?
+//
+//    indexEntryHash String?
+// }

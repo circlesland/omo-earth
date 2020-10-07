@@ -2,9 +2,9 @@ import {
   MutationResolvers,
   QueryResolvers
 } from "../generated/graphql";
-import {Session} from "../../../data/dist/session";
-import {Entry} from "../../../data/dist/entry";
-import {Identity} from "@omo/keystore-data/dist/identity";
+import {Session} from "@omo/data/dist/session";
+import {Entry} from "@omo/data/dist/entry";
+import {Identity} from "@omo/data/dist/identity";
 import {privateDecrypt} from "crypto";
 
 export class Resolvers

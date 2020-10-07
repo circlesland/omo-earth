@@ -28,7 +28,7 @@ model Challenges {
   done Boolean
 }
 
-model KeyPairs {
+model SigningKeyPairs {
   id Int @default(autoincrement()) @id
   validFrom DateTime
   validTo DateTime

@@ -1,6 +1,6 @@
 import {prisma} from "./prisma";
 import {Client} from "@omo/auth-client/dist/client";
-import {ValueGenerator} from "../../../auth/util/dist/valueGenerator";
+import {ValueGenerator} from "@omo/auth-utils/dist/valueGenerator";
 import jsonwebtoken from 'jsonwebtoken';
 import {Identity} from "./identity";
 

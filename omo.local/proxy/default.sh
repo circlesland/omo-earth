@@ -25,13 +25,19 @@ $SET_HEADER_BLOCK
   }
 
   location /${PROXY_SERVICE_AUTH_PATH} {
-    limit_req zone=zone1 burst=4;
+    limit_req zone=zone1 burst=6 nodelay;
 $SET_HEADER_BLOCK
     proxy_pass ${AUTH_PROTOCOL}${AUTH_DOMAIN}:${AUTH_PORT};
   }
 
   location /${PROXY_SERVICE_KEYSTORE_PATH} {
-    limit_req zone=zone2 burst=16;
+    limit_req zone=zone2 burst=16 nodelay;
+$SET_HEADER_BLOCK
+    proxy_pass ${KEYSTORE_PROTOCOL}${KEYSTORE_DOMAIN}:${KEYSTORE_PORT};
+  }
+
+  location /${PROXY_SERVICE_SAFE_PATH} {
+    limit_req zone=zone2 burst=16 nodelay;
 $SET_HEADER_BLOCK
     proxy_pass ${KEYSTORE_PROTOCOL}${KEYSTORE_DOMAIN}:${KEYSTORE_PORT};
   }

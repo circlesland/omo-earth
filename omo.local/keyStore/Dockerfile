@@ -14,9 +14,12 @@ COPY ./auth/client/tsconfig.json ./auth/client/tsconfig.json
 RUN cd ./auth/client/ && npm i
 RUN cd ./auth/client/ && npx tsc
 
-COPY ./keyStore/data/src ./keyStore/data/src
-COPY ./keyStore/data/package.json ./keyStore/data/package.json
-COPY ./keyStore/data/tsconfig.json ./keyStore/data/tsconfig.json
+COPY ./data/src ./data/src
+COPY ./data/package.json ./data/package.json
+COPY ./data/tsconfig.json ./data/tsconfig.json
+
+RUN cd ./data/ && npm i
+RUN cd ./data/ && npx tsc
 
 COPY ./keyStore/server/src ./keyStore/server/src
 COPY ./keyStore/server/package.json ./keyStore/server/package.json
