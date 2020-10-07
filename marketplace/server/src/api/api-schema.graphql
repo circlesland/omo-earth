@@ -12,6 +12,15 @@ type Mutation {
     exchangeToken(jwt:String!) : ExchangeTokenResponse!
 }
 
+interface ActionResponse {
+    success: Boolean!
+    errorMessage: String
+}
+
+type ExchangeTokenResponse implements ActionResponse {
+    success: Boolean!
+    errorMessage: String
+}
 type Query {
     version:Version!
 }

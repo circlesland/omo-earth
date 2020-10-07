@@ -1,27 +1,14 @@
 #!/bin/sh
 
+echo "Building marketplace .."
+pwd
+echo "Building ../data .."
 cd ../data || exit
-rm -r dist
-rm -r node_modules
-rm -f package-lock.json
-npm i || exit
-npx tsc || exit
+./rebuild.sh
 
-cd ../auth/util || exit
-rm -r dist
-rm -r node_modules
-rm -f package-lock.json
-npm i || exit
-npx tsc || exit
-
-cd ../client || exit
-rm -r dist
-rm -r node_modules
-rm -f package-lock.json
-npm i || exit
-npx tsc || exit
-
-cd ../../marketplace/server || exit
+pwd
+echo "Building ../marketplace/server .."
+cd ../marketplace/server || exit
 rm -r dist
 rm -r node_modules
 rm -f package-lock.json

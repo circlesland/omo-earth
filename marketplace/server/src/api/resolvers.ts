@@ -54,8 +54,12 @@ export class Resolvers
     };
 
     this.queryResolvers = {
-      version: async (parent, {}, context) => {
-        return null;
+      version: (parent, args, context) => {
+        return {
+          major:1,
+          minor: 0,
+          revision: 0
+        };
       }
     };
   }
