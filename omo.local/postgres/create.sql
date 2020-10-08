@@ -79,7 +79,20 @@ VALUES ('1', 'http://omo.local:8080', '2020-01-01', null);
 CREATE DATABASE "omo-marketplace";
 \c "omo-marketplace";
 
+create table public."Offer"
+(
+    "ownerIdentityId" text                                   not null,
+    name              text                                   not null,
+    description       text                                   not null,
+    price             numeric(65, 30)                        not null,
+    "createdAt"       timestamp(3) default CURRENT_TIMESTAMP not null
+);
 
+alter table public."Offer"
+    owner to postgres;
+
+create unique index "Offer.ownerIdentityId_unique"
+    on public."Offer" ("ownerIdentityId");
 
 
 --CREATE DATABASE "omo-data";

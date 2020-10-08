@@ -13,13 +13,6 @@ export class Offer {
         name,
         description,
         price
-      },
-      select: {
-        description: true,
-        name: true,
-        ownerIdentityId: true,
-        price: true,
-        createdAt: true
       }
     });
 
@@ -29,14 +22,8 @@ export class Offer {
     }
   }
 
-  static findO() {
+  static find() {
     return prisma.offer.findMany({
-      select: {
-        description: true,
-        name: true,
-        ownerIdentityId: true,
-        price: true
-      }
     });
   }
 }

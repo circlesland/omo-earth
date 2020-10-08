@@ -1,0 +1,13 @@
+mutation createOffer($name:String! $description:String! $price:Float!) {
+    createOffer(name:$name description:$description price:$price) {
+        success
+        errorMessage
+        offer {
+            ownerIdentityId
+            createdAt
+            name
+            description
+            price
+        }
+    }
+}

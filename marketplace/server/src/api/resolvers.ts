@@ -20,20 +20,32 @@ export class Resolvers
       throw new Error("process.env.PROXY_DOMAIN must be set to a domain name or ip address.");
 
     this.mutationResolvers = {
-      createOffer:async (parent, {name, description, price}, context) => {
+      createOffer: async (parent, {name, description, price}, context) => {
         const offer = await Offer.create(context.sessionId, name, description, price);
-        return <CreateOfferResponse>{
+        return {
           success: true,
           offer: {
-            // createdAt: offer.offer.
+            name: offer.offer.name,
+            description: offer.offer.description,
+            price: offer.offer.price,
+            createdAt: offer.offer.createdAt.toJSON(),
+            ownerIdentityId: offer.offer.ownerIdentityId
           }
-        }
+        };
       }
     };
 
     this.queryResolvers = {
       offers: async (parent, args, context) => {
-        return await Offer.findO();
+        return (await Offer.find()).map(o => {
+          return {
+            name: o.name,
+            description: o.description,
+            price: o.price,
+            createdAt: o.createdAt.toJSON(),
+            ownerIdentityId: o.ownerIdentityId
+          }
+        });
       },
       version: (parent, args, context) => {
         return {
