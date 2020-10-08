@@ -54,6 +54,7 @@ export type Query = {
   indexEntry?: Maybe<Entry>;
   findEntryByHash?: Maybe<Entry>;
   findEntryByHashCleartext?: Maybe<Entry>;
+  version?: Maybe<Version>;
 };
 
 

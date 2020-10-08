@@ -225,7 +225,7 @@
         "description": null,
         "fields": [
           {
-            "name": "identityId",
+            "name": "ownerIdentityId",
             "description": null,
             "args": [],
             "type": {

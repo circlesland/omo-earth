@@ -14,28 +14,15 @@ interface ActionResponse {
 }
 
 type Offer {
-    identityId: String!
+    ownerIdentityId: String!
     createdAt: String!
     name: String!
     description: String!
     price: Float!
 }
 
-type ExchangeTokenResponse implements ActionResponse {
-    success: Boolean!
-    errorMessage: String
-}
 type CreateOfferResponse implements ActionResponse {
     success: Boolean!
     errorMessage: String
     offer: Offer
-}
-type Query {
-    version:Version!
-}
-
-type Version {
-    major: Int!
-    minor: Int!
-    revision: Int!
 }
