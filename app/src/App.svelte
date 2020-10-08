@@ -14,14 +14,16 @@
   import { products } from "./organisms/products";
   import { safeToken } from "./organisms/safeToken";
   import { productDetail } from "./organisms/productDetail";
-  import {actionRepository, jwtLocalStorageKey} from "./actions/actionRepository";
+  import {
+    actionRepository,
+    jwtLocalStorageKey,
+  } from "./actions/actionRepository";
   import { profile } from "./organisms/profile";
-  import {ExchangeMagicLoginCodeForJwt} from "./trigger/auth/exchangeMagicLinkCodeForJwt";
-
+  import { ExchangeMagicLoginCodeForJwt } from "./trigger/auth/exchangeMagicLinkCodeForJwt";
   // set default component
   let viewDocument = Home;
 
-  function route(path:string, handler/*:(ctx:any)=>void*/) {
+  function route(path: string, handler /*:(ctx:any)=>void*/) {
     const handlerWrapper = (ctx) => {
       if (!sessionStorage.getItem("me")) {
         viewDocument = Home;
