@@ -10,6 +10,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import {ValueGenerator} from "@omo/auth-util/dist/valueGenerator";
 import {SigningKeyPair} from "@omo/auth-data/dist/signingKeyPair";
 import {Apps} from "@omo/auth-data/dist/apps";
+import {publicEncrypt} from "crypto";
 
 export class Resolvers
 {
@@ -18,24 +19,58 @@ export class Resolvers
   readonly queryResolvers: QueryResolvers;
   readonly mutationResolvers: MutationResolvers;
 
+  async getAppById(appId:string) :  Promise<{
+    appId: string
+    originHeaderValue?: string
+    validFrom?: Date|null
+    validTo?: Date|null
+  }> {
+    const app = await Apps.findById(appId);
+    if (!app)
+      throw new Error("The app with the id '" + appId + "' couldn't be found.")
+
+    if (!process.env.DEBUG)
+    {
+      if (app.originHeaderValue !== origin) // Validate the Origin only when not in DEBUG mode
+        throw new Error("The origin of the request (" + origin + ") doesn't map with the configured origin for app '" + appId + "'");
+    }
+    return app;
+  }
+
   constructor()
   {
     this.mutationResolvers = {
-      login: async (parent, {appId, emailAddress}, {origin}) =>
+      loginWithPublicKey:  async (parent, {appId, publicKey}, {origin}) => {
+        try {
+          const app = await this.getAppById(appId);
+          const challenge = await Challenge.requestChallenge("publicKey", publicKey, app.appId, 8, 120);
+          if (!challenge.success)
+          {
+            return <LoginResponse>{
+              success: false,
+              errorMessage: challenge.errorMessage
+            }
+          }
+
+          return <LoginResponse>{
+            success: true,
+            challenge: challenge.challenge,
+          }
+        } catch (e) {
+          console.error(e);
+
+          return <LoginResponse>{
+            success: false,
+            errorMessage: "Internal server error"
+          }
+        }
+      },
+      loginWithEmail: async (parent, {appId, emailAddress}, {origin}) =>
       {
         try
         {
-          const app = await Apps.findById(appId);
-          if (!app)
-            throw new Error("The app with the id '" + appId + "' couldn't be found.")
-
-          if (!process.env.DEBUG)
-          {
-            if (app.originHeaderValue !== origin) // Validate the Origin only when not in DEBUG mode
-              throw new Error("The origin of the request (" + origin + ") doesn't map with the configured origin for app '" + appId + "'");
-          }
-
-          const challenge = await Challenge.requestChallenge(emailAddress, appId, 8, 120);
+          const app = await this.getAppById(appId);
+          const challenge = await Challenge.requestChallenge("email", emailAddress, app.appId, 8, 120);
           if (!challenge.success)
           {
             return <LoginResponse>{
@@ -68,7 +103,7 @@ export class Resolvers
         try
         {
           const verificationResult = await Challenge.verifyChallenge(oneTimeToken);
-          if (!verificationResult.success || !verificationResult.email || !verificationResult.appId)
+          if (!verificationResult.success || !verificationResult.type || !verificationResult.key || !verificationResult.appId)
           {
             return <VerifyResponse>{
               success: false,
@@ -76,7 +111,7 @@ export class Resolvers
             }
           }
 
-          const jwt = await Resolvers._generateJwt(verificationResult.email, verificationResult.appId);
+          const jwt = await Resolvers._generateJwt(verificationResult.type, verificationResult.key, verificationResult.appId);
 
           return <VerifyResponse>{
             success: true,
@@ -123,7 +158,7 @@ export class Resolvers
     }
   }
 
-  private static async _generateJwt(forEmail: string, forAppId: string)
+  private static async _generateJwt(type:string, key: string, forAppId: string)
   {
     if (!process.env.AUTH_JWT_EXP_IN_SEC)
     {
@@ -137,7 +172,9 @@ export class Resolvers
     const iss = externalUrl;
 
     // RFC 7519: 4.1.2.  "sub" (Subject) Claim
-    const sub = forEmail;
+    const sub = key;
+
+    const subType = type;
 
     // RFC 7519: 4.1.3.  "aud" (Audience) Claim
     const aud = [forAppId];
@@ -163,7 +200,7 @@ export class Resolvers
     const kid = externalUrl + "/graphql?query=query%20%7B%20keys%28kid%3A%22" + keypair.id + "%22%29%20%7Bid%2C%20validTo%2C%20publicKey%20%7D%7D";
 
     const tokenData = {
-      iss, sub, aud, exp, iat, jti, kid
+      iss, sub, subType, aud, exp, iat, jti, kid
     };
 
     return jsonwebtoken.sign(tokenData, keypair.privateKeyPem, {

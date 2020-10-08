@@ -99,7 +99,7 @@ export const actionRepository = {
     }
     var checkForJwtIntervalHandle: number|undefined;
 
-    const result =  await authClient.Login({
+    const result =  await authClient.LoginWithEmail({
       appId: conf.auth.appId,
       emailAddress: trigger.emailAddress
     });

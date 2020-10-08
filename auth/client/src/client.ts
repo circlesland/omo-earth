@@ -71,6 +71,6 @@ export class Client
     if (!verifiedPayload)
       throw new Error("The received jwt couldn't be verified.")
 
-    return sub;
+    return tokenPayload;
   }
 }

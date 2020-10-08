@@ -64,11 +64,21 @@ export class Session
     const authority = authorities[0];
     const client = new Client(authority.appId, authority.issuer);
 
-    // Verify the token and get the subject
-    const sub = await client.verify(jwt);
+    // Verify the token and get the paylout
+    const payload = await client.verify(jwt);
+    const sub = payload.sub;
+    const subType = payload.subType;
+
+    if (subType == "email") {
+
+    } else if (subType == "publicKey") {
+
+    } else {
+      throw new Error("unkown authentication method (subType) in received jwt: '" + subType + "'");
+    }
 
     // Find an identity that matches the subject
-    const identities = await prisma.identity.findMany({where:{emailAddress: sub}});
+    const identities = await prisma.identity.findMany({where:{type: subType, key: sub}});
 
     let identity;
     if (identities.length == 0) {

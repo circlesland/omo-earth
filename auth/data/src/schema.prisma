@@ -21,10 +21,11 @@ model Apps {
 model Challenges {
   id Int @default(autoincrement()) @id
   validTo DateTime
-  email String
+  type String
+  key String
   appId String
   challenge String
-  @@unique([email, challenge], name: "UX_Challenges_Email_Challenge")
+  @@unique([type, key, challenge], name: "UX_Challenges_Type_Key_Challenge")
   done Boolean
 }
 

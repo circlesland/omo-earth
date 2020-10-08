@@ -20,14 +20,21 @@ export type Scalars = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  login: LoginResponse;
+  loginWithEmail: LoginResponse;
+  loginWithPublicKey: LoginResponse;
   verify: VerifyResponse;
 };
 
 
-export type MutationLoginArgs = {
+export type MutationLoginWithEmailArgs = {
   appId: Scalars['String'];
   emailAddress: Scalars['String'];
+};
+
+
+export type MutationLoginWithPublicKeyArgs = {
+  appId: Scalars['String'];
+  publicKey: Scalars['String'];
 };
 
 
@@ -69,12 +76,15 @@ export type LoginResponse = ActionResponse & {
   __typename?: 'LoginResponse';
   success: Scalars['Boolean'];
   errorMessage?: Maybe<Scalars['String']>;
+  challenge?: Maybe<Scalars['String']>;
 };
 
 export type VerifyResponse = ActionResponse & {
   __typename?: 'VerifyResponse';
   success: Scalars['Boolean'];
   errorMessage?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  key?: Maybe<Scalars['String']>;
   jwt: Scalars['String'];
 };
 
@@ -84,15 +94,29 @@ export enum CacheControlScope {
 }
 
 
-export type LoginMutationVariables = Exact<{
+export type LoginWithEmailMutationVariables = Exact<{
   appId: Scalars['String'];
   emailAddress: Scalars['String'];
 }>;
 
 
-export type LoginMutation = (
+export type LoginWithEmailMutation = (
   { __typename?: 'Mutation' }
-  & { login: (
+  & { loginWithEmail: (
+    { __typename?: 'LoginResponse' }
+    & Pick<LoginResponse, 'success' | 'errorMessage'>
+  ) }
+);
+
+export type LoginWithPublicKeyMutationVariables = Exact<{
+  appId: Scalars['String'];
+  publicKey: Scalars['String'];
+}>;
+
+
+export type LoginWithPublicKeyMutation = (
+  { __typename?: 'Mutation' }
+  & { loginWithPublicKey: (
     { __typename?: 'LoginResponse' }
     & Pick<LoginResponse, 'success' | 'errorMessage'>
   ) }
@@ -125,9 +149,17 @@ export type KeysQuery = (
 );
 
 
-export const LoginDocument = gql`
-    mutation Login($appId: String!, $emailAddress: String!) {
-  login(appId: $appId, emailAddress: $emailAddress) {
+export const LoginWithEmailDocument = gql`
+    mutation LoginWithEmail($appId: String!, $emailAddress: String!) {
+  loginWithEmail(appId: $appId, emailAddress: $emailAddress) {
+    success
+    errorMessage
+  }
+}
+    `;
+export const LoginWithPublicKeyDocument = gql`
+    mutation LoginWithPublicKey($appId: String!, $publicKey: String!) {
+  loginWithPublicKey(appId: $appId, publicKey: $publicKey) {
     success
     errorMessage
   }
@@ -158,8 +190,11 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    Login(variables: LoginMutationVariables): Promise<{ data?: LoginMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<LoginMutation>(print(LoginDocument), variables));
+    LoginWithEmail(variables: LoginWithEmailMutationVariables): Promise<{ data?: LoginWithEmailMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<LoginWithEmailMutation>(print(LoginWithEmailDocument), variables));
+    },
+    LoginWithPublicKey(variables: LoginWithPublicKeyMutationVariables): Promise<{ data?: LoginWithPublicKeyMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<LoginWithPublicKeyMutation>(print(LoginWithPublicKeyDocument), variables));
     },
     Verify(variables: VerifyMutationVariables): Promise<{ data?: VerifyMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<VerifyMutation>(print(VerifyDocument), variables));

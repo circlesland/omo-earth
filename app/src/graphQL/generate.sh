@@ -1,14 +1,18 @@
 #!/bin/bash
 # run the codegenerator
+echo "Generating 'auth' client ..";
 cd auth || exit
 npx graphql-codegen
 
+echo "Generating 'keyStore' client ..";
 cd ../keyStore || exit
 npx graphql-codegen
 
+echo "Generating 'safe' client ..";
 cd ../safe || exit
 npx graphql-codegen
 
+echo "Generating 'marketplace' client ..";
 cd ../marketplace || exit
 npx graphql-codegen
 

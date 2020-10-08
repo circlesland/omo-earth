@@ -21,23 +21,24 @@ create table "_Migration"
 alter table "_Migration"
     owner to postgres;
 
-create table "Challenges"
+create table public."Challenges"
 (
     id        serial       not null
         constraint "Challenges_pkey"
             primary key,
     "validTo" timestamp(3) not null,
-    email     text         not null,
+    type       text         not null,
+    key       text         not null,
     challenge text         not null,
     done      boolean      not null,
     "appId"   text         not null
 );
 
-alter table "Challenges"
+alter table public."Challenges"
     owner to postgres;
 
-create unique index "UX_Challenges_Email_Challenge"
-    on "Challenges" (email, challenge);
+create unique index "UX_Challenges_Type_Key_Challenge"
+    on public."Challenges" (type, key, challenge);
 
 create table "Apps"
 (

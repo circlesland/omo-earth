@@ -15,14 +15,21 @@ export type Scalars = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  login: LoginResponse;
+  loginWithEmail: LoginResponse;
+  loginWithPublicKey: LoginResponse;
   verify: VerifyResponse;
 };
 
 
-export type MutationLoginArgs = {
+export type MutationLoginWithEmailArgs = {
   appId: Scalars['String'];
   emailAddress: Scalars['String'];
+};
+
+
+export type MutationLoginWithPublicKeyArgs = {
+  appId: Scalars['String'];
+  publicKey: Scalars['String'];
 };
 
 
@@ -64,12 +71,15 @@ export type LoginResponse = ActionResponse & {
   __typename?: 'LoginResponse';
   success: Scalars['Boolean'];
   errorMessage?: Maybe<Scalars['String']>;
+  challenge?: Maybe<Scalars['String']>;
 };
 
 export type VerifyResponse = ActionResponse & {
   __typename?: 'VerifyResponse';
   success: Scalars['Boolean'];
   errorMessage?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  key?: Maybe<Scalars['String']>;
   jwt: Scalars['String'];
 };
 
@@ -185,7 +195,8 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'appId' | 'emailAddress'>>;
+  loginWithEmail?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginWithEmailArgs, 'appId' | 'emailAddress'>>;
+  loginWithPublicKey?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginWithPublicKeyArgs, 'appId' | 'publicKey'>>;
   verify?: Resolver<ResolversTypes['VerifyResponse'], ParentType, ContextType, RequireFields<MutationVerifyArgs, 'oneTimeToken'>>;
 }>;
 
@@ -217,12 +228,15 @@ export type VersionResolvers<ContextType = any, ParentType extends ResolversPare
 export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = ResolversObject<{
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  challenge?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type VerifyResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['VerifyResponse'] = ResolversParentTypes['VerifyResponse']> = ResolversObject<{
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  key?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   jwt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
