@@ -1,8 +1,9 @@
 import {
+  CreateOfferResponse,
   MutationResolvers,
   QueryResolvers
 } from "../generated/graphql";
-import {Session} from "@omo/data/dist/session";
+import {Offer} from "@omo/marketplace-data/dist/offer";
 
 export class Resolvers
 {
@@ -19,41 +20,21 @@ export class Resolvers
       throw new Error("process.env.PROXY_DOMAIN must be set to a domain name or ip address.");
 
     this.mutationResolvers = {
-      exchangeToken: async (parent, {jwt}, context) =>
-      {
-        try
-        {
-          const session = await Session.createSessionFromJWT(jwt);
-
-          context.setCookies.push({
-            name: "session",
-            value: session.sessionId,
-            // Use a session cookie that should only last for the one browser session
-            options: {
-              domain: process.env.PROXY_EXTERN_DOMAIN,
-              httpOnly: true,
-              path: "/",
-              sameSite: true,
-              secure: !process.env.DEBUG
-            }
-          });
-
-          return {
-            success: true
-          }
-        }
-        catch (e)
-        {
-          console.error(e);
-          return {
-            success: false,
-            errorMessage: "Couldn't create the session cookie from the supplied JWT. Please try again with a new JWT."
+      createOffer:async (parent, {name, description, price}, context) => {
+        const offer = await Offer.create(context.sessionId, name, description, price);
+        return <CreateOfferResponse>{
+          success: true,
+          offer: {
+            // createdAt: offer.offer.
           }
         }
       }
     };
 
     this.queryResolvers = {
+      offers: async (parent, args, context) => {
+        return await Offer.findO();
+      },
       version: (parent, args, context) => {
         return {
           major:1,

@@ -19,6 +19,7 @@
     "typescript": "^3.9.2"
   },
   "dependencies": {
+    "@omo/marketplace-data": "../data",
     "@omo/data": "../../data",
     "apollo-server": "^2.13.1",
     "apollo-server-plugin-http-headers": "^0.1.3",

@@ -12,7 +12,7 @@ pwd
 echo "Building ../keyStore/server .."
 cd ../keyStore/server || exit
 rm -r -f   dist
-rm -r -f   node_modules
+rm -r -f   node_modules/@omo
 rm -f package-lock.json
 npm i || exit
 npm run generate || exit

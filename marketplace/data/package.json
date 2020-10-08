@@ -12,6 +12,7 @@
     "deploy": "npx prisma generate --schema ./src/schema.prisma && npx prisma --experimental migrate save --schema ./src/schema.prisma && npx prisma --experimental migrate up --schema ./src/schema.prisma"
   },
   "devDependencies": {
+    "@omo/data": "../../data",
     "@prisma/cli": "^2.5.1",
     "@types/node": "^14.0.1",
     "ts-node": "^8.10.1",
