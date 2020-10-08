@@ -3,37 +3,18 @@
 
 datasource db {
     provider = "postgresql"
-    url      = "postgresql://postgres:postgres@localhost:5432/omo-auth?schema=public"
+    url      = "postgresql://postgres:postgres@localhost:5432/omo-marketplace?schema=public"
 }
 
 generator client {
     provider = "prisma-client-js"
 }
 
-model Apps {
-  id Int @default(autoincrement()) @id
-  appId String @unique
-  originHeaderValue String
-  validFrom DateTime
-  validTo DateTime?
-}
+model Offer {
+  ownerIdentityId String @unique
+  createdAt DateTime @default(now())
 
-model Challenges {
-  id Int @default(autoincrement()) @id
-  validTo DateTime
-  email String
-  appId String
-  challenge String
-  @@unique([email, challenge], name: "UX_Challenges_Email_Challenge")
-  done Boolean
-}
-
-model SigningKeyPairs {
-  id Int @default(autoincrement()) @id
-  validFrom DateTime
-  validTo DateTime
-  privateKeyPem String
-  publicKeyPem String
-  privateKeyJwk String
-  publicKeyJwk String
+  name String
+  description String
+  price Float
 }

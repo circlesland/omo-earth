@@ -91,6 +91,14 @@ export const actionRepository = {
     // Below we're waiting for a new JWT so any pre-existing JWT must be deleted first.
     localStorage.removeItem(jwtLocalStorageKey);
 
+    if (checkForJwtIntervalHandle) {
+      // Looks strange but prevents the interval from keeping running
+      // a second time if the user requests the login link more than once
+      // because of input lag or similar problems
+      clearInterval(checkForJwtIntervalHandle);
+    }
+    var checkForJwtIntervalHandle: number|undefined;
+
     const result =  await authClient.Login({
       appId: conf.auth.appId,
       emailAddress: trigger.emailAddress
@@ -103,7 +111,7 @@ export const actionRepository = {
     // Wait for the user to click the magic link.
     // The magic-link's target will exchange the one time code
     // with a JWT. This is what we're waiting for (100ms polling).
-    var checker = setInterval(() => {
+    checkForJwtIntervalHandle = setInterval(() => {
       if (!localStorage.getItem(jwtLocalStorageKey))
       {
         console.log("Waiting for user to follow the magic link ..");
@@ -115,7 +123,7 @@ export const actionRepository = {
       window.trigger(new ExchangeJwtForSessionCookie(localStorage.getItem(jwtLocalStorageKey)));
       localStorage.removeItem(jwtLocalStorageKey);
       // .. then stop the timer
-      clearInterval(checker);
+      clearInterval(checkForJwtIntervalHandle);
     }, 100);
   },
   [Actions.exchangeJwtForSessionCookie]: async (trigger:ExchangeJwtForSessionCookie) => {

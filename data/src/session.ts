@@ -28,6 +28,29 @@ export class Session
     return session;
   }
 
+  static async findIdentityIdBySessionId(sessionId: string) {
+    const session = await prisma.session.findOne({
+      where: {
+        sessionId
+      },
+      select: {
+        createdAt: true,
+        maxLifetime: true,
+        identityIdentityId: true
+      }
+    });
+    if (!session || !session.identityIdentityId)
+      return null;
+
+    const now = new Date();
+    const expires = new Date(session.createdAt.getTime() + session.maxLifetime * 1000);
+
+    if (expires.getTime() < now.getTime())
+      return null;
+
+    return session.identityIdentityId;
+  }
+
   static async createSessionFromJWT(jwt:string)
   {
     const tokenPayload:any = jsonwebtoken.decode(jwt);
