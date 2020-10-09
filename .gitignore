@@ -103,7 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-
 src/**/*.js.map 
 
 app/src/**/*.js.map 
@@ -118,3 +117,6 @@ public/bundle.js
 
 .history
 /app/public/build/*
+
+
+.DS_Store

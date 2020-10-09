@@ -17,4 +17,6 @@ model Offer {
   name String
   description String
   price Float
+  city String
+  category String
 }
