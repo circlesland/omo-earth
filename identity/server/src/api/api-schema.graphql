@@ -4,12 +4,21 @@ type Mutation {
     # Exchanges a JWT for a session cookie which will be read by all subsequent mutation- and query-calls.
     # When a User exchanges a token for the first time, a Agent and Identity will be created.
     exchangeToken(jwt:String!) : ExchangeTokenResponse!
+
+    updatePublicData(data:Json) : UpdatePublicDataResponse!
+    updatePrivateData(data:Json) : UpdatePrivateDataResponse!
 }
 
 type Query {
     version : Version
 
-    # Gets the identity private key of the currently logged-on agent
+    publicData(identityPublicKey:String!) : Json
+
+    # Gets the public and private data that is associated with the Identity
+    privateData : Json!
+
+    # Gets the identity private key of the currently logged-on agent.
+    # Depending on the agent type, this key is encrypted or not.
     identityPrivateKey : String!
 }
 
@@ -19,6 +28,16 @@ interface ActionResponse {
 }
 
 type ExchangeTokenResponse implements ActionResponse {
+    success: Boolean!
+    errorMessage: String
+}
+
+type UpdatePublicDataResponse implements ActionResponse {
+    success: Boolean!
+    errorMessage: String
+}
+
+type UpdatePrivateDataResponse implements ActionResponse {
     success: Boolean!
     errorMessage: String
 }

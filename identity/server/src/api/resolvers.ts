@@ -4,6 +4,7 @@ import {
 } from "../generated/graphql";
 import {Session} from "@omo/data/dist/session";
 import {privateDecrypt} from "crypto";
+import {Identity} from "@omo/data/dist/identity";
 
 export class Resolvers
 {
@@ -51,27 +52,54 @@ export class Resolvers
             errorMessage: "Couldn't create the session cookie from the supplied JWT. Please try again with a new JWT."
           }
         }
+      },
+      updatePublicData: async (parent, {data}, context) => {
+        try
+        {
+          await Identity.updatePrivateData(context.sessionId, data);
+          return {
+            success: true
+          };
+        } catch (e) {
+          console.error(e);
+          return {
+            success: false,
+            errorMessage: "Couldn't update the public data."
+          }
+        }
+      },
+      updatePrivateData: async (parent, {data}, context) => {
+        try
+        {
+          await Identity.updatePrivateData(context.sessionId, data);
+          return {
+            success: true
+          };
+        } catch (e) {
+          console.error(e);
+          return {
+            success: false,
+            errorMessage: "Couldn't update the private data."
+          }
+        }
       }
     };
-/*
-    const findEntryByHashCleartext = async (hash:string, sessionId:string) => {
-      const session = await Session.findByValidSessionId(sessionId);
-      if (!session || !session.identity || !session.identity.indexEntryPrivateKey)
-        throw new Error("Invalid session");
-
-      const entry = await Entry.findByHash(hash);
-      if (!entry)
-        return null;
-
-      const clearText = privateDecrypt(session.identity.indexEntryPrivateKey, Buffer.from(entry.content, "base64"));
-      console.log("clearText: ", clearText.toString("utf8"));
-      entry.content = JSON.parse(clearText.toString("utf8"));
-
-      return entry;
-    };
-*/
 
     this.queryResolvers = {
+      privateData: async (parent, args, context) => {
+        const identity = await Identity.findIdentityBySession(context.sessionId);
+        if (!identity) {
+          throw new Error("Identity not found.");
+        }
+        return identity.privateData;
+      },
+      publicData: async (parent, {identityPublicKey}, context) => {
+        const identity = await Identity.findIdentityBySession(context.sessionId);
+        if (!identity) {
+          throw new Error("Identity not found.");
+        }
+        return identity.publicData;
+      },
       version: parent => {
         return {
           major: 1,
