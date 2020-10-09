@@ -12,7 +12,8 @@ type Mutation {
 type Query {
     version : Version
 
-    publicData(identityPublicKey:String!) : Json
+    # Gets the public data of an identity. If no public key was passed, the query returns the own public data.
+    publicData(identityPublicKey:String) : Json
 
     # Gets the public and private data that is associated with the Identity
     privateData : Json!

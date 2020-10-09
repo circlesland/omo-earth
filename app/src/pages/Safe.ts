@@ -10,7 +10,7 @@ export const Safe = (content: any) =>
     try
     {
       const meObj = JSON.parse(me);
-      title = "Welcome " + meObj.content.email;
+      title = "Welcome " + meObj.key;
     } catch (e) {
       console.error("Couldn't parse the 'me' value in the sessionStorage.");
     }

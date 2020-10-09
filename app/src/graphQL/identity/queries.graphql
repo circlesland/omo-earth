@@ -1,11 +1,11 @@
-query IdentityPrivateKey {
+query identityPrivateKey {
     identityPrivateKey
 }
 
-query PrivateData {
+query privateData {
     privateData
 }
 
-query PublicData {
-    identityPrivateKey
+query publicData($identityPublicKey:String) {
+    publicData(identityPublicKey: $identityPublicKey)
 }

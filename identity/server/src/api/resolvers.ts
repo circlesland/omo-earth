@@ -13,12 +13,12 @@ export class Resolvers
   readonly queryResolvers: QueryResolvers;
   readonly mutationResolvers: MutationResolvers;
 
-  static readonly sessionTimeoutInSeconds = 60;
-
   constructor()
   {
     if (!process.env.PROXY_DOMAIN)
+    {
       throw new Error("process.env.PROXY_DOMAIN must be set to a domain name or ip address.");
+    }
 
     this.mutationResolvers = {
       exchangeToken: async (parent, {jwt}, context) =>
@@ -94,11 +94,14 @@ export class Resolvers
         return identity.privateData;
       },
       publicData: async (parent, {identityPublicKey}, context) => {
-        const identity = await Identity.findIdentityBySession(context.sessionId);
-        if (!identity) {
-          throw new Error("Identity not found.");
-        }
-        return identity.publicData;
+          const myIdentity = !identityPublicKey
+            ? await Identity.findIdentityBySession(context.sessionId)
+            : await Identity.findByPublicKey(identityPublicKey);
+          if (!myIdentity)
+          {
+            throw new Error("Identity not found.");
+          }
+          return myIdentity.publicData;
       },
       version: parent => {
         return {

@@ -25,8 +25,14 @@
 
   function route(path: string, handler /*:(ctx:any)=>void*/) {
     const handlerWrapper = (ctx) => {
-      if (!sessionStorage.getItem("me")) {
-        viewDocument = Home;
+      const meData = sessionStorage.getItem("me");
+      console.log("check route.", path, meData);
+      if (!meData || path !== "/sign-in/onetime/:code") {
+        const me = JSON.parse(meData);
+        if (!me.type || !me.key)
+          viewDocument = Home;
+        else
+          handler(ctx);
       } else {
         handler(ctx);
       }

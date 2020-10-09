@@ -50,7 +50,7 @@ export type Query = {
 
 
 export type QueryPublicDataArgs = {
-  identityPublicKey: Scalars['String'];
+  identityPublicKey?: Maybe<Scalars['String']>;
 };
 
 export type ActionResponse = {
@@ -144,12 +144,14 @@ export type PrivateDataQuery = (
   & Pick<Query, 'privateData'>
 );
 
-export type PublicDataQueryVariables = Exact<{ [key: string]: never; }>;
+export type PublicDataQueryVariables = Exact<{
+  identityPublicKey?: Maybe<Scalars['String']>;
+}>;
 
 
 export type PublicDataQuery = (
   { __typename?: 'Query' }
-  & Pick<Query, 'identityPrivateKey'>
+  & Pick<Query, 'publicData'>
 );
 
 
@@ -178,18 +180,18 @@ export const UpdatePrivateDataDocument = gql`
 }
     `;
 export const IdentityPrivateKeyDocument = gql`
-    query IdentityPrivateKey {
+    query identityPrivateKey {
   identityPrivateKey
 }
     `;
 export const PrivateDataDocument = gql`
-    query PrivateData {
+    query privateData {
   privateData
 }
     `;
 export const PublicDataDocument = gql`
-    query PublicData {
-  identityPrivateKey
+    query publicData($identityPublicKey: String) {
+  publicData(identityPublicKey: $identityPublicKey)
 }
     `;
 
@@ -208,13 +210,13 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     updatePrivateData(variables?: UpdatePrivateDataMutationVariables): Promise<{ data?: UpdatePrivateDataMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<UpdatePrivateDataMutation>(print(UpdatePrivateDataDocument), variables));
     },
-    IdentityPrivateKey(variables?: IdentityPrivateKeyQueryVariables): Promise<{ data?: IdentityPrivateKeyQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+    identityPrivateKey(variables?: IdentityPrivateKeyQueryVariables): Promise<{ data?: IdentityPrivateKeyQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<IdentityPrivateKeyQuery>(print(IdentityPrivateKeyDocument), variables));
     },
-    PrivateData(variables?: PrivateDataQueryVariables): Promise<{ data?: PrivateDataQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+    privateData(variables?: PrivateDataQueryVariables): Promise<{ data?: PrivateDataQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<PrivateDataQuery>(print(PrivateDataDocument), variables));
     },
-    PublicData(variables?: PublicDataQueryVariables): Promise<{ data?: PublicDataQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+    publicData(variables?: PublicDataQueryVariables): Promise<{ data?: PublicDataQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<PublicDataQuery>(print(PublicDataDocument), variables));
     }
   };

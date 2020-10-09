@@ -19,7 +19,7 @@
   </div>
   <div class="flex justify-center z-30">
     <img
-      src="https://i.pravatar.cc/150?u={$me.id}"
+      src="https://i.pravatar.cc/150?u={$me.key}"
       class="z-30 rounded-full -mt-20 border-8 object-center object-cover
         border-white mr-2 h-36 w-36"
       alt="" />
@@ -33,7 +33,7 @@
         {name}
       {/await}    
     </div>-->
-    <p class="text-center text-gray-600 uppercase">{$me.content.email}</p>
+    <p class="text-center text-gray-600 uppercase">{$me.key}</p>
     <div class="text-sm font-light text-center py-1 px-4">My Pledge</div>
   </div>
   <!-- 

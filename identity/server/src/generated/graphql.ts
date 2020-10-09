@@ -45,7 +45,7 @@ export type Query = {
 
 
 export type QueryPublicDataArgs = {
-  identityPublicKey: Scalars['String'];
+  identityPublicKey?: Maybe<Scalars['String']>;
 };
 
 export type ActionResponse = {
@@ -197,7 +197,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   version?: Resolver<Maybe<ResolversTypes['Version']>, ParentType, ContextType>;
-  publicData?: Resolver<Maybe<ResolversTypes['Json']>, ParentType, ContextType, RequireFields<QueryPublicDataArgs, 'identityPublicKey'>>;
+  publicData?: Resolver<Maybe<ResolversTypes['Json']>, ParentType, ContextType, RequireFields<QueryPublicDataArgs, never>>;
   privateData?: Resolver<ResolversTypes['Json'], ParentType, ContextType>;
   identityPrivateKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 }>;

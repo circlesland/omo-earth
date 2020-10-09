@@ -1,23 +1,21 @@
 import { writable } from 'svelte/store';
-import type {Entry} from "../graphQL/identity/generated";
 
 function createStore() {
-  const existingIndexEntry = sessionStorage.getItem("me");
+  const existingAgent = sessionStorage.getItem("me");
 
-  const emptyEntry:Entry = {
-    ownerFingerPrint: null,
-    creatorFingerPrint: null,
-    entryHash: null,
-    content: {
-      email: null
-    },
+  const emptyAgent = {
+    type: "",
+    key: "",
+    identityPublicKey: "",
+    privateData: {},
+    publicData: {}
   };
 
-  const indexEntry = existingIndexEntry
-    ? JSON.parse(existingIndexEntry)
-    : emptyEntry;
+  const agent = existingAgent
+    ? JSON.parse(existingAgent)
+    : emptyAgent;
 
-  const { subscribe, set, update } = writable(indexEntry);
+  const { subscribe, set, update } = writable(agent);
 
   return {
     subscribe,

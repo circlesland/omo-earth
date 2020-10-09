@@ -13,7 +13,7 @@ import {ResetLayout} from "../trigger/compositor/resetLayout";
 import type {RequestMagicLoginLink} from "../trigger/auth/requestMagicLoginLink";
 import {ExchangeJwtForSessionCookie} from "../trigger/auth/exchangeJwtForSessionCookie";
 import type {ExchangeMagicLoginCodeForJwt} from "../trigger/auth/exchangeMagicLinkCodeForJwt";
-import {AddKey} from "../trigger/identity/addKey";
+import type {AddKey} from "../trigger/identity/addKey";
 import type {ImportKey} from "../trigger/identity/importKey";
 import type {RemoveKey} from "../trigger/identity/removeKey";
 import type {ShareKey} from "../trigger/identity/shareKey";
@@ -22,7 +22,6 @@ import {users} from "../stores/users";
 import {me} from "../stores/me";
 import {authClient} from "../graphQL/auth/authClient";
 import {identityClient} from "../graphQL/identity/identityClient";
-import type {Entry} from "../graphQL/identity/generated";
 
 let sideBarToggleState:boolean = true;
 
@@ -141,42 +140,29 @@ export const actionRepository = {
     const decodedJwt = jwt_decode(trigger.jwt);
     console.log("JWT:", decodedJwt);
 
+    // Get the personal data of the identity
+    const publicData = await identityClient.publicData({
+      identityPublicKey: null
+    });
+    const privateData = await identityClient.privateData({});
+
     me.update(o => {
-      o.content.email = decodedJwt.sub;
+      o.key = decodedJwt.sub;
+      o.type = decodedJwt.subType;
+      o.publicData = publicData.data.publicData;
+      o.privateData = privateData.data.privateData;
       return o;
     });
     localStorage.removeItem(jwtLocalStorageKey);
 
-    window.trigger(new AddKey(Date.now().toString(), "privatekey", "publickey"));
     window.trigger(new NavigateTo("To safe", "/safe"));
   },
   [Actions.addKey]: async (trigger:AddKey) => {
-    /*
-    const keyEntry =  await identityClient.CreateEntry({
-      publicKey: trigger.publicKey,
-      privateKey: trigger.privateKey,
-
-    });
-    if (keyEntry.errors && keyEntry.errors.length > 0) {
-      throw new Error(keyEntry.errors.map(o => o.message) .join("\n"));
-    }
-    await KeyStoreClient.instance.importEntry(keyEntry.entryHash, trigger.name);
-
-    const importedEntry = await identityClient.ImportEntry({
-      name: trigger.name,
-      entryHash: keyEntry.entryHash
-    });
-    if (importedEntry.errors && importedEntry.errors.length > 0) {
-      throw new Error(importedEntry.errors.map(o => o.message) .join("\n"));
-    }
-    */
   },
   [Actions.importKey]: async (trigger:ImportKey) => {
   },
   [Actions.removeKey]: async (trigger:RemoveKey) => {
   },
   [Actions.shareKey]: async (trigger:ShareKey) => {
-    // 1) Read the key data
-    // 2) Create a new entry with the key data and encrypt it with the recipient's key
   }
 }
