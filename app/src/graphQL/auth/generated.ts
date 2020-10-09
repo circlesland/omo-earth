@@ -65,13 +65,6 @@ export type PublicKey = {
   validTo: Scalars['String'];
 };
 
-export type Version = {
-  __typename?: 'Version';
-  major: Scalars['Int'];
-  minor: Scalars['Int'];
-  revision: Scalars['Int'];
-};
-
 export type LoginResponse = ActionResponse & {
   __typename?: 'LoginResponse';
   success: Scalars['Boolean'];
@@ -86,6 +79,13 @@ export type VerifyResponse = ActionResponse & {
   type?: Maybe<Scalars['String']>;
   key?: Maybe<Scalars['String']>;
   jwt: Scalars['String'];
+};
+
+export type Version = {
+  __typename?: 'Version';
+  major: Scalars['Int'];
+  minor: Scalars['Int'];
+  revision: Scalars['Int'];
 };
 
 export enum CacheControlScope {

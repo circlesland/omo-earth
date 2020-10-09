@@ -1,3 +1,11 @@
 query IdentityPrivateKey {
     identityPrivateKey
 }
+
+query PrivateData {
+    privateData
+}
+
+query PublicData {
+    identityPrivateKey
+}

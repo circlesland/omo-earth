@@ -21,9 +21,8 @@ export type Scalars = {
 export type Mutation = {
   __typename?: 'Mutation';
   exchangeToken: ExchangeTokenResponse;
-  createEntry: CreateEntryResponse;
-  importEntry: ImportEntryResponse;
-  removeEntry: RemoveEntryResponse;
+  updatePublicData: UpdatePublicDataResponse;
+  updatePrivateData: UpdatePrivateDataResponse;
 };
 
 
@@ -32,47 +31,26 @@ export type MutationExchangeTokenArgs = {
 };
 
 
-export type MutationCreateEntryArgs = {
-  publicKey?: Maybe<Scalars['String']>;
-  entryContent: Scalars['Json'];
+export type MutationUpdatePublicDataArgs = {
+  data?: Maybe<Scalars['Json']>;
 };
 
 
-export type MutationImportEntryArgs = {
-  entryHash: Scalars['String'];
-  name: Scalars['String'];
-  overwrite?: Maybe<Scalars['Boolean']>;
-};
-
-
-export type MutationRemoveEntryArgs = {
-  name: Scalars['String'];
+export type MutationUpdatePrivateDataArgs = {
+  data?: Maybe<Scalars['Json']>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  indexEntry?: Maybe<Entry>;
-  findEntryByHash?: Maybe<Entry>;
-  findEntryByHashCleartext?: Maybe<Entry>;
   version?: Maybe<Version>;
+  publicData?: Maybe<Scalars['Json']>;
+  privateData: Scalars['Json'];
+  identityPrivateKey: Scalars['String'];
 };
 
 
-export type QueryFindEntryByHashArgs = {
-  hash: Scalars['String'];
-};
-
-
-export type QueryFindEntryByHashCleartextArgs = {
-  hash: Scalars['String'];
-};
-
-export type Entry = {
-  __typename?: 'Entry';
-  creatorFingerPrint: Scalars['String'];
-  ownerFingerPrint: Scalars['String'];
-  entryHash: Scalars['String'];
-  content: Scalars['Json'];
+export type QueryPublicDataArgs = {
+  identityPublicKey: Scalars['String'];
 };
 
 export type ActionResponse = {
@@ -86,27 +64,16 @@ export type ExchangeTokenResponse = ActionResponse & {
   errorMessage?: Maybe<Scalars['String']>;
 };
 
-export type CreateEntryResponse = ActionResponse & {
-  __typename?: 'CreateEntryResponse';
+export type UpdatePublicDataResponse = ActionResponse & {
+  __typename?: 'UpdatePublicDataResponse';
   success: Scalars['Boolean'];
   errorMessage?: Maybe<Scalars['String']>;
-  entryHash?: Maybe<Scalars['String']>;
 };
 
-export type RemoveEntryResponse = ActionResponse & {
-  __typename?: 'RemoveEntryResponse';
+export type UpdatePrivateDataResponse = ActionResponse & {
+  __typename?: 'UpdatePrivateDataResponse';
   success: Scalars['Boolean'];
   errorMessage?: Maybe<Scalars['String']>;
-  entryHash?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-};
-
-export type ImportEntryResponse = ActionResponse & {
-  __typename?: 'ImportEntryResponse';
-  success: Scalars['Boolean'];
-  errorMessage?: Maybe<Scalars['String']>;
-  entryHash?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
 };
 
 export type Version = {
@@ -135,82 +102,54 @@ export type ExchangeTokenMutation = (
   ) }
 );
 
-export type CreateEntryMutationVariables = Exact<{
-  entryContent: Scalars['Json'];
-  publicKey?: Maybe<Scalars['String']>;
+export type UpdatePublicDataMutationVariables = Exact<{
+  data?: Maybe<Scalars['Json']>;
 }>;
 
 
-export type CreateEntryMutation = (
+export type UpdatePublicDataMutation = (
   { __typename?: 'Mutation' }
-  & { createEntry: (
-    { __typename?: 'CreateEntryResponse' }
-    & Pick<CreateEntryResponse, 'success' | 'errorMessage' | 'entryHash'>
+  & { updatePublicData: (
+    { __typename?: 'UpdatePublicDataResponse' }
+    & Pick<UpdatePublicDataResponse, 'success' | 'errorMessage'>
   ) }
 );
 
-export type ImportEntryMutationVariables = Exact<{
-  entryHash: Scalars['String'];
-  name: Scalars['String'];
+export type UpdatePrivateDataMutationVariables = Exact<{
+  data?: Maybe<Scalars['Json']>;
 }>;
 
 
-export type ImportEntryMutation = (
+export type UpdatePrivateDataMutation = (
   { __typename?: 'Mutation' }
-  & { importEntry: (
-    { __typename?: 'ImportEntryResponse' }
-    & Pick<ImportEntryResponse, 'success' | 'errorMessage' | 'entryHash' | 'name'>
+  & { updatePrivateData: (
+    { __typename?: 'UpdatePrivateDataResponse' }
+    & Pick<UpdatePrivateDataResponse, 'success' | 'errorMessage'>
   ) }
 );
 
-export type RemoveEntryMutationVariables = Exact<{
-  name: Scalars['String'];
-}>;
+export type IdentityPrivateKeyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RemoveEntryMutation = (
-  { __typename?: 'Mutation' }
-  & { removeEntry: (
-    { __typename?: 'RemoveEntryResponse' }
-    & Pick<RemoveEntryResponse, 'success' | 'errorMessage' | 'entryHash' | 'name'>
-  ) }
+export type IdentityPrivateKeyQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'identityPrivateKey'>
 );
 
-export type IndexEntryQueryVariables = Exact<{ [key: string]: never; }>;
+export type PrivateDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type IndexEntryQuery = (
+export type PrivateDataQuery = (
   { __typename?: 'Query' }
-  & { indexEntry?: Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'creatorFingerPrint' | 'ownerFingerPrint' | 'entryHash' | 'content'>
-  )> }
+  & Pick<Query, 'privateData'>
 );
 
-export type FindEntryByHashQueryVariables = Exact<{
-  hash: Scalars['String'];
-}>;
+export type PublicDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindEntryByHashQuery = (
+export type PublicDataQuery = (
   { __typename?: 'Query' }
-  & { findEntryByHash?: Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'creatorFingerPrint' | 'ownerFingerPrint' | 'entryHash' | 'content'>
-  )> }
-);
-
-export type FindEntryByHashCleartextQueryVariables = Exact<{
-  hash: Scalars['String'];
-}>;
-
-
-export type FindEntryByHashCleartextQuery = (
-  { __typename?: 'Query' }
-  & { findEntryByHashCleartext?: Maybe<(
-    { __typename?: 'Entry' }
-    & Pick<Entry, 'creatorFingerPrint' | 'ownerFingerPrint' | 'entryHash' | 'content'>
-  )> }
+  & Pick<Query, 'identityPrivateKey'>
 );
 
 
@@ -222,63 +161,35 @@ export const ExchangeTokenDocument = gql`
   }
 }
     `;
-export const CreateEntryDocument = gql`
-    mutation CreateEntry($entryContent: Json!, $publicKey: String) {
-  createEntry(publicKey: $publicKey, entryContent: $entryContent) {
+export const UpdatePublicDataDocument = gql`
+    mutation updatePublicData($data: Json) {
+  updatePublicData(data: $data) {
     success
     errorMessage
-    entryHash
   }
 }
     `;
-export const ImportEntryDocument = gql`
-    mutation ImportEntry($entryHash: String!, $name: String!) {
-  importEntry(entryHash: $entryHash, name: $name) {
+export const UpdatePrivateDataDocument = gql`
+    mutation updatePrivateData($data: Json) {
+  updatePrivateData(data: $data) {
     success
     errorMessage
-    entryHash
-    name
   }
 }
     `;
-export const RemoveEntryDocument = gql`
-    mutation RemoveEntry($name: String!) {
-  removeEntry(name: $name) {
-    success
-    errorMessage
-    entryHash
-    name
-  }
+export const IdentityPrivateKeyDocument = gql`
+    query IdentityPrivateKey {
+  identityPrivateKey
 }
     `;
-export const IndexEntryDocument = gql`
-    query IndexEntry {
-  indexEntry {
-    creatorFingerPrint
-    ownerFingerPrint
-    entryHash
-    content
-  }
+export const PrivateDataDocument = gql`
+    query PrivateData {
+  privateData
 }
     `;
-export const FindEntryByHashDocument = gql`
-    query FindEntryByHash($hash: String!) {
-  findEntryByHash(hash: $hash) {
-    creatorFingerPrint
-    ownerFingerPrint
-    entryHash
-    content
-  }
-}
-    `;
-export const FindEntryByHashCleartextDocument = gql`
-    query FindEntryByHashCleartext($hash: String!) {
-  findEntryByHashCleartext(hash: $hash) {
-    creatorFingerPrint
-    ownerFingerPrint
-    entryHash
-    content
-  }
+export const PublicDataDocument = gql`
+    query PublicData {
+  identityPrivateKey
 }
     `;
 
@@ -291,23 +202,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     ExchangeToken(variables: ExchangeTokenMutationVariables): Promise<{ data?: ExchangeTokenMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<ExchangeTokenMutation>(print(ExchangeTokenDocument), variables));
     },
-    CreateEntry(variables: CreateEntryMutationVariables): Promise<{ data?: CreateEntryMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<CreateEntryMutation>(print(CreateEntryDocument), variables));
+    updatePublicData(variables?: UpdatePublicDataMutationVariables): Promise<{ data?: UpdatePublicDataMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<UpdatePublicDataMutation>(print(UpdatePublicDataDocument), variables));
     },
-    ImportEntry(variables: ImportEntryMutationVariables): Promise<{ data?: ImportEntryMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<ImportEntryMutation>(print(ImportEntryDocument), variables));
+    updatePrivateData(variables?: UpdatePrivateDataMutationVariables): Promise<{ data?: UpdatePrivateDataMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<UpdatePrivateDataMutation>(print(UpdatePrivateDataDocument), variables));
     },
-    RemoveEntry(variables: RemoveEntryMutationVariables): Promise<{ data?: RemoveEntryMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<RemoveEntryMutation>(print(RemoveEntryDocument), variables));
+    IdentityPrivateKey(variables?: IdentityPrivateKeyQueryVariables): Promise<{ data?: IdentityPrivateKeyQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<IdentityPrivateKeyQuery>(print(IdentityPrivateKeyDocument), variables));
     },
-    IndexEntry(variables?: IndexEntryQueryVariables): Promise<{ data?: IndexEntryQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<IndexEntryQuery>(print(IndexEntryDocument), variables));
+    PrivateData(variables?: PrivateDataQueryVariables): Promise<{ data?: PrivateDataQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<PrivateDataQuery>(print(PrivateDataDocument), variables));
     },
-    FindEntryByHash(variables: FindEntryByHashQueryVariables): Promise<{ data?: FindEntryByHashQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<FindEntryByHashQuery>(print(FindEntryByHashDocument), variables));
-    },
-    FindEntryByHashCleartext(variables: FindEntryByHashCleartextQueryVariables): Promise<{ data?: FindEntryByHashCleartextQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<FindEntryByHashCleartextQuery>(print(FindEntryByHashCleartextDocument), variables));
+    PublicData(variables?: PublicDataQueryVariables): Promise<{ data?: PublicDataQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<PublicDataQuery>(print(PublicDataDocument), variables));
     }
   };
 }
