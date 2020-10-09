@@ -2,7 +2,7 @@ import type {Trigger} from "../trigger";
 import {Actions} from "../../actions/actions";
 
 export class AddKey implements Trigger {
-  title: string = "Adds a new key to the personal keystore or generates it";
+  title: string = "Adds a new key to the personal identity or generates it";
   triggers: Actions = Actions.addKey;
   name: string;
   privateKey?:string;

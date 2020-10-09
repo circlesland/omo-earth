@@ -50,7 +50,7 @@ PROXY_SERVICE_STATIC_PATH=static
 # The path to the auth-service on the omo domain
 PROXY_SERVICE_AUTH_PATH=auth
 # The path to the auth-service on the omo domain
-PROXY_SERVICE_KEYSTORE_PATH=keystore
+PROXY_SERVICE_IDENTITY_PATH=identity
 # The path to the app on the omo domain (empty means that this is at the root level of the domain '/')
 PROXY_SERVICE_APP_PATH=
 
@@ -86,12 +86,12 @@ AUTH_GRAPHQL_SCHEMA=server/src/api/api-schema.graphql
 #
 # Keystore service configuration
 #
-KEYSTORE_PROTOCOL=http://
-KEYSTORE_DOMAIN=keystore
-KEYSTORE_PORT=80
-KEYSTORE_CORS_ORIGINS=http://omo.local:8080;http://localhost:5000;
+IDENTITY_PROTOCOL=http://
+IDENTITY_DOMAIN=identity
+IDENTITY_PORT=80
+IDENTITY_CORS_ORIGINS=http://omo.local:8080;http://localhost:5000;
 
-KEYSTORE_GRAPHQL_SCHEMA=keyStore/server/src/api/api-schema.graphql
+IDENTITY_GRAPHQL_SCHEMA=identity/server/src/api/api-schema.graphql
 ```
 
 

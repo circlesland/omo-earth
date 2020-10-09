@@ -1,4 +1,4 @@
-schema: http://omo.local:8080/keystore/graphql
+schema: http://omo.local:8080/identity/graphql
 documents: ./*.graphql
 generates:
   generated.ts:

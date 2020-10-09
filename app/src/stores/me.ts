@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type {Entry} from "../graphQL/keyStore/generated";
+import type {Entry} from "../graphQL/identity/generated";
 
 function createStore() {
   const existingIndexEntry = sessionStorage.getItem("me");

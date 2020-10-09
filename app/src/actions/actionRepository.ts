@@ -13,16 +13,16 @@ import {ResetLayout} from "../trigger/compositor/resetLayout";
 import type {RequestMagicLoginLink} from "../trigger/auth/requestMagicLoginLink";
 import {ExchangeJwtForSessionCookie} from "../trigger/auth/exchangeJwtForSessionCookie";
 import type {ExchangeMagicLoginCodeForJwt} from "../trigger/auth/exchangeMagicLinkCodeForJwt";
-import {AddKey} from "../trigger/keyStore/addKey";
-import type {ImportKey} from "../trigger/keyStore/importKey";
-import type {RemoveKey} from "../trigger/keyStore/removeKey";
-import type {ShareKey} from "../trigger/keyStore/shareKey";
+import {AddKey} from "../trigger/identity/addKey";
+import type {ImportKey} from "../trigger/identity/importKey";
+import type {RemoveKey} from "../trigger/identity/removeKey";
+import type {ShareKey} from "../trigger/identity/shareKey";
 import jwt_decode from "jwt-decode";
 import {users} from "../stores/users";
 import {me} from "../stores/me";
 import {authClient} from "../graphQL/auth/authClient";
-import {keyStoreClient} from "../graphQL/keyStore/keyStoreClient";
-import type {Entry} from "../graphQL/keyStore/generated";
+import {identityClient} from "../graphQL/identity/identityClient";
+import type {Entry} from "../graphQL/identity/generated";
 
 let sideBarToggleState:boolean = true;
 
@@ -35,7 +35,7 @@ const conf = {
     url: externalUrl + "/auth",
     appId: "1"
   },
-  keyStoreServerUrl: externalUrl + "/keystore"
+  identityServerUrl: externalUrl + "/identity"
 };
 
 export const config = conf;
@@ -128,14 +128,14 @@ export const actionRepository = {
   },
   [Actions.exchangeJwtForSessionCookie]: async (trigger:ExchangeJwtForSessionCookie) => {
 
-    const result =  await keyStoreClient.ExchangeToken({
+    const result =  await identityClient.ExchangeToken({
       jwt: trigger.jwt
     });
     if (result.errors && result.errors.length > 0) {
       throw new Error(result.errors.map(o => o.message) .join("\n"));
     }
     if (!result.data.exchangeToken.success) {
-      throw new Error("Couldn't exchange the JWT for a session at the keystore.")
+      throw new Error("Couldn't exchange the JWT for a session at the identity.")
     }
 
     const decodedJwt = jwt_decode(trigger.jwt);
@@ -152,7 +152,7 @@ export const actionRepository = {
   },
   [Actions.addKey]: async (trigger:AddKey) => {
     /*
-    const keyEntry =  await keyStoreClient.CreateEntry({
+    const keyEntry =  await identityClient.CreateEntry({
       publicKey: trigger.publicKey,
       privateKey: trigger.privateKey,
 
@@ -162,7 +162,7 @@ export const actionRepository = {
     }
     await KeyStoreClient.instance.importEntry(keyEntry.entryHash, trigger.name);
 
-    const importedEntry = await keyStoreClient.ImportEntry({
+    const importedEntry = await identityClient.ImportEntry({
       name: trigger.name,
       entryHash: keyEntry.entryHash
     });

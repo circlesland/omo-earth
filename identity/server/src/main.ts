@@ -13,19 +13,19 @@ export class Main
 
   constructor()
   {
-    if (!process.env.KEYSTORE_GRAPHQL_SCHEMA)
+    if (!process.env.IDENTITY_GRAPHQL_SCHEMA)
     {
-      throw new Error("The KEYSTORE_GRAPHQL_SCHEMA environment variable must contain a valid path that " +
+      throw new Error("The IDENTITY_GRAPHQL_SCHEMA environment variable must contain a valid path that " +
         "points to the GraphQL api schema.");
     }
-    if (!process.env.KEYSTORE_CORS_ORIGINS){
-      throw new Error("The KEYSTORE_CORS_ORIGINS environment variable must contain a valid URL terminated by a semicolon. Values in this list are allowed to request the api service.")
+    if (!process.env.IDENTITY_CORS_ORIGINS){
+      throw new Error("The IDENTITY_CORS_ORIGINS environment variable must contain a valid URL terminated by a semicolon. Values in this list are allowed to request the api service.")
     }
-    const apiSchemaTypeDefs = importSchema(process.env.KEYSTORE_GRAPHQL_SCHEMA);
+    const apiSchemaTypeDefs = importSchema(process.env.IDENTITY_GRAPHQL_SCHEMA);
 
     this._resolvers = new Resolvers();
 
-    const corsOrigins = process.env.KEYSTORE_CORS_ORIGINS.split(";");
+    const corsOrigins = process.env.IDENTITY_CORS_ORIGINS.split(";");
     console.log("cors origins: ", corsOrigins);
 
     this._server = new ApolloServer({
@@ -45,13 +45,13 @@ export class Main
 
   async run()
   {
-    if (!process.env.KEYSTORE_PORT)
+    if (!process.env.IDENTITY_PORT)
     {
-      throw new Error("The KEYSTORE_PORT environment variable is not set.");
+      throw new Error("The IDENTITY_PORT environment variable is not set.");
     }
 
     await this._server.listen({
-      port: parseInt(process.env.KEYSTORE_PORT),
+      port: parseInt(process.env.IDENTITY_PORT),
     });
 
   }

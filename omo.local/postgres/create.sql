@@ -101,86 +101,80 @@ create unique index "Offer.ownerIdentityId_unique"
 
 create table "_Migration"
 (
-    revision           serial       not null
+    revision serial not null
         constraint "_Migration_pkey"
             primary key,
-    name               text         not null,
-    datamodel          text         not null,
-    status             text         not null,
-    applied            integer      not null,
-    rolled_back        integer      not null,
-    datamodel_steps    text         not null,
-    database_migration text         not null,
-    errors             text         not null,
-    started_at         timestamp(3) not null,
-    finished_at        timestamp(3)
+    name text not null,
+    datamodel text not null,
+    status text not null,
+    applied integer not null,
+    rolled_back integer not null,
+    datamodel_steps text not null,
+    database_migration text not null,
+    errors text not null,
+    started_at timestamp(3) not null,
+    finished_at timestamp(3)
 );
-
-alter table "_Migration"
-    owner to postgres;
+alter table "_Migration" owner to postgres;
 
 create table "Identity"
 (
-    "identityId"               text not null,
-    "emailAddress"             text,
-    "indexEntryPrivateKey"     text,
-    "indexEntryPublicKey"      text not null,
-    "indexEntryKeyFingerprint" text not null,
-    "indexEntryHash"           text
+    "identityPublicKey" text not null
+        constraint "Identity_pkey"
+            primary key,
+    "publicData" jsonb not null,
+    "privateData" jsonb not null
 );
 
-alter table "Identity"
-    owner to postgres;
+alter table "Identity" owner to postgres;
 
-create unique index "Identity.identityId_unique"
-    on "Identity" ("identityId");
+create table "Agent"
+(
+    "identityPublicKey" text not null
+        constraint "Agent_identityPublicKey_fkey"
+            references "Identity"
+            on update cascade on delete cascade,
+    "identityPrivateKey" text not null,
+    type text not null,
+    key text not null
+);
+
+alter table "Agent" owner to postgres;
+
+create unique index "UX_Agent_Type_Key"
+    on "Agent" (type, key);
 
 create table "Authority"
 (
-    id      serial not null
+    id serial not null
         constraint "Authority_pkey"
             primary key,
-    issuer  text   not null,
-    "appId" text   not null
+    issuer text not null,
+    "appId" text not null
 );
 
-alter table "Authority"
-    owner to postgres;
+alter table "Authority" owner to postgres;
 
 create table "Session"
 (
-    "sessionId"          text         not null,
-    "createdAt"          timestamp(3) not null,
-    "maxLifetime"        integer      not null,
-    "authorityId"        integer      not null
+    "sessionId" text not null,
+    "createdAt" timestamp(3) not null,
+    "maxLifetime" integer not null,
+    "authorityId" integer not null
         constraint "Session_authorityId_fkey"
             references "Authority"
             on update cascade on delete cascade,
-    "identityIdentityId" text         not null
-        constraint "Session_identityIdentityId_fkey"
-            references "Identity" ("identityId")
+    "agentType" text not null,
+    "agentKey" text not null,
+    constraint "Session_agentType_agentKey_fkey"
+        foreign key ("agentType", "agentKey") references "Agent" (type, key)
             on update cascade on delete cascade
 );
 
-alter table "Session"
-    owner to postgres;
+alter table "Session" owner to postgres;
 
 create unique index "Session.sessionId_unique"
     on "Session" ("sessionId");
-
-create table "Entry"
-(
-    "creatorFingerPrint" text not null,
-    "ownerFingerPrint"   text not null,
-    "entryHash"          text not null,
-    content              text not null
-);
-
-alter table "Entry"
-    owner to postgres;
-
-create unique index "Entry.entryHash_unique"
-    on "Entry" ("entryHash");
 
 -- TODO: Get URL from ENV
 INSERT INTO "Authority" (issuer, "appId") VALUES ('http://omo.local:8080/auth', '1');

@@ -2,15 +2,15 @@
 
 currentDir=`pwd`
 
-echo "Building keyStore .."
+echo "Building identity .."
 pwd
 echo "Building ../data .."
 cd ../data || exit
 ./rebuild.sh || exit
 
 pwd
-echo "Building ../keyStore/server .."
-cd ../keyStore/server || exit
+echo "Building ../identity/server .."
+cd ../identity/server || exit
 rm -r -f   dist
 rm -r -f   node_modules/@omo
 rm -f package-lock.json

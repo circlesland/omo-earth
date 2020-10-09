@@ -7,7 +7,7 @@ type Mutation {
     # Sends a one time that is encrypted with the supplied public key and awaits a decrypted response at the verify() method.
     loginWithPublicKey(appId:String! publicKey:String!) : LoginResponse!
 
-    # Verifies the one time code and issues a JWT that proofs that the owner has access to the email address
+    # Verifies the one time code and issues a JWT that proofs that the owner has access to the email address or the private key.
     verify(oneTimeToken:String!) : VerifyResponse!
 }
 
@@ -27,12 +27,6 @@ type PublicKey {
     validTo: String!
 }
 
-type Version {
-    major: Int!
-    minor: Int!
-    revision: Int!
-}
-
 type LoginResponse implements ActionResponse {
     success: Boolean!
     errorMessage: String
@@ -46,4 +40,10 @@ type VerifyResponse implements ActionResponse {
     type: String
     key: String
     jwt:String!
+}
+
+type Version {
+    major: Int!
+    minor: Int!
+    revision: Int!
 }

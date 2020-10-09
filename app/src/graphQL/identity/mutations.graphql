@@ -1,0 +1,6 @@
+mutation ExchangeToken($jwt:String!) {
+    exchangeToken(jwt: $jwt) {
+        success
+        errorMessage
+    }
+}

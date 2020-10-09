@@ -60,13 +60,6 @@ export type PublicKey = {
   validTo: Scalars['String'];
 };
 
-export type Version = {
-  __typename?: 'Version';
-  major: Scalars['Int'];
-  minor: Scalars['Int'];
-  revision: Scalars['Int'];
-};
-
 export type LoginResponse = ActionResponse & {
   __typename?: 'LoginResponse';
   success: Scalars['Boolean'];
@@ -81,6 +74,13 @@ export type VerifyResponse = ActionResponse & {
   type?: Maybe<Scalars['String']>;
   key?: Maybe<Scalars['String']>;
   jwt: Scalars['String'];
+};
+
+export type Version = {
+  __typename?: 'Version';
+  major: Scalars['Int'];
+  minor: Scalars['Int'];
+  revision: Scalars['Int'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -170,9 +170,9 @@ export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   PublicKey: ResolverTypeWrapper<PublicKey>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
-  Version: ResolverTypeWrapper<Version>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   VerifyResponse: ResolverTypeWrapper<VerifyResponse>;
+  Version: ResolverTypeWrapper<Version>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -185,9 +185,9 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
   PublicKey: PublicKey;
   Int: Scalars['Int'];
-  Version: Version;
   LoginResponse: LoginResponse;
   VerifyResponse: VerifyResponse;
+  Version: Version;
 }>;
 
 export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Json'], any> {
@@ -218,13 +218,6 @@ export type PublicKeyResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type VersionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Version'] = ResolversParentTypes['Version']> = ResolversObject<{
-  major?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  minor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  revision?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
 export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = ResolversObject<{
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -241,15 +234,22 @@ export type VerifyResponseResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type VersionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Version'] = ResolversParentTypes['Version']> = ResolversObject<{
+  major?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  minor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  revision?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type Resolvers<ContextType = any> = ResolversObject<{
   Json?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   ActionResponse?: ActionResponseResolvers<ContextType>;
   PublicKey?: PublicKeyResolvers<ContextType>;
-  Version?: VersionResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   VerifyResponse?: VerifyResponseResolvers<ContextType>;
+  Version?: VersionResolvers<ContextType>;
 }>;
 
 

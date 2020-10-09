@@ -28,7 +28,6 @@ export type MutationCreateOfferArgs = {
 export type Query = {
   __typename?: 'Query';
   offers: Array<Offer>;
-  version: Version;
 };
 
 export type ActionResponse = {
@@ -45,24 +44,11 @@ export type Offer = {
   price: Scalars['Float'];
 };
 
-export type ExchangeTokenResponse = ActionResponse & {
-  __typename?: 'ExchangeTokenResponse';
-  success: Scalars['Boolean'];
-  errorMessage?: Maybe<Scalars['String']>;
-};
-
 export type CreateOfferResponse = ActionResponse & {
   __typename?: 'CreateOfferResponse';
   success: Scalars['Boolean'];
   errorMessage?: Maybe<Scalars['String']>;
   offer?: Maybe<Offer>;
-};
-
-export type Version = {
-  __typename?: 'Version';
-  major: Scalars['Int'];
-  minor: Scalars['Int'];
-  revision: Scalars['Int'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -149,13 +135,10 @@ export type ResolversTypes = ResolversObject<{
   String: ResolverTypeWrapper<Scalars['String']>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   Query: ResolverTypeWrapper<{}>;
-  ActionResponse: ResolversTypes['ExchangeTokenResponse'] | ResolversTypes['CreateOfferResponse'];
+  ActionResponse: ResolversTypes['CreateOfferResponse'];
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Offer: ResolverTypeWrapper<Offer>;
-  ExchangeTokenResponse: ResolverTypeWrapper<ExchangeTokenResponse>;
   CreateOfferResponse: ResolverTypeWrapper<CreateOfferResponse>;
-  Version: ResolverTypeWrapper<Version>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -165,13 +148,10 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String'];
   Float: Scalars['Float'];
   Query: {};
-  ActionResponse: ResolversParentTypes['ExchangeTokenResponse'] | ResolversParentTypes['CreateOfferResponse'];
+  ActionResponse: ResolversParentTypes['CreateOfferResponse'];
   Boolean: Scalars['Boolean'];
   Offer: Offer;
-  ExchangeTokenResponse: ExchangeTokenResponse;
   CreateOfferResponse: CreateOfferResponse;
-  Version: Version;
-  Int: Scalars['Int'];
 }>;
 
 export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Json'], any> {
@@ -184,11 +164,10 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   offers?: Resolver<Array<ResolversTypes['Offer']>, ParentType, ContextType>;
-  version?: Resolver<ResolversTypes['Version'], ParentType, ContextType>;
 }>;
 
 export type ActionResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActionResponse'] = ResolversParentTypes['ActionResponse']> = ResolversObject<{
-  __resolveType: TypeResolveFn<'ExchangeTokenResponse' | 'CreateOfferResponse', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'CreateOfferResponse', ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 }>;
@@ -202,23 +181,10 @@ export type OfferResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type ExchangeTokenResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ExchangeTokenResponse'] = ResolversParentTypes['ExchangeTokenResponse']> = ResolversObject<{
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
 export type CreateOfferResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateOfferResponse'] = ResolversParentTypes['CreateOfferResponse']> = ResolversObject<{
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   offer?: Resolver<Maybe<ResolversTypes['Offer']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type VersionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Version'] = ResolversParentTypes['Version']> = ResolversObject<{
-  major?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  minor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  revision?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -228,9 +194,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Query?: QueryResolvers<ContextType>;
   ActionResponse?: ActionResponseResolvers<ContextType>;
   Offer?: OfferResolvers<ContextType>;
-  ExchangeTokenResponse?: ExchangeTokenResponseResolvers<ContextType>;
   CreateOfferResponse?: CreateOfferResponseResolvers<ContextType>;
-  Version?: VersionResolvers<ContextType>;
 }>;
 
 

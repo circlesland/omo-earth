@@ -24,12 +24,12 @@ services:
     ports:
       - "80"
 
-  keystore:
+  identity:
     depends_on:
       - postgres
     build:
       context: ../
-      dockerfile: omo.earth/keyStore/Dockerfile
+      dockerfile: omo.earth/identity/Dockerfile
     env_file:
       - .env
     ports:
@@ -39,7 +39,7 @@ services:
     depends_on:
       - postgres
       - auth
-      - keystore
+      - identity
     build:
       context: ../app
       dockerfile: ../omo.earth/app/Dockerfile
@@ -73,7 +73,7 @@ services:
         - PROXY_EXTERN_PORT=${PROXY_EXTERN_PORT}
         - PROXY_SERVICE_STATIC_PATH=${PROXY_SERVICE_STATIC_PATH}
         - PROXY_SERVICE_AUTH_PATH=${PROXY_SERVICE_AUTH_PATH}
-        - PROXY_SERVICE_KEYSTORE_PATH=${PROXY_SERVICE_KEYSTORE_PATH}
+        - PROXY_SERVICE_IDENTITY_PATH=${PROXY_SERVICE_IDENTITY_PATH}
         - PROXY_SERVICE_APP_PATH=${PROXY_SERVICE_APP_PATH}
         - STATIC_PROTOCOL=${STATIC_PROTOCOL}
         - STATIC_DOMAIN=${STATIC_DOMAIN}
@@ -84,9 +84,9 @@ services:
         - AUTH_PROTOCOL=${AUTH_PROTOCOL}
         - AUTH_DOMAIN=${AUTH_DOMAIN}
         - AUTH_PORT=${AUTH_PORT}
-        - KEYSTORE_PROTOCOL=${KEYSTORE_PROTOCOL}
-        - KEYSTORE_DOMAIN=${KEYSTORE_DOMAIN}
-        - KEYSTORE_PORT=${KEYSTORE_PORT}
+        - IDENTITY_PROTOCOL=${IDENTITY_PROTOCOL}
+        - IDENTITY_DOMAIN=${IDENTITY_DOMAIN}
+        - IDENTITY_PORT=${IDENTITY_PORT}
     env_file:
       - .env
 

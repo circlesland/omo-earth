@@ -1,0 +1,30 @@
+scalar Json
+
+type Mutation {
+    # Exchanges a JWT for a session cookie which will be read by all subsequent mutation- and query-calls.
+    # When a User exchanges a token for the first time, a Agent and Identity will be created.
+    exchangeToken(jwt:String!) : ExchangeTokenResponse!
+}
+
+type Query {
+    version : Version
+
+    # Gets the identity private key of the currently logged-on agent
+    identityPrivateKey : String!
+}
+
+interface ActionResponse {
+    success: Boolean!
+    errorMessage: String
+}
+
+type ExchangeTokenResponse implements ActionResponse {
+    success: Boolean!
+    errorMessage: String
+}
+
+type Version {
+    major: Int!
+    minor: Int!
+    revision: Int!
+}

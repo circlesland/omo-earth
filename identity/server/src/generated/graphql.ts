@@ -16,9 +16,6 @@ export type Scalars = {
 export type Mutation = {
   __typename?: 'Mutation';
   exchangeToken: ExchangeTokenResponse;
-  createEntry: CreateEntryResponse;
-  importEntry: ImportEntryResponse;
-  removeEntry: RemoveEntryResponse;
 };
 
 
@@ -26,48 +23,9 @@ export type MutationExchangeTokenArgs = {
   jwt: Scalars['String'];
 };
 
-
-export type MutationCreateEntryArgs = {
-  publicKey?: Maybe<Scalars['String']>;
-  entryContent: Scalars['Json'];
-};
-
-
-export type MutationImportEntryArgs = {
-  entryHash: Scalars['String'];
-  name: Scalars['String'];
-  overwrite?: Maybe<Scalars['Boolean']>;
-};
-
-
-export type MutationRemoveEntryArgs = {
-  name: Scalars['String'];
-};
-
 export type Query = {
   __typename?: 'Query';
-  indexEntry?: Maybe<Entry>;
-  findEntryByHash?: Maybe<Entry>;
-  findEntryByHashCleartext?: Maybe<Entry>;
   version?: Maybe<Version>;
-};
-
-
-export type QueryFindEntryByHashArgs = {
-  hash: Scalars['String'];
-};
-
-
-export type QueryFindEntryByHashCleartextArgs = {
-  hash: Scalars['String'];
-};
-
-export type Entry = {
-  __typename?: 'Entry';
-  creatorFingerPrint: Scalars['String'];
-  ownerFingerPrint: Scalars['String'];
-  entryHash: Scalars['String'];
-  content: Scalars['Json'];
 };
 
 export type ActionResponse = {
@@ -79,29 +37,6 @@ export type ExchangeTokenResponse = ActionResponse & {
   __typename?: 'ExchangeTokenResponse';
   success: Scalars['Boolean'];
   errorMessage?: Maybe<Scalars['String']>;
-};
-
-export type CreateEntryResponse = ActionResponse & {
-  __typename?: 'CreateEntryResponse';
-  success: Scalars['Boolean'];
-  errorMessage?: Maybe<Scalars['String']>;
-  entryHash?: Maybe<Scalars['String']>;
-};
-
-export type RemoveEntryResponse = ActionResponse & {
-  __typename?: 'RemoveEntryResponse';
-  success: Scalars['Boolean'];
-  errorMessage?: Maybe<Scalars['String']>;
-  entryHash?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-};
-
-export type ImportEntryResponse = ActionResponse & {
-  __typename?: 'ImportEntryResponse';
-  success: Scalars['Boolean'];
-  errorMessage?: Maybe<Scalars['String']>;
-  entryHash?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
 };
 
 export type Version = {
@@ -193,14 +128,10 @@ export type ResolversTypes = ResolversObject<{
   Json: ResolverTypeWrapper<Scalars['Json']>;
   Mutation: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Query: ResolverTypeWrapper<{}>;
-  Entry: ResolverTypeWrapper<Entry>;
-  ActionResponse: ResolversTypes['ExchangeTokenResponse'] | ResolversTypes['CreateEntryResponse'] | ResolversTypes['RemoveEntryResponse'] | ResolversTypes['ImportEntryResponse'];
+  ActionResponse: ResolversTypes['ExchangeTokenResponse'];
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   ExchangeTokenResponse: ResolverTypeWrapper<ExchangeTokenResponse>;
-  CreateEntryResponse: ResolverTypeWrapper<CreateEntryResponse>;
-  RemoveEntryResponse: ResolverTypeWrapper<RemoveEntryResponse>;
-  ImportEntryResponse: ResolverTypeWrapper<ImportEntryResponse>;
   Version: ResolverTypeWrapper<Version>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
 }>;
@@ -210,14 +141,10 @@ export type ResolversParentTypes = ResolversObject<{
   Json: Scalars['Json'];
   Mutation: {};
   String: Scalars['String'];
-  Boolean: Scalars['Boolean'];
   Query: {};
-  Entry: Entry;
-  ActionResponse: ResolversParentTypes['ExchangeTokenResponse'] | ResolversParentTypes['CreateEntryResponse'] | ResolversParentTypes['RemoveEntryResponse'] | ResolversParentTypes['ImportEntryResponse'];
+  ActionResponse: ResolversParentTypes['ExchangeTokenResponse'];
+  Boolean: Scalars['Boolean'];
   ExchangeTokenResponse: ExchangeTokenResponse;
-  CreateEntryResponse: CreateEntryResponse;
-  RemoveEntryResponse: RemoveEntryResponse;
-  ImportEntryResponse: ImportEntryResponse;
   Version: Version;
   Int: Scalars['Int'];
 }>;
@@ -228,28 +155,14 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   exchangeToken?: Resolver<ResolversTypes['ExchangeTokenResponse'], ParentType, ContextType, RequireFields<MutationExchangeTokenArgs, 'jwt'>>;
-  createEntry?: Resolver<ResolversTypes['CreateEntryResponse'], ParentType, ContextType, RequireFields<MutationCreateEntryArgs, 'entryContent'>>;
-  importEntry?: Resolver<ResolversTypes['ImportEntryResponse'], ParentType, ContextType, RequireFields<MutationImportEntryArgs, 'entryHash' | 'name'>>;
-  removeEntry?: Resolver<ResolversTypes['RemoveEntryResponse'], ParentType, ContextType, RequireFields<MutationRemoveEntryArgs, 'name'>>;
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  indexEntry?: Resolver<Maybe<ResolversTypes['Entry']>, ParentType, ContextType>;
-  findEntryByHash?: Resolver<Maybe<ResolversTypes['Entry']>, ParentType, ContextType, RequireFields<QueryFindEntryByHashArgs, 'hash'>>;
-  findEntryByHashCleartext?: Resolver<Maybe<ResolversTypes['Entry']>, ParentType, ContextType, RequireFields<QueryFindEntryByHashCleartextArgs, 'hash'>>;
   version?: Resolver<Maybe<ResolversTypes['Version']>, ParentType, ContextType>;
 }>;
 
-export type EntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Entry'] = ResolversParentTypes['Entry']> = ResolversObject<{
-  creatorFingerPrint?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  ownerFingerPrint?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  entryHash?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  content?: Resolver<ResolversTypes['Json'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
 export type ActionResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActionResponse'] = ResolversParentTypes['ActionResponse']> = ResolversObject<{
-  __resolveType: TypeResolveFn<'ExchangeTokenResponse' | 'CreateEntryResponse' | 'RemoveEntryResponse' | 'ImportEntryResponse', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'ExchangeTokenResponse', ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 }>;
@@ -257,29 +170,6 @@ export type ActionResponseResolvers<ContextType = any, ParentType extends Resolv
 export type ExchangeTokenResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ExchangeTokenResponse'] = ResolversParentTypes['ExchangeTokenResponse']> = ResolversObject<{
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type CreateEntryResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateEntryResponse'] = ResolversParentTypes['CreateEntryResponse']> = ResolversObject<{
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  entryHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type RemoveEntryResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RemoveEntryResponse'] = ResolversParentTypes['RemoveEntryResponse']> = ResolversObject<{
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  entryHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type ImportEntryResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImportEntryResponse'] = ResolversParentTypes['ImportEntryResponse']> = ResolversObject<{
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  entryHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -294,12 +184,8 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Json?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  Entry?: EntryResolvers<ContextType>;
   ActionResponse?: ActionResponseResolvers<ContextType>;
   ExchangeTokenResponse?: ExchangeTokenResponseResolvers<ContextType>;
-  CreateEntryResponse?: CreateEntryResponseResolvers<ContextType>;
-  RemoveEntryResponse?: RemoveEntryResponseResolvers<ContextType>;
-  ImportEntryResponse?: ImportEntryResponseResolvers<ContextType>;
   Version?: VersionResolvers<ContextType>;
 }>;
 

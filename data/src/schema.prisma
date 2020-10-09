@@ -7,31 +7,32 @@ generator client {
     provider = "prisma-client-js"
 }
 
-// Represents a person.
-model Identity
-{
+// An agent is an entity that is entitled to act as a person (a device or bot).
+model Agent {
+  // A link to the Identit that this agent represents.
+  identity Identity  @relation(fields: [identityPublicKey], references: [identityPublicKey])
+  identityPublicKey String
+  // Contains the private key of the Identity that this Agent represents.
+  // When the Agent's 'type' is 'publicKey' then the 'identityPrivateKey' will be encrypted
+  // with the Agent's 'key'.
+  // When the 'type' is 'email' then the field contains the private key in plain-text.
+  identityPrivateKey String
+  // The type can either be 'email' or 'publicKey'.
+  type String
+  // Depending on the 'type', this field either contains a email address or a public key.
+  key String
+  @@unique([type, key], name: "UX_Agent_Type_Key")
+}
+
+model Identity {
   // The public key that identifies the identity
-  identityPublicKey String @unique
+  identityPublicKey String @id
   // The agents that should be able to act as this identity.
   agents Agent[]
   // Contains data that should be publicy available for everyone.
   publicData Json
   // Contains data that is encrypted with the 'identityPublicKey'.
   privateData Json
-}
-
-// An agent is an entity that is entitled to act as a person (a device or bot).
-model Agent {
-  // The type can either be 'email' or 'publicKey'.
-  type String
-  // Depending on the 'type', this field either contains a email address or a public key.
-  key String
-  @@unique([type, key], name: "UX_Agent_Type_Key")
-  // Contains the private key of the Identity that this Agent represents.
-  // When the Agent's 'type' is 'publicKey' then the 'identityPrivateKey' will be encrypted
-  // with the Agent's 'key'.
-  // When the 'type' is 'email' then the field contains the private key in plain-text.
-  identityPrivateKey String
 }
 
 // Authorities are trusted services that issue JWTs which this service accepts as authentication
@@ -53,5 +54,5 @@ model Session {
   // This fields specifies the max. session lifetime in seconds.
   maxLifetime Int
   // Who is identified by the session?
-  identity Identity
+  agent Agent
 }

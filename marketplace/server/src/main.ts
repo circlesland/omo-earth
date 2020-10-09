@@ -15,11 +15,11 @@ export class Main
   {
     if (!process.env.MARKETPLACE_GRAPHQL_SCHEMA)
     {
-      throw new Error("The KEYSTORE_GRAPHQL_SCHEMA environment variable must contain a valid path that " +
+      throw new Error("The IDENTITY_GRAPHQL_SCHEMA environment variable must contain a valid path that " +
         "points to the GraphQL api schema.");
     }
     if (!process.env.MARKETPLACE_CORS_ORIGINS){
-      throw new Error("The KEYSTORE_CORS_ORIGINS environment variable must contain a valid URL terminated by a semicolon. Values in this list are allowed to request the api service.")
+      throw new Error("The IDENTITY_CORS_ORIGINS environment variable must contain a valid URL terminated by a semicolon. Values in this list are allowed to request the api service.")
     }
     const apiSchemaTypeDefs = importSchema(process.env.MARKETPLACE_GRAPHQL_SCHEMA);
 
@@ -47,7 +47,7 @@ export class Main
   {
     if (!process.env.MARKETPLACE_PORT)
     {
-      throw new Error("The KEYSTORE_PORT environment variable is not set.");
+      throw new Error("The IDENTITY_PORT environment variable is not set.");
     }
 
     await this._server.listen({

@@ -61,7 +61,7 @@
         <div
                 class="flex flex-wrap items-stretch w-full relative h-18 bg-white
           items-center rounded-t pr-10">
-          Exchanging the JWT for a session at the keyStore ..
+          Exchanging the JWT for a session at the identity ..
         </div>
       </form>
     {:else if status === "done"}

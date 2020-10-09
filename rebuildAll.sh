@@ -5,7 +5,7 @@ cd auth || exit
 cd ../data || exit
 ./rebuild.sh
 
-cd ../keyStore || exit
+cd ../identity || exit
 ./rebuild.sh
 
 cd ../marketplace || exit
