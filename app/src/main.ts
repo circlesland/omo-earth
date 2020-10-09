@@ -1,5 +1,6 @@
 import App from "./App.svelte";
 import {EventBroker, Topic} from "./eventBroker";
+import type Web3 from "web3";
 
 declare global
 {
@@ -8,6 +9,7 @@ declare global
     eventBroker: EventBroker;
     shellEvents: Topic<any>;
     trigger: (trigger:any) => void;
+    web3: Web3;
   }
 }
 

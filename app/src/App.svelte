@@ -20,19 +20,14 @@
   } from "./actions/actionRepository";
   import { profile } from "./organisms/profile";
   import { ExchangeMagicLoginCodeForJwt } from "./trigger/auth/exchangeMagicLinkCodeForJwt";
+  import {Agent} from "./stores/agent";
   // set default component
   let viewDocument = Home;
 
-  function route(path: string, handler /*:(ctx:any)=>void*/) {
+  function route(path: string, handler) {
     const handlerWrapper = (ctx) => {
-      const meData = sessionStorage.getItem("me");
-      console.log("check route.", path, meData);
-      if (!meData || path !== "/sign-in/onetime/:code") {
-        const me = JSON.parse(meData);
-        if (!me.type || !me.key)
-          viewDocument = Home;
-        else
-          handler(ctx);
+      if (!Agent.me.getPublicData() && path !== "/sign-in/onetime/:code") {
+        viewDocument = Home;
       } else {
         handler(ctx);
       }

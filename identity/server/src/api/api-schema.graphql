@@ -6,7 +6,7 @@ type Mutation {
     exchangeToken(jwt:String!) : ExchangeTokenResponse!
 
     updatePublicData(data:Json) : UpdatePublicDataResponse!
-    updatePrivateData(data:Json) : UpdatePrivateDataResponse!
+    updatePrivateData(data:String) : UpdatePrivateDataResponse!
 }
 
 type Query {
@@ -16,11 +16,13 @@ type Query {
     publicData(identityPublicKey:String) : Json
 
     # Gets the public and private data that is associated with the Identity
-    privateData : Json!
+    privateData : String!
 
     # Gets the identity private key of the currently logged-on agent.
     # Depending on the agent type, this key is encrypted or not.
     identityPrivateKey : String!
+
+    identityPublicKey: String!
 }
 
 interface ActionResponse {

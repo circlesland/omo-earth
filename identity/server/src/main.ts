@@ -18,8 +18,10 @@ export class Main
       throw new Error("The IDENTITY_GRAPHQL_SCHEMA environment variable must contain a valid path that " +
         "points to the GraphQL api schema.");
     }
-    if (!process.env.IDENTITY_CORS_ORIGINS){
-      throw new Error("The IDENTITY_CORS_ORIGINS environment variable must contain a valid URL terminated by a semicolon. Values in this list are allowed to request the api service.")
+    if (!process.env.IDENTITY_CORS_ORIGINS)
+    {
+      throw new Error("The IDENTITY_CORS_ORIGINS environment variable must contain a valid URL terminated by a semicolon. " +
+        "Values in this list are allowed to request the api service.")
     }
     const apiSchemaTypeDefs = importSchema(process.env.IDENTITY_GRAPHQL_SCHEMA);
 
@@ -31,7 +33,7 @@ export class Main
     this._server = new ApolloServer({
       context: RequestContext.create,
       typeDefs: apiSchemaTypeDefs,
-      plugins:[httpHeadersPlugin],
+      plugins: [httpHeadersPlugin],
       resolvers: {
         Mutation: this._resolvers.mutationResolvers,
         Query: this._resolvers.queryResolvers

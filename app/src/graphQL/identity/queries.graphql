@@ -1,3 +1,7 @@
+query identityPublicKey {
+    identityPublicKey
+}
+
 query identityPrivateKey {
     identityPrivateKey
 }

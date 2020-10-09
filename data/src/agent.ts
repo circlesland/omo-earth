@@ -20,7 +20,7 @@ export class Agent
         identity: {
           create: {
             identityPublicKey: keyPair.publicKeyPem,
-            privateData: {},
+            privateData: "",
             publicData: {}
           }
         }
@@ -46,7 +46,7 @@ export class Agent
       identity = await prisma.identity.create({
         data: {
           identityPublicKey: identityPublicKey,
-          privateData: {},
+          privateData: "",
           publicData: {}
         }
       });

@@ -18,8 +18,6 @@ import type {ImportKey} from "../trigger/identity/importKey";
 import type {RemoveKey} from "../trigger/identity/removeKey";
 import type {ShareKey} from "../trigger/identity/shareKey";
 import jwt_decode from "jwt-decode";
-import {users} from "../stores/users";
-import {me} from "../stores/me";
 import {authClient} from "../graphQL/auth/authClient";
 import {identityClient} from "../graphQL/identity/identityClient";
 
@@ -90,13 +88,15 @@ export const actionRepository = {
     // Below we're waiting for a new JWT so any pre-existing JWT must be deleted first.
     localStorage.removeItem(jwtLocalStorageKey);
 
-    if (checkForJwtIntervalHandle) {
+    if (typeof checkForJwtIntervalHandle === "number") {
       // Looks strange but prevents the interval from keeping running
       // a second time if the user requests the login link more than once
       // because of input lag or similar problems
-      clearInterval(checkForJwtIntervalHandle);
+      clearInterval(<number>checkForJwtIntervalHandle);
+    } else if (checkForJwtIntervalHandle) {
+      clearTimeout(checkForJwtIntervalHandle);
     }
-    var checkForJwtIntervalHandle: number|undefined;
+    var checkForJwtIntervalHandle: number|undefined|NodeJS.Timeout;
 
     const result =  await authClient.LoginWithEmail({
       appId: conf.auth.appId,
@@ -122,7 +122,14 @@ export const actionRepository = {
       window.trigger(new ExchangeJwtForSessionCookie(localStorage.getItem(jwtLocalStorageKey)));
       localStorage.removeItem(jwtLocalStorageKey);
       // .. then stop the timer
-      clearInterval(checkForJwtIntervalHandle);
+      if (typeof checkForJwtIntervalHandle === "number") {
+        // Looks strange but prevents the interval from keeping running
+        // a second time if the user requests the login link more than once
+        // because of input lag or similar problems
+        clearInterval(<number>checkForJwtIntervalHandle);
+      } else if (checkForJwtIntervalHandle) {
+        clearTimeout(checkForJwtIntervalHandle);
+      }
     }, 100);
   },
   [Actions.exchangeJwtForSessionCookie]: async (trigger:ExchangeJwtForSessionCookie) => {
@@ -140,21 +147,7 @@ export const actionRepository = {
     const decodedJwt = jwt_decode(trigger.jwt);
     console.log("JWT:", decodedJwt);
 
-    // Get the personal data of the identity
-    const publicData = await identityClient.publicData({
-      identityPublicKey: null
-    });
-    const privateData = await identityClient.privateData({});
-
-    me.update(o => {
-      o.key = decodedJwt.sub;
-      o.type = decodedJwt.subType;
-      o.publicData = publicData.data.publicData;
-      o.privateData = privateData.data.privateData;
-      return o;
-    });
     localStorage.removeItem(jwtLocalStorageKey);
-
     window.trigger(new NavigateTo("To safe", "/safe"));
   },
   [Actions.addKey]: async (trigger:AddKey) => {

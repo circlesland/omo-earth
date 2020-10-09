@@ -123,7 +123,7 @@ create table "Identity"
         constraint "Identity_pkey"
             primary key,
     "publicData" jsonb not null,
-    "privateData" jsonb not null
+    "privateData" text not null
 );
 
 alter table "Identity" owner to postgres;

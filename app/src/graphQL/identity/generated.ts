@@ -37,15 +37,16 @@ export type MutationUpdatePublicDataArgs = {
 
 
 export type MutationUpdatePrivateDataArgs = {
-  data?: Maybe<Scalars['Json']>;
+  data?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
   __typename?: 'Query';
   version?: Maybe<Version>;
   publicData?: Maybe<Scalars['Json']>;
-  privateData: Scalars['Json'];
+  privateData: Scalars['String'];
   identityPrivateKey: Scalars['String'];
+  identityPublicKey: Scalars['String'];
 };
 
 
@@ -103,7 +104,7 @@ export type ExchangeTokenMutation = (
 );
 
 export type UpdatePublicDataMutationVariables = Exact<{
-  data?: Maybe<Scalars['Json']>;
+  data: Scalars['Json'];
 }>;
 
 
@@ -116,7 +117,7 @@ export type UpdatePublicDataMutation = (
 );
 
 export type UpdatePrivateDataMutationVariables = Exact<{
-  data?: Maybe<Scalars['Json']>;
+  data: Scalars['String'];
 }>;
 
 
@@ -126,6 +127,14 @@ export type UpdatePrivateDataMutation = (
     { __typename?: 'UpdatePrivateDataResponse' }
     & Pick<UpdatePrivateDataResponse, 'success' | 'errorMessage'>
   ) }
+);
+
+export type IdentityPublicKeyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type IdentityPublicKeyQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'identityPublicKey'>
 );
 
 export type IdentityPrivateKeyQueryVariables = Exact<{ [key: string]: never; }>;
@@ -164,7 +173,7 @@ export const ExchangeTokenDocument = gql`
 }
     `;
 export const UpdatePublicDataDocument = gql`
-    mutation updatePublicData($data: Json) {
+    mutation updatePublicData($data: Json!) {
   updatePublicData(data: $data) {
     success
     errorMessage
@@ -172,11 +181,16 @@ export const UpdatePublicDataDocument = gql`
 }
     `;
 export const UpdatePrivateDataDocument = gql`
-    mutation updatePrivateData($data: Json) {
+    mutation updatePrivateData($data: String!) {
   updatePrivateData(data: $data) {
     success
     errorMessage
   }
+}
+    `;
+export const IdentityPublicKeyDocument = gql`
+    query identityPublicKey {
+  identityPublicKey
 }
     `;
 export const IdentityPrivateKeyDocument = gql`
@@ -204,11 +218,14 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     ExchangeToken(variables: ExchangeTokenMutationVariables): Promise<{ data?: ExchangeTokenMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<ExchangeTokenMutation>(print(ExchangeTokenDocument), variables));
     },
-    updatePublicData(variables?: UpdatePublicDataMutationVariables): Promise<{ data?: UpdatePublicDataMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+    updatePublicData(variables: UpdatePublicDataMutationVariables): Promise<{ data?: UpdatePublicDataMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<UpdatePublicDataMutation>(print(UpdatePublicDataDocument), variables));
     },
-    updatePrivateData(variables?: UpdatePrivateDataMutationVariables): Promise<{ data?: UpdatePrivateDataMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+    updatePrivateData(variables: UpdatePrivateDataMutationVariables): Promise<{ data?: UpdatePrivateDataMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<UpdatePrivateDataMutation>(print(UpdatePrivateDataDocument), variables));
+    },
+    identityPublicKey(variables?: IdentityPublicKeyQueryVariables): Promise<{ data?: IdentityPublicKeyQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<IdentityPublicKeyQuery>(print(IdentityPublicKeyDocument), variables));
     },
     identityPrivateKey(variables?: IdentityPrivateKeyQueryVariables): Promise<{ data?: IdentityPrivateKeyQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<IdentityPrivateKeyQuery>(print(IdentityPrivateKeyDocument), variables));

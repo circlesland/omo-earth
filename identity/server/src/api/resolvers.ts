@@ -5,11 +5,10 @@ import {
 import {Session} from "@omo/data/dist/session";
 import {privateDecrypt} from "crypto";
 import {Identity} from "@omo/data/dist/identity";
+import {Agent} from "@omo/data/dist/agent";
 
 export class Resolvers
 {
-  // TODO: Add rate limiting (e.g. with https://www.npmjs.com/package/graphql-rate-limit-directive)
-
   readonly queryResolvers: QueryResolvers;
   readonly mutationResolvers: MutationResolvers;
 
@@ -71,6 +70,10 @@ export class Resolvers
       updatePrivateData: async (parent, {data}, context) => {
         try
         {
+          if (!data){
+            throw new Error("No data to update.");
+          }
+
           await Identity.updatePrivateData(context.sessionId, data);
           return {
             success: true
@@ -86,6 +89,20 @@ export class Resolvers
     };
 
     this.queryResolvers = {
+      identityPrivateKey: async (parent, args, context) => {
+        const session = await Session.findSessionBySessionId(context.sessionId);
+        if (!session){
+          throw new Error("Invalid session!")
+        }
+        return session.agent.identityPrivateKey;
+      },
+      identityPublicKey: async (parent, args, context) => {
+        const session = await Session.findSessionBySessionId(context.sessionId);
+        if (!session){
+          throw new Error("Invalid session!")
+        }
+        return session.agent.identityPublicKey;
+      },
       privateData: async (parent, args, context) => {
         const identity = await Identity.findIdentityBySession(context.sessionId);
         if (!identity) {

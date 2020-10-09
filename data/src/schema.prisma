@@ -32,7 +32,7 @@ model Identity {
   // Contains data that should be publicy available for everyone.
   publicData Json
   // Contains data that is encrypted with the 'identityPublicKey'.
-  privateData Json
+  privateData String
 }
 
 // Authorities are trusted services that issue JWTs which this service accepts as authentication
