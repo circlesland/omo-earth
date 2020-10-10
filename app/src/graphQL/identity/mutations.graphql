@@ -5,15 +5,15 @@ mutation ExchangeToken($jwt:String!) {
     }
 }
 
-mutation updatePublicData($data:Json!) {
-    updatePublicData(data:$data) {
+mutation setPublicData($data:Json!) {
+    setPublicData(data:$data) {
         success
         errorMessage
     }
 }
 
-mutation updatePrivateData($data:String!) {
-    updatePrivateData(data:$data) {
+mutation setPrivateData($initializationVector:String! $data:String!) {
+    setPrivateData(initializationVector:$initializationVector data:$data) {
         success
         errorMessage
     }

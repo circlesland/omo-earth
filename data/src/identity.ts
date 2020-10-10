@@ -2,9 +2,9 @@ import {Session} from "./session";
 import {prisma} from "./prisma";
 
 export class Identity {
-  static async findByPublicKey(identityPublicKey: string)
+  static async findByIdentityId(identityId: string)
   {
-    return await prisma.identity.findOne({where:{identityPublicKey:identityPublicKey}});
+    return await prisma.identity.findOne({where:{identityId:identityId}});
   }
 
   static async findIdentityBySession(sessionId:string) {
@@ -13,7 +13,7 @@ export class Identity {
     {
       throw new Error("Couldn't find a valid session with the passed sessionId.");
     }
-    const identity = await Identity.findByPublicKey(session.agent.identityPublicKey);
+    const identity = await Identity.findByIdentityId(session.agent.identityId);
     if (!identity)
     {
       throw new Error("Couldn't find a identity with the passed sessionId.");
@@ -21,7 +21,7 @@ export class Identity {
     return identity;
   }
 
-  static async updatePublicData(sessionId:string, publicData:string) {
+  static async setPublicData(sessionId:string, publicData:string) {
     const identity = await Identity.findIdentityBySession(sessionId);
     if (!identity)
     {
@@ -29,7 +29,7 @@ export class Identity {
     }
     await prisma.identity.update({
       where: {
-        identityPublicKey: identity.identityPublicKey
+        identityId: identity.identityId
       },
       data: {
         publicData
@@ -37,7 +37,7 @@ export class Identity {
     });
   }
 
-  static async updatePrivateData(sessionId:string, privateData:string) {
+  static async setPrivateData(sessionId:string, initializationVector:string, privateData:string) {
     const identity = await this.findIdentityBySession(sessionId);
     if (!identity)
     {
@@ -45,10 +45,11 @@ export class Identity {
     }
     await prisma.identity.update({
       where: {
-        identityPublicKey: identity.identityPublicKey
+        identityId: identity.identityId
       },
       data: {
-        privateData
+        privateData,
+        initializationVector
       }
     });
   }

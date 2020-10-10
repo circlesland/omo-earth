@@ -1,4 +1,4 @@
-import {generateKeyPair} from "crypto";
+import {generateKeyPair, randomBytes} from "crypto";
 
 export interface KeyPair
 {
@@ -10,6 +10,10 @@ export interface KeyPair
 
 export class KeyGenerator
 {
+    static async generateRandomKey(lengthInBytes:number) {
+      return randomBytes(lengthInBytes);
+    }
+
     static async generateRsaKeyPair(keyLength: number = 2048)
     {
         return new Promise<KeyPair>((resolve, reject) =>

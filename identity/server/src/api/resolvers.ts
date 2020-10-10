@@ -52,10 +52,10 @@ export class Resolvers
           }
         }
       },
-      updatePublicData: async (parent, {data}, context) => {
+      setPublicData: async (parent, {data}, context) => {
         try
         {
-          await Identity.updatePrivateData(context.sessionId, data);
+          await Identity.setPublicData(context.sessionId, data);
           return {
             success: true
           };
@@ -67,14 +67,14 @@ export class Resolvers
           }
         }
       },
-      updatePrivateData: async (parent, {data}, context) => {
+      setPrivateData: async (parent, {data, initializationVector}, context) => {
         try
         {
           if (!data){
             throw new Error("No data to update.");
           }
 
-          await Identity.updatePrivateData(context.sessionId, data);
+          await Identity.setPrivateData(context.sessionId, initializationVector, data);
           return {
             success: true
           };
@@ -89,31 +89,34 @@ export class Resolvers
     };
 
     this.queryResolvers = {
-      identityPrivateKey: async (parent, args, context) => {
+      identityKey: async (parent, args, context) => {
         const session = await Session.findSessionBySessionId(context.sessionId);
         if (!session){
           throw new Error("Invalid session!")
         }
-        return session.agent.identityPrivateKey;
+        return session.agent.identityKey;
       },
-      identityPublicKey: async (parent, args, context) => {
+      identityId: async (parent, args, context) => {
         const session = await Session.findSessionBySessionId(context.sessionId);
         if (!session){
           throw new Error("Invalid session!")
         }
-        return session.agent.identityPublicKey;
+        return session.agent.identityId;
       },
       privateData: async (parent, args, context) => {
         const identity = await Identity.findIdentityBySession(context.sessionId);
         if (!identity) {
           throw new Error("Identity not found.");
         }
-        return identity.privateData;
+        return {
+          initializationVector: identity.initializationVector,
+          data: identity.privateData
+        }
       },
-      publicData: async (parent, {identityPublicKey}, context) => {
-          const myIdentity = !identityPublicKey
+      publicData: async (parent, {identityId}, context) => {
+          const myIdentity = !identityId
             ? await Identity.findIdentityBySession(context.sessionId)
-            : await Identity.findByPublicKey(identityPublicKey);
+            : await Identity.findByIdentityId(identityId);
           if (!myIdentity)
           {
             throw new Error("Identity not found.");

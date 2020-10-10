@@ -1,5 +1,6 @@
-import {prisma} from "./prisma";
-import {KeyGenerator} from "@omo/auth-utils/dist/keyGenerator";
+import { prisma } from "./prisma";
+import { KeyGenerator } from "@omo/auth-utils/dist/keyGenerator";
+import { createHash } from "crypto";
 
 export class Agent
 {
@@ -10,16 +11,22 @@ export class Agent
    */
   static async createFromEmail(email: string)
   {
-    const keyPair = await KeyGenerator.generateRsaKeyPair();
+    // Generate a random key for the Identity's 'privateData' field.
+    const keyLengthInBits = 256;
+    const identityKey = await KeyGenerator.generateRandomKey(keyLengthInBits / 8);
+    const identityId = createHash('sha512')
+                         .update(identityKey)
+                         .digest('base64');
 
     return prisma.agent.create({
       data: {
         type: "email",
         key: email,
-        identityPrivateKey: keyPair.privateKeyPem,
+        identityKey: identityKey.toString("base64"),
         identity: {
           create: {
-            identityPublicKey: keyPair.publicKeyPem,
+            initializationVector: "",
+            identityId: identityId,
             privateData: "",
             publicData: {}
           }
@@ -31,21 +38,22 @@ export class Agent
   /**
    * Creates a new agent together with an identity.
    * The supplied data is used to create the identity.
-   * The 'identityPrivateKey' must be passed only encrypted.
+   * The 'identityKey' must be passed only encrypted.
    * This method is also used to add a new agent to an existing identity.
    * @param agentPublicKey
-   * @param identityPublicKey
-   * @param identityPrivateKey The private key for the identity, already encrypted with the 'agentPublicKey' by the agent.
+   * @param identityId
+   * @param identityKey The private key for the identity, already encrypted with the 'agentPublicKey' by the agent.
    */
-  static async createFromPublicKey(agentPublicKey: string, identityPublicKey: string, identityPrivateKey: string)
+  static async createFromPublicKey(agentPublicKey: string, identityId: string, identityKey: string)
   {
-    let identity = await prisma.identity.findOne({where: {identityPublicKey: identityPublicKey}});
+    let identity = await prisma.identity.findOne({where: {identityId: identityId}});
     if (!identity)
     {
       // Create a new identity with the passed data
       identity = await prisma.identity.create({
         data: {
-          identityPublicKey: identityPublicKey,
+          initializationVector: "",
+          identityId: identityId,
           privateData: "",
           publicData: {}
         }
@@ -56,10 +64,10 @@ export class Agent
       data: {
         identity: {
           connect: {
-            identityPublicKey: identity.identityPublicKey
+            identityId: identity.identityId
           }
         },
-        identityPrivateKey: identityPrivateKey,
+        identityKey: identityKey,
         key: agentPublicKey,
         type: "publicKey"
       }

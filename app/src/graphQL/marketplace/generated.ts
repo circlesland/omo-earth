@@ -33,7 +33,6 @@ export type MutationCreateOfferArgs = {
 export type Query = {
   __typename?: 'Query';
   offers: Array<Offer>;
-  version: Version;
 };
 
 export type ActionResponse = {
@@ -50,24 +49,11 @@ export type Offer = {
   price: Scalars['Float'];
 };
 
-export type ExchangeTokenResponse = ActionResponse & {
-  __typename?: 'ExchangeTokenResponse';
-  success: Scalars['Boolean'];
-  errorMessage?: Maybe<Scalars['String']>;
-};
-
 export type CreateOfferResponse = ActionResponse & {
   __typename?: 'CreateOfferResponse';
   success: Scalars['Boolean'];
   errorMessage?: Maybe<Scalars['String']>;
   offer?: Maybe<Offer>;
-};
-
-export type Version = {
-  __typename?: 'Version';
-  major: Scalars['Int'];
-  minor: Scalars['Int'];
-  revision: Scalars['Int'];
 };
 
 export enum CacheControlScope {

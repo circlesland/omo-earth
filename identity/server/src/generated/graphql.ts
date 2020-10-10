@@ -16,8 +16,8 @@ export type Scalars = {
 export type Mutation = {
   __typename?: 'Mutation';
   exchangeToken: ExchangeTokenResponse;
-  updatePublicData: UpdatePublicDataResponse;
-  updatePrivateData: UpdatePrivateDataResponse;
+  setPublicData: SetPublicDataResponse;
+  setPrivateData: SetPrivateDataResponse;
 };
 
 
@@ -26,32 +26,39 @@ export type MutationExchangeTokenArgs = {
 };
 
 
-export type MutationUpdatePublicDataArgs = {
+export type MutationSetPublicDataArgs = {
   data?: Maybe<Scalars['Json']>;
 };
 
 
-export type MutationUpdatePrivateDataArgs = {
-  data?: Maybe<Scalars['String']>;
+export type MutationSetPrivateDataArgs = {
+  initializationVector: Scalars['String'];
+  data: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
   version?: Maybe<Version>;
   publicData?: Maybe<Scalars['Json']>;
-  privateData: Scalars['String'];
-  identityPrivateKey: Scalars['String'];
-  identityPublicKey: Scalars['String'];
+  privateData: PrivateData;
+  identityKey: Scalars['String'];
+  identityId: Scalars['String'];
 };
 
 
 export type QueryPublicDataArgs = {
-  identityPublicKey?: Maybe<Scalars['String']>;
+  identityId?: Maybe<Scalars['String']>;
 };
 
 export type ActionResponse = {
   success: Scalars['Boolean'];
   errorMessage?: Maybe<Scalars['String']>;
+};
+
+export type PrivateData = {
+  __typename?: 'PrivateData';
+  initializationVector: Scalars['String'];
+  data: Scalars['String'];
 };
 
 export type ExchangeTokenResponse = ActionResponse & {
@@ -60,14 +67,14 @@ export type ExchangeTokenResponse = ActionResponse & {
   errorMessage?: Maybe<Scalars['String']>;
 };
 
-export type UpdatePublicDataResponse = ActionResponse & {
-  __typename?: 'UpdatePublicDataResponse';
+export type SetPublicDataResponse = ActionResponse & {
+  __typename?: 'SetPublicDataResponse';
   success: Scalars['Boolean'];
   errorMessage?: Maybe<Scalars['String']>;
 };
 
-export type UpdatePrivateDataResponse = ActionResponse & {
-  __typename?: 'UpdatePrivateDataResponse';
+export type SetPrivateDataResponse = ActionResponse & {
+  __typename?: 'SetPrivateDataResponse';
   success: Scalars['Boolean'];
   errorMessage?: Maybe<Scalars['String']>;
 };
@@ -162,11 +169,12 @@ export type ResolversTypes = ResolversObject<{
   Mutation: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Query: ResolverTypeWrapper<{}>;
-  ActionResponse: ResolversTypes['ExchangeTokenResponse'] | ResolversTypes['UpdatePublicDataResponse'] | ResolversTypes['UpdatePrivateDataResponse'];
+  ActionResponse: ResolversTypes['ExchangeTokenResponse'] | ResolversTypes['SetPublicDataResponse'] | ResolversTypes['SetPrivateDataResponse'];
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  PrivateData: ResolverTypeWrapper<PrivateData>;
   ExchangeTokenResponse: ResolverTypeWrapper<ExchangeTokenResponse>;
-  UpdatePublicDataResponse: ResolverTypeWrapper<UpdatePublicDataResponse>;
-  UpdatePrivateDataResponse: ResolverTypeWrapper<UpdatePrivateDataResponse>;
+  SetPublicDataResponse: ResolverTypeWrapper<SetPublicDataResponse>;
+  SetPrivateDataResponse: ResolverTypeWrapper<SetPrivateDataResponse>;
   Version: ResolverTypeWrapper<Version>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
 }>;
@@ -177,11 +185,12 @@ export type ResolversParentTypes = ResolversObject<{
   Mutation: {};
   String: Scalars['String'];
   Query: {};
-  ActionResponse: ResolversParentTypes['ExchangeTokenResponse'] | ResolversParentTypes['UpdatePublicDataResponse'] | ResolversParentTypes['UpdatePrivateDataResponse'];
+  ActionResponse: ResolversParentTypes['ExchangeTokenResponse'] | ResolversParentTypes['SetPublicDataResponse'] | ResolversParentTypes['SetPrivateDataResponse'];
   Boolean: Scalars['Boolean'];
+  PrivateData: PrivateData;
   ExchangeTokenResponse: ExchangeTokenResponse;
-  UpdatePublicDataResponse: UpdatePublicDataResponse;
-  UpdatePrivateDataResponse: UpdatePrivateDataResponse;
+  SetPublicDataResponse: SetPublicDataResponse;
+  SetPrivateDataResponse: SetPrivateDataResponse;
   Version: Version;
   Int: Scalars['Int'];
 }>;
@@ -192,22 +201,28 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   exchangeToken?: Resolver<ResolversTypes['ExchangeTokenResponse'], ParentType, ContextType, RequireFields<MutationExchangeTokenArgs, 'jwt'>>;
-  updatePublicData?: Resolver<ResolversTypes['UpdatePublicDataResponse'], ParentType, ContextType, RequireFields<MutationUpdatePublicDataArgs, never>>;
-  updatePrivateData?: Resolver<ResolversTypes['UpdatePrivateDataResponse'], ParentType, ContextType, RequireFields<MutationUpdatePrivateDataArgs, never>>;
+  setPublicData?: Resolver<ResolversTypes['SetPublicDataResponse'], ParentType, ContextType, RequireFields<MutationSetPublicDataArgs, never>>;
+  setPrivateData?: Resolver<ResolversTypes['SetPrivateDataResponse'], ParentType, ContextType, RequireFields<MutationSetPrivateDataArgs, 'initializationVector' | 'data'>>;
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   version?: Resolver<Maybe<ResolversTypes['Version']>, ParentType, ContextType>;
   publicData?: Resolver<Maybe<ResolversTypes['Json']>, ParentType, ContextType, RequireFields<QueryPublicDataArgs, never>>;
-  privateData?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  identityPrivateKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  identityPublicKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  privateData?: Resolver<ResolversTypes['PrivateData'], ParentType, ContextType>;
+  identityKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  identityId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 }>;
 
 export type ActionResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActionResponse'] = ResolversParentTypes['ActionResponse']> = ResolversObject<{
-  __resolveType: TypeResolveFn<'ExchangeTokenResponse' | 'UpdatePublicDataResponse' | 'UpdatePrivateDataResponse', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'ExchangeTokenResponse' | 'SetPublicDataResponse' | 'SetPrivateDataResponse', ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+}>;
+
+export type PrivateDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['PrivateData'] = ResolversParentTypes['PrivateData']> = ResolversObject<{
+  initializationVector?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  data?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type ExchangeTokenResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ExchangeTokenResponse'] = ResolversParentTypes['ExchangeTokenResponse']> = ResolversObject<{
@@ -216,13 +231,13 @@ export type ExchangeTokenResponseResolvers<ContextType = any, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type UpdatePublicDataResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdatePublicDataResponse'] = ResolversParentTypes['UpdatePublicDataResponse']> = ResolversObject<{
+export type SetPublicDataResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetPublicDataResponse'] = ResolversParentTypes['SetPublicDataResponse']> = ResolversObject<{
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type UpdatePrivateDataResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdatePrivateDataResponse'] = ResolversParentTypes['UpdatePrivateDataResponse']> = ResolversObject<{
+export type SetPrivateDataResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetPrivateDataResponse'] = ResolversParentTypes['SetPrivateDataResponse']> = ResolversObject<{
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   errorMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -240,9 +255,10 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   ActionResponse?: ActionResponseResolvers<ContextType>;
+  PrivateData?: PrivateDataResolvers<ContextType>;
   ExchangeTokenResponse?: ExchangeTokenResponseResolvers<ContextType>;
-  UpdatePublicDataResponse?: UpdatePublicDataResponseResolvers<ContextType>;
-  UpdatePrivateDataResponse?: UpdatePrivateDataResponseResolvers<ContextType>;
+  SetPublicDataResponse?: SetPublicDataResponseResolvers<ContextType>;
+  SetPrivateDataResponse?: SetPrivateDataResponseResolvers<ContextType>;
   Version?: VersionResolvers<ContextType>;
 }>;
 

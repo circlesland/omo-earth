@@ -55,7 +55,7 @@
             "deprecationReason": null
           },
           {
-            "name": "updatePublicData",
+            "name": "setPublicData",
             "description": null,
             "args": [
               {
@@ -74,7 +74,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdatePublicDataResponse",
+                "name": "SetPublicDataResponse",
                 "ofType": null
               }
             },
@@ -82,16 +82,34 @@
             "deprecationReason": null
           },
           {
-            "name": "updatePrivateData",
+            "name": "setPrivateData",
             "description": null,
             "args": [
+              {
+                "name": "initializationVector",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
               {
                 "name": "data",
                 "description": null,
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
                 },
                 "defaultValue": null
               }
@@ -101,7 +119,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "UpdatePrivateDataResponse",
+                "name": "SetPrivateDataResponse",
                 "ofType": null
               }
             },
@@ -146,7 +164,7 @@
             "description": null,
             "args": [
               {
-                "name": "identityPublicKey",
+                "name": "identityId",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -172,8 +190,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "OBJECT",
+                "name": "PrivateData",
                 "ofType": null
               }
             },
@@ -181,7 +199,7 @@
             "deprecationReason": null
           },
           {
-            "name": "identityPrivateKey",
+            "name": "identityKey",
             "description": null,
             "args": [],
             "type": {
@@ -197,7 +215,7 @@
             "deprecationReason": null
           },
           {
-            "name": "identityPublicKey",
+            "name": "identityId",
             "description": null,
             "args": [],
             "type": {
@@ -263,12 +281,12 @@
           },
           {
             "kind": "OBJECT",
-            "name": "UpdatePublicDataResponse",
+            "name": "SetPublicDataResponse",
             "ofType": null
           },
           {
             "kind": "OBJECT",
-            "name": "UpdatePrivateDataResponse",
+            "name": "SetPrivateDataResponse",
             "ofType": null
           }
         ]
@@ -280,6 +298,49 @@
         "fields": null,
         "inputFields": null,
         "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PrivateData",
+        "description": null,
+        "fields": [
+          {
+            "name": "initializationVector",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "data",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
       },
@@ -330,7 +391,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "UpdatePublicDataResponse",
+        "name": "SetPublicDataResponse",
         "description": null,
         "fields": [
           {
@@ -375,7 +436,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "UpdatePrivateDataResponse",
+        "name": "SetPrivateDataResponse",
         "description": null,
         "fields": [
           {

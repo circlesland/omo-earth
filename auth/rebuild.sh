@@ -2,7 +2,7 @@
 
 currentDir=`pwd`
 
-echo "Building aut .."
+echo "Building auth .."
 pwd
 echo "Building ./util .."
 

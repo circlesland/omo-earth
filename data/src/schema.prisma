@@ -10,13 +10,13 @@ generator client {
 // An agent is an entity that is entitled to act as a person (a device or bot).
 model Agent {
   // A link to the Identit that this agent represents.
-  identity Identity  @relation(fields: [identityPublicKey], references: [identityPublicKey])
-  identityPublicKey String
-  // Contains the private key of the Identity that this Agent represents.
-  // When the Agent's 'type' is 'publicKey' then the 'identityPrivateKey' will be encrypted
-  // with the Agent's 'key'.
+  identity Identity  @relation(fields: [identityId], references: [identityId])
+  identityId String
+  // Contains the key that can be used to decrypt the Identity's 'privateData' field.
+  // When the Agent's 'type' is 'publicKey' then the 'identityKey' will be encrypted
+  // with the Agent's 'publicKey'.
   // When the 'type' is 'email' then the field contains the private key in plain-text.
-  identityPrivateKey String
+  identityKey String
   // The type can either be 'email' or 'publicKey'.
   type String
   // Depending on the 'type', this field either contains a email address or a public key.
@@ -25,14 +25,16 @@ model Agent {
 }
 
 model Identity {
-  // The public key that identifies the identity
-  identityPublicKey String @id
+  // a unique identity string that is derived from the 'identityKey' via PBKDF2 with SHA3.
+  identityId String @id
   // The agents that should be able to act as this identity.
   agents Agent[]
   // Contains data that should be publicy available for everyone.
   publicData Json
-  // Contains data that is encrypted with the 'identityPublicKey'.
+  // Contains data that is encrypted with the 'identityId'.
   privateData String
+  // The 'initializationVector' that was used to encrypt the 'privateData'.
+  initializationVector String
 }
 
 // Authorities are trusted services that issue JWTs which this service accepts as authentication

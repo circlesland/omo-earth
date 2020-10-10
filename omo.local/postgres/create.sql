@@ -119,10 +119,11 @@ alter table "_Migration" owner to postgres;
 
 create table "Identity"
 (
-    "identityPublicKey" text not null
+    "identityId" text not null
         constraint "Identity_pkey"
             primary key,
     "publicData" jsonb not null,
+    "initializationVector" text not null,
     "privateData" text not null
 );
 
@@ -130,11 +131,11 @@ alter table "Identity" owner to postgres;
 
 create table "Agent"
 (
-    "identityPublicKey" text not null
-        constraint "Agent_identityPublicKey_fkey"
+    "identityId" text not null
+        constraint "Agent_identityId_fkey"
             references "Identity"
             on update cascade on delete cascade,
-    "identityPrivateKey" text not null,
+    "identityKey" text not null,
     type text not null,
     key text not null
 );

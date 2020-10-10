@@ -1,15 +1,18 @@
-query identityPublicKey {
-    identityPublicKey
+query identityId {
+    identityId
 }
 
-query identityPrivateKey {
-    identityPrivateKey
+query identityKey {
+    identityKey
 }
 
 query privateData {
-    privateData
+    privateData {
+        initializationVector
+        data
+    }
 }
 
-query publicData($identityPublicKey:String) {
-    publicData(identityPublicKey: $identityPublicKey)
+query publicData($identityId:String) {
+    publicData(identityId: $identityId)
 }

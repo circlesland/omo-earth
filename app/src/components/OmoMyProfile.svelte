@@ -1,6 +1,23 @@
 <script>
-  $: {
+  import {Agent} from "../stores/agent";
+
+  let publicData = {};
+  let privateData = {};
+
+  async function init() {
+    publicData = await Agent.me.getPublicData();
+    privateData = await Agent.me.getPrivateData();
   }
+
+  function addToPrivateData() {
+    let i = Object.keys(privateData).length;
+    privateData[(i++).toString()] = {
+      hello: "world " + i
+    };
+    Agent.me.setPrivateData(privateData);
+  }
+
+  init();
 </script>
 
 <div class="bg-white relative shadow text-gray-800 overflow-hidden">
@@ -30,9 +47,20 @@
         {name}
       {/await}    
     </div>-->
-    <p class="text-center text-gray-600 uppercase">Hello world!</p>
+    <p class="text-center text-gray-600 uppercase"></p>
     <div class="text-sm font-light text-center py-1 px-4">My Pledge</div>
   </div>
+
+  Public data:
+  <pre>
+    {JSON.stringify(publicData,undefined,3)}
+    </pre><br/>
+  <button on:click={() => addToPrivateData()}>Add</button>
+  Private data:
+  <pre style="overflow: scroll; height:200px;">
+    {JSON.stringify(privateData,undefined,3)}
+    </pre><br/>
+
   <!-- 
   <div class="h-10 flex items-center justify-between bg-gray-100">
     <a

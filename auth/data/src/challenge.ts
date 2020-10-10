@@ -1,6 +1,7 @@
 import {prisma} from "./prisma";
 import {ValueGenerator} from "@omo/auth-util/dist/valueGenerator";
 import {publicEncrypt} from "crypto";
+import * as constants from "constants";
 
 export interface RequestChallengeResponse
 {
@@ -54,7 +55,10 @@ export class Challenge
     if (type === "publicKey")
     {
       const challengeBuffer = Buffer.from(challenge, "utf8");
-      const encryptedChallengeBuffer = publicEncrypt(key, challengeBuffer);
+      const encryptedChallengeBuffer = publicEncrypt({
+        key: key,
+        padding: constants.RSA_PKCS1_PADDING
+      }, challengeBuffer);
       challenge = encryptedChallengeBuffer.toString("base64");
     }
     else if (type === "email")
