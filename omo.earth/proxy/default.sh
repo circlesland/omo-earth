@@ -6,30 +6,31 @@ SET_HEADER_BLOCK=`cat << 'EOF'
     proxy_set_header Cookie $http_cookie;
 EOF`
 
+RATE_LIMITING=`cat << 'EOF'
+limit_req_zone $binary_remote_addr zone=zone1:10m rate=2r/s;
+limit_req_zone $binary_remote_addr zone=zone2:10m rate=4r/s;
+limit_req_zone $binary_remote_addr zone=zone3:10m rate=8r/s;
+EOF`
+
 TEMPLATE=`cat << EOF
+$RATE_LIMITING
+
 server {
-  server_name ${PROXY_EXTERN_DOMAIN};
-
-  listen ${PROXY_PORT};
-
-  location /${PROXY_SERVICE_STATIC_PATH} {
-$SET_HEADER_BLOCK
-    proxy_pass ${STATIC_PROTOCOL}${STATIC_DOMAIN}:${STATIC_PORT};
-  }
+  listen 443 ssl;
+  server_name  alpha.omo.earth;
+  ssl_certificate /etc/letsencrypt/live/alpha.omo.earth/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/alpha.omo.earth/privkey.pem;
 
   location /${PROXY_SERVICE_AUTH_PATH} {
+    limit_req zone=zone1 burst=6 nodelay;
 $SET_HEADER_BLOCK
     proxy_pass ${AUTH_PROTOCOL}${AUTH_DOMAIN}:${AUTH_PORT};
   }
 
   location /${PROXY_SERVICE_IDENTITY_PATH} {
+    limit_req zone=zone2 burst=16 nodelay;
 $SET_HEADER_BLOCK
     proxy_pass ${IDENTITY_PROTOCOL}${IDENTITY_DOMAIN}:${IDENTITY_PORT};
-  }
-
-  location /${PROXY_SERVICE_APP_PATH} {
-$SET_HEADER_BLOCK
-    proxy_pass ${APP_PROTOCOL}${APP_DOMAIN}:${APP_PORT};
   }
 }
 EOF`

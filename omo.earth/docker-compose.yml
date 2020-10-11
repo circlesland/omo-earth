@@ -7,7 +7,7 @@ services:
     env_file:
       - .env
     ports:
-      - "5432"
+      - "5432:5432"
 
   auth:
     depends_on:
@@ -20,13 +20,14 @@ services:
     environment:
       # Sucks: The hash is a comment in .env-files, so this variable must be set
       # inside of this file.
-      - AUTH_APP_REDIRECT=http://omo.earth/#!/sign-in/onetime
+      - AUTH_APP_REDIRECT=https://alpha.omo.earth/#!/sign-in/onetime
     ports:
       - "80"
 
   identity:
     depends_on:
       - postgres
+      - auth
     build:
       context: ../
       dockerfile: omo.earth/identity/Dockerfile
@@ -35,33 +36,10 @@ services:
     ports:
       - "80"
 
-  app:
-    depends_on:
-      - postgres
-      - auth
-      - identity
-    build:
-      context: ../app
-      dockerfile: ../omo.earth/app/Dockerfile
-      args:
-        - PROXY_PROTOCOL=${PROXY_PROTOCOL}
-        - PROXY_EXTERN_DOMAIN=${PROXY_EXTERN_DOMAIN}
-        - PROXY_EXTERN_PORT=${PROXY_EXTERN_PORT}
-    env_file:
-      - .env
-    ports:
-      - "80"
-
-  static:
-    build: static
-    ports:
-      - "80"
-
   proxy:
     depends_on:
-      - static
       - auth
-      - app
+      - identity
     build:
       context: proxy
       dockerfile: Dockerfile
@@ -71,13 +49,8 @@ services:
         - PROXY_PORT=${PROXY_PORT}
         - PROXY_EXTERN_DOMAIN=${PROXY_EXTERN_DOMAIN}
         - PROXY_EXTERN_PORT=${PROXY_EXTERN_PORT}
-        - PROXY_SERVICE_STATIC_PATH=${PROXY_SERVICE_STATIC_PATH}
         - PROXY_SERVICE_AUTH_PATH=${PROXY_SERVICE_AUTH_PATH}
         - PROXY_SERVICE_IDENTITY_PATH=${PROXY_SERVICE_IDENTITY_PATH}
-        - PROXY_SERVICE_APP_PATH=${PROXY_SERVICE_APP_PATH}
-        - STATIC_PROTOCOL=${STATIC_PROTOCOL}
-        - STATIC_DOMAIN=${STATIC_DOMAIN}
-        - STATIC_PORT=${STATIC_PORT}
         - APP_PROTOCOL=${APP_PROTOCOL}
         - APP_DOMAIN=${APP_DOMAIN}
         - APP_PORT=${APP_PORT}
@@ -89,7 +62,7 @@ services:
         - IDENTITY_PORT=${IDENTITY_PORT}
     env_file:
       - .env
-
     ports:
-      - "80:80"
       - "443:443"
+    volumes:
+      - /etc/letsencrypt/live/alpha.omo.earth:/etc/letsencrypt/live/alpha.omo.earth
