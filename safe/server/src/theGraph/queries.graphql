@@ -1,0 +1,8 @@
+query safeAddressByOwner($address:ID!) {
+    users(where: { id: $address }) {
+        id
+        safes {
+            id
+        }
+    }
+}
