@@ -65,4 +65,4 @@ services:
     ports:
       - "443:443"
     volumes:
-      - /etc/letsencrypt/live/alpha.omo.earth:/etc/letsencrypt/live/alpha.omo.earth
+      - /etc/letsencrypt/archive/alpha.omo.earth:/tls

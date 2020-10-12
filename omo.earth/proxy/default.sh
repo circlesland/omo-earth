@@ -18,8 +18,8 @@ $RATE_LIMITING
 server {
   listen 443 ssl;
   server_name  alpha.omo.earth;
-  ssl_certificate /etc/letsencrypt/live/alpha.omo.earth/fullchain.pem;
-  ssl_certificate_key /etc/letsencrypt/live/alpha.omo.earth/privkey.pem;
+  ssl_certificate /tls/fullchain1.pem;
+  ssl_certificate_key /tls/privkey1.pem;
 
   location /${PROXY_SERVICE_AUTH_PATH} {
     limit_req zone=zone1 burst=6 nodelay;

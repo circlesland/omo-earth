@@ -30,6 +30,8 @@ ENV IDENTITY_PORT="$IDENTITY_PORT"
 
 COPY default.sh /etc/nginx/conf.d/default.sh
 
+#RUN ls -a /etc/letsencrypt/live/alpha.omo.earth
+
 RUN chmod +x /etc/nginx/conf.d/default.sh
 RUN cd /etc/nginx/conf.d/ && /etc/nginx/conf.d/default.sh
 RUN cat /etc/nginx/conf.d/default.conf
